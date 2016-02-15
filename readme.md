@@ -8,7 +8,7 @@
 
   ```go
 
-    go get -u github.com/influx6/faux/vfx/...
+    go get -u github.com/influx6/govfx/...
 
   ```
 
@@ -64,8 +64,8 @@
   	"fmt"
   	"time"
 
-  	"github.com/influx6/faux/vfx"
-  	"github.com/influx6/faux/vfx/animations/boundaries"
+  	"github.com/influx6/govfx"
+  	"github.com/influx6/govfx/animations/boundaries"
   )
 
   func main() {
