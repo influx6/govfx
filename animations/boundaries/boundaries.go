@@ -3,7 +3,7 @@ package boundaries
 import (
 	"fmt"
 
-	"github.com/influx6/faux/vfx"
+	"github.com/influx6/govfx"
 )
 
 //==============================================================================
@@ -13,7 +13,7 @@ type WidthCSSWriter struct {
 	width    int
 	unit     string
 	priority bool
-	elem     vfx.Elemental
+	elem     govfx.Elemental
 }
 
 // Write writes out the necessary output for a css width property.
@@ -31,13 +31,13 @@ type Width struct {
 }
 
 // Init returns the initial writers for the sequence.
-func (w *Width) Init(stats vfx.Stats, elems vfx.Elementals) vfx.DeferWriters {
-	var writers vfx.DeferWriters
+func (w *Width) Init(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWriters {
+	var writers govfx.DeferWriters
 
 	for _, elem := range elems {
 		width, priority, _ := elem.Read("width")
 		writers = append(writers, &WidthCSSWriter{
-			width:    vfx.ParseInt(width),
+			width:    govfx.ParseInt(width),
 			unit:     "px",
 			priority: priority,
 			elem:     elem,
@@ -48,20 +48,19 @@ func (w *Width) Init(stats vfx.Stats, elems vfx.Elementals) vfx.DeferWriters {
 }
 
 // Next returns the writers for the current sequence iteration.
-func (w *Width) Next(stats vfx.Stats, elems vfx.Elementals) vfx.DeferWriters {
-	var writers vfx.DeferWriters
+func (w *Width) Next(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWriters {
+	var writers govfx.DeferWriters
 
-	easing := vfx.GetEasing(stats.Easing())
+	easing := govfx.GetEasing(stats.Easing())
 
 	for _, elem := range elems {
 		width, priority, _ := elem.Read("width")
 
-		realWidth := vfx.ParseInt(width)
+		realWidth := govfx.ParseInt(width)
 		change := w.Width - realWidth
 
-		newWidth := int(easing.Ease(vfx.EaseConfig{
-			CurrentStep:  stats.CurrentIteration(),
-			TotalSteps:   stats.TotalIterations(),
+		newWidth := int(easing.Ease(govfx.EaseConfig{
+			Stat:         stats,
 			CurrentValue: float64(realWidth),
 			DeltaValue:   float64(change),
 		}))

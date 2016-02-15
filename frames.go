@@ -38,9 +38,9 @@ type Frame interface {
 	Phase() FramePhase
 	Init(float64) DeferWriters
 	Sequence(float64) DeferWriters
-	OnEnd(func(Stats)) loop.Looper
-	OnBegin(func(Stats)) loop.Looper
-	OnProgress(func(Stats)) loop.Looper
+	OnEnd(func(Frame)) loop.Looper
+	OnBegin(func(Frame)) loop.Looper
+	OnProgress(func(Frame)) loop.Looper
 }
 
 // AnimationSequence defines a set of sequences that operate on the behaviour of
@@ -105,26 +105,26 @@ func (f *AnimationSequence) IsOver() bool {
 
 // OnProgress provides a callback hook to listen to progress of the animation,
 // this is fired through out the duration of the animation.
-func (f *AnimationSequence) OnProgress(fx func(Stats)) loop.Looper {
+func (f *AnimationSequence) OnProgress(fx func(Frame)) loop.Looper {
 	return f.progress.Q(func() {
-		fx(f.Stats())
+		fx(f)
 	})
 }
 
 // OnBegin callbacks are fired once, at the beginning of an animation, even if
 // the animation runs in a loop, it still will not be fired more than once.
-func (f *AnimationSequence) OnBegin(fx func(Stats)) loop.Looper {
+func (f *AnimationSequence) OnBegin(fx func(Frame)) loop.Looper {
 	return f.begin.Q(func() {
-		fx(f.Stats())
+		fx(f)
 	})
 }
 
 // OnEnd callbacks are fired once, at the end of an animation, if the animation
 // the animation runs in a loop, it still will not be fired more than once at
 // the end of the total loop count.
-func (f *AnimationSequence) OnEnd(fx func(Stats)) loop.Looper {
+func (f *AnimationSequence) OnEnd(fx func(Frame)) loop.Looper {
 	return f.ended.Q(func() {
-		fx(f.Stats())
+		fx(f)
 	})
 }
 

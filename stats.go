@@ -66,10 +66,10 @@ type Stat struct {
 	done             bool
 }
 
-// TimeStat returns a new Stats instance which provide information concering
+// NewStat returns a new Stats instance which provide information concering
 // the current animation frame, it uses the provided duration to calculate the
 // total iteration for the animation.
-func TimeStat(config StatConfig) Stats {
+func NewStat(config StatConfig) Stats {
 	st := Stat{
 		config:         config,
 		totalIteration: GetIterations(config.Duration),
@@ -80,7 +80,7 @@ func TimeStat(config StatConfig) Stats {
 
 // Clone returns a clone for the stats.
 func (s *Stat) Clone() Stats {
-	return TimeStat(s.config)
+	return NewStat(s.config)
 }
 
 // Delay returns the time duration defined as the delay before the start of

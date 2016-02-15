@@ -7,7 +7,7 @@ type EaseIn struct{}
 
 // Ease returns a new value base on the EaseConfig received.
 func (e EaseIn) Ease(c EaseConfig) float64 {
-	return (c.DeltaValue * c.Stats.DeltaIteration()) + c.CurrentValue
+	return (c.DeltaValue * c.Stat.DeltaIteration()) + c.CurrentValue
 }
 
 //==============================================================================
@@ -17,7 +17,7 @@ type EaseInQuad struct{}
 
 // Ease returns a new value base on the EaseConfig received.
 func (e EaseInQuad) Ease(c EaseConfig) float64 {
-	ms := c.Stats.DeltaIteration()
+	ms := c.Stat.DeltaIteration()
 	return (c.DeltaValue * ms * ms) + c.CurrentValue
 }
 
@@ -28,7 +28,7 @@ type EaseOutQuad struct{}
 
 // Ease returns a new value base on the EaseConfig received.
 func (e EaseOutQuad) Ease(c EaseConfig) float64 {
-	ms := (c.Stats.DeltaIteration()) * float64(c.Stats.CurrentIteration()-2)
+	ms := (c.Stat.DeltaIteration()) * float64(c.Stat.CurrentIteration()-2)
 	return ((c.DeltaValue * -1) * ms) + c.CurrentValue
 }
 
@@ -39,7 +39,7 @@ type EaseInOutQuad struct{}
 
 // Ease returns a new value base on the EaseConfig received.
 func (e EaseInOutQuad) Ease(c EaseConfig) float64 {
-	diff := c.Stats.DeltaIteration()
+	diff := c.Stat.DeltaIteration()
 
 	if diff < 1 {
 		return (c.DeltaValue / 2) * diff * diff

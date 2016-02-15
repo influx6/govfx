@@ -26,7 +26,7 @@ func TestDeferWriterCache(t *testing.T) {
 
 			cache := govfx.NewDeferWriterCache()
 
-			stat := govfx.TimeStat(govfx.StatConfig{
+			stat := govfx.NewStat(govfx.StatConfig{
 				Duration: 1 * time.Second,
 				Delay:    2 * time.Second,
 				Easing:   "ease-in",
@@ -35,7 +35,7 @@ func TestDeferWriterCache(t *testing.T) {
 				Optimize: false,
 			})
 
-			stat2 := govfx.TimeStat(govfx.StatConfig{
+			stat2 := govfx.NewStat(govfx.StatConfig{
 				Duration: 1 * time.Second,
 				Delay:    2 * time.Second,
 				Easing:   "ease-in",
