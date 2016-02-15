@@ -70,8 +70,8 @@
 
   func main() {
 
-  	width := vfx.NewAnimationSequence(".zapps",
-  		vfx.TimeStat(vfx.StatConfig{
+  	width := govfx.NewAnimationSequence(".zapps",
+  		govfx.NewStat(govfx.StatConfig{
   			Duration: 1 * time.Second,
   			Delay:    2 * time.Second,
   			Easing:   "ease-in",
@@ -81,19 +81,19 @@
   		}),
   		&boundaries.Width{Width: 500})
 
-  	width.OnBegin(func(stats vfx.Stats) {
+  	width.OnBegin(func(stats govfx.Frame) {
   		fmt.Println("Animation Has Begun.")
   	})
 
-  	width.OnEnd(func(stats vfx.Stats) {
+  	width.OnEnd(func(stats govfx.Frame) {
   		fmt.Println("Animation Has Ended.")
   	})
 
-  	width.OnProgress(func(stats vfx.Stats) {
+  	width.OnProgress(func(stats govfx.Frame) {
   		fmt.Println("Animation is progressing.")
   	})
 
-  	vfx.Animate(width)
+  	govfx.Animate(width)
 
     // To stop a frame animation, simple use the vfx.Stop function call.
     vfx.Stop(width)
