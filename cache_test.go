@@ -1,4 +1,4 @@
-package vfx_test
+package govfx_test
 
 import (
 	"sync"
@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/ardanlabs/kit/tests"
-	"github.com/influx6/faux/vfx"
+	"github.com/influx6/govfx"
 )
 
 // TestDeferWriterCache validates the operation and write safetiness of DeferWriterCache.
@@ -24,9 +24,9 @@ func TestDeferWriterCache(t *testing.T) {
 
 			ws.Add(1)
 
-			cache := vfx.NewDeferWriterCache()
+			cache := govfx.NewDeferWriterCache()
 
-			stat := vfx.TimeStat(vfx.StatConfig{
+			stat := govfx.TimeStat(govfx.StatConfig{
 				Duration: 1 * time.Second,
 				Delay:    2 * time.Second,
 				Easing:   "ease-in",
@@ -35,7 +35,7 @@ func TestDeferWriterCache(t *testing.T) {
 				Optimize: false,
 			})
 
-			stat2 := vfx.TimeStat(vfx.StatConfig{
+			stat2 := govfx.TimeStat(govfx.StatConfig{
 				Duration: 1 * time.Second,
 				Delay:    2 * time.Second,
 				Easing:   "ease-in",
@@ -44,8 +44,8 @@ func TestDeferWriterCache(t *testing.T) {
 				Optimize: false,
 			})
 
-			frame := vfx.NewAnimationSequence("", stat)
-			frame2 := vfx.NewAnimationSequence("", stat2)
+			frame := govfx.NewAnimationSequence("", stat)
+			frame2 := govfx.NewAnimationSequence("", stat2)
 
 			defer cache.Clear(frame)
 			defer cache.Clear(frame2)
@@ -105,8 +105,8 @@ type wr struct{}
 // Write writes out the writers details.
 func (w *wr) Write() {}
 
-func buildNDeferWriters(size int) vfx.DeferWriters {
-	var ws vfx.DeferWriters
+func buildNDeferWriters(size int) govfx.DeferWriters {
+	var ws govfx.DeferWriters
 
 	for i := 0; i < size; i++ {
 		ws = append(ws, &wr{})

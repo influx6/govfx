@@ -1,4 +1,4 @@
-package vfx_test
+package govfx_test
 
 import "github.com/ardanlabs/kit/tests"
 

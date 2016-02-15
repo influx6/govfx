@@ -1,4 +1,4 @@
-package vfx
+package govfx
 
 import (
 	"sync/atomic"

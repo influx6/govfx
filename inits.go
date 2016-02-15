@@ -1,4 +1,4 @@
-package vfx
+package govfx
 
 import (
 	"github.com/influx6/faux/loop"
