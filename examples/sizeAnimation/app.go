@@ -4,14 +4,14 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/influx6/faux/vfx"
-	"github.com/influx6/faux/vfx/animations/boundaries"
+	"github.com/influx6/govfx"
+	"github.com/influx6/govfx/animations/boundaries"
 )
 
 func main() {
 
-	width := vfx.NewAnimationSequence(".zapps",
-		vfx.TimeStat(vfx.StatConfig{
+	width := govfx.NewAnimationSequence(".zapps",
+		govfx.NewStat(govfx.StatConfig{
 			Duration: 1 * time.Second,
 			Delay:    2 * time.Second,
 			Easing:   "ease-in",
@@ -21,17 +21,17 @@ func main() {
 		}),
 		&boundaries.Width{Width: 500})
 
-	width.OnBegin(func(stats vfx.Stats) {
+	width.OnBegin(func(stats govfx.Frame) {
 		fmt.Println("Animation Has Begun.")
 	})
 
-	width.OnEnd(func(stats vfx.Stats) {
+	width.OnEnd(func(stats govfx.Frame) {
 		fmt.Println("Animation Has Ended.")
 	})
 
-	width.OnProgress(func(stats vfx.Stats) {
+	width.OnProgress(func(stats govfx.Frame) {
 		fmt.Println("Animation is progressing.")
 	})
 
-	vfx.Animate(width)
+	govfx.Animate(width)
 }
