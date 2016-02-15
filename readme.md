@@ -1,5 +1,5 @@
-# VFX
- VFX is a idiomatic web animation library which brings the style of [VelocityJS](https://julian.com/research/velocity/)
+# GoVFX
+ GoVFX is a idiomatic web animation library which brings the style of [VelocityJS](https://julian.com/research/velocity/)
  to Go. It brings a different approach in the way animations are built but
  has a solid foundation to allow the best performance ensuring to reduce layout
  trashing as much as possible.
