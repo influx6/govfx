@@ -1,0 +1,90 @@
+{
+	"comment": "",
+	"ignore": "",
+	"package": [
+		{
+			"path": "github.com/ardanlabs/kit/cfg",
+			"revision": "0849a3acf1daf42c03d109846b7c96b53e7e79df",
+			"revisionTime": "2015-12-30T13:39:03-07:00"
+		},
+		{
+			"path": "github.com/ardanlabs/kit/db",
+			"revision": "0849a3acf1daf42c03d109846b7c96b53e7e79df",
+			"revisionTime": "2015-12-30T13:39:03-07:00"
+		},
+		{
+			"path": "github.com/ardanlabs/kit/db/mongo",
+			"revision": "0849a3acf1daf42c03d109846b7c96b53e7e79df",
+			"revisionTime": "2015-12-30T13:39:03-07:00"
+		},
+		{
+			"path": "github.com/ardanlabs/kit/log",
+			"revision": "0849a3acf1daf42c03d109846b7c96b53e7e79df",
+			"revisionTime": "2015-12-30T13:39:03-07:00"
+		},
+		{
+			"path": "github.com/ardanlabs/kit/tests",
+			"revision": "0849a3acf1daf42c03d109846b7c96b53e7e79df",
+			"revisionTime": "2015-12-30T13:39:03-07:00"
+		},
+		{
+			"path": "github.com/go-humble/detect",
+			"revision": "714e9e4d821cb7daac42b10f6f91fe5da00fa6fb",
+			"revisionTime": "2015-07-11T22:04:33-07:00"
+		},
+		{
+			"path": "github.com/gopherjs/gopherjs/build",
+			"revision": "76dd0e02d28e5192523ef1ee98becbd86c918cff",
+			"revisionTime": "2016-02-05T16:25:13-08:00"
+		},
+		{
+			"path": "github.com/gopherjs/gopherjs/compiler",
+			"revision": "76dd0e02d28e5192523ef1ee98becbd86c918cff",
+			"revisionTime": "2016-02-05T16:25:13-08:00"
+		},
+		{
+			"path": "github.com/gopherjs/gopherjs/compiler/analysis",
+			"revision": "76dd0e02d28e5192523ef1ee98becbd86c918cff",
+			"revisionTime": "2016-02-05T16:25:13-08:00"
+		},
+		{
+			"path": "github.com/gopherjs/gopherjs/compiler/astutil",
+			"revision": "76dd0e02d28e5192523ef1ee98becbd86c918cff",
+			"revisionTime": "2016-02-05T16:25:13-08:00"
+		},
+		{
+			"path": "github.com/gopherjs/gopherjs/compiler/filter",
+			"revision": "76dd0e02d28e5192523ef1ee98becbd86c918cff",
+			"revisionTime": "2016-02-05T16:25:13-08:00"
+		},
+		{
+			"path": "github.com/gopherjs/gopherjs/compiler/prelude",
+			"revision": "76dd0e02d28e5192523ef1ee98becbd86c918cff",
+			"revisionTime": "2016-02-05T16:25:13-08:00"
+		},
+		{
+			"path": "github.com/gopherjs/gopherjs/compiler/typesutil",
+			"revision": "76dd0e02d28e5192523ef1ee98becbd86c918cff",
+			"revisionTime": "2016-02-05T16:25:13-08:00"
+		},
+		{
+			"path": "github.com/gopherjs/gopherjs/js",
+			"revision": "76dd0e02d28e5192523ef1ee98becbd86c918cff",
+			"revisionTime": "2016-02-05T16:25:13-08:00"
+		},
+		{
+			"path": "github.com/gopherjs/gopherjs/third_party/importer",
+			"revision": "76dd0e02d28e5192523ef1ee98becbd86c918cff",
+			"revisionTime": "2016-02-05T16:25:13-08:00"
+		},
+		{
+			"path": "github.com/satori/go.uuid",
+			"revision": ""
+		},
+		{
+			"path": "honnef.co/go/js/dom",
+			"revision": "ef247f60aa88ed944d605c82cb56a9873c2f9b2e",
+			"revisionTime": "2016-01-27T08:58:48+01:00"
+		}
+	]
+}
