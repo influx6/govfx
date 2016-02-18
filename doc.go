@@ -1,4 +1,4 @@
-// package govfx provides a go idiomatic animation library built to be simple,
+// Package govfx provides a Go idiomatic animation library built to be simple,
 // efficient and flexibile at the sametime.
 // The VFX was created to provide the simplicity covering the powerful capability
 // possible when using go and its API was built to follow that principle of
@@ -21,7 +21,7 @@
 // func main() {
 //
 //
-// 	width := vfx.NewAnimationSequence(".zapps",
+// 	width := vfx.QuerySequence(".zapps",
 // 		vfx.TimeStat(vfx.StatConfig{
 // 			Duration: 1 * time.Second,
 // 			Delay:    2 * time.Second,

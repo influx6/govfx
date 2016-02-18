@@ -4,7 +4,8 @@ import (
 	"sync"
 	"sync/atomic"
 
-	"github.com/go-humble/detect"
+	"honnef.co/go/js/dom"
+
 	"github.com/influx6/faux/fque"
 	"github.com/influx6/faux/loop"
 )
@@ -54,7 +55,6 @@ type AnimationSequence struct {
 	done           int64
 	completedFrame int64
 	iniWriters     DeferWriters
-	selector       string
 	elementals     Elementals
 	totalCycles    int64
 	lastCycle      int64
@@ -66,15 +66,29 @@ type AnimationSequence struct {
 	frames         []Frame
 }
 
-// NewAnimationSequence defines a builder for building a animation frame.
-func NewAnimationSequence(selector string, stat Stats, s ...Sequence) Frame {
+// QuerySequence uses a selector to retrieve the desired elements needed
+// to be animated, returning the frame for the animation sequence.
+func QuerySequence(selector string, stat Stats, s ...Sequence) Frame {
+	return ElementalSequence(TransformElements(QuerySelectorAll(selector)), stat, s...)
+}
+
+// DOMSequence returns a new Frame transforming the lists of
+// accordingly dom.Elements into its desired elementals for the animation
+// sequence.
+func DOMSequence(elems []dom.Element, stat Stats, s ...Sequence) Frame {
+	return ElementalSequence(TransformElements(elems), stat, s...)
+}
+
+// ElementalSequence returns a new frame using the selected Elementals for
+// the animation sequence.
+func ElementalSequence(elems Elementals, stat Stats, s ...Sequence) Frame {
 	as := AnimationSequence{
-		selector:  selector,
-		sequences: s,
-		stat:      stat,
-		progress:  fque.New(),
-		begin:     fque.New(),
-		ended:     fque.New(),
+		sequences:  s,
+		stat:       stat,
+		progress:   fque.New(),
+		begin:      fque.New(),
+		ended:      fque.New(),
+		elementals: elems,
 	}
 
 	return &as
@@ -162,10 +176,6 @@ func (f *AnimationSequence) Inited() bool {
 func (f *AnimationSequence) Init(ms float64) DeferWriters {
 	if atomic.LoadInt64(&f.inited) > 0 {
 		return f.iniWriters
-	}
-
-	if detect.IsBrowser() {
-		f.elementals = QuerySelectorAll(f.selector)
 	}
 
 	var writers DeferWriters

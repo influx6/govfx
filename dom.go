@@ -56,6 +56,74 @@ func QuerySelector(selector string) Elemental {
 	return NewElement(Document().QuerySelector(selector), "")
 }
 
+// TransformElements returns a lists of Elementals if the argument provided
+// is either a dom.Element, a list of dom.Element or Elementals, transforming
+// them accordingly else returns nil.
+func TransformElements(elem interface{}) Elementals {
+
+	switch elem.(type) {
+	case Elementals:
+		return elem.(Elementals)
+	case Element:
+		return Elementals{elem.(Elemental)}
+	case dom.Element:
+		return Elementals{NewElement(elem.(dom.Element), "")}
+	case []dom.Element:
+		var m Elementals
+
+		for _, item := range elem.([]dom.Element) {
+			if item != nil {
+				m = append(m, NewElement(item, ""))
+			}
+		}
+
+		return m
+	}
+
+	return nil
+}
+
+// RootElement returns the root parent element that for the provided element.
+func RootElement(elem dom.Node) dom.Node {
+	var parent dom.Node
+
+	parent = elem
+
+	for parent.ParentNode() != nil {
+		parent = parent.ParentNode()
+	}
+
+	return parent
+}
+
+// HasShadowRoot returns true/false if the element type matches
+// the [object shadowRoot].
+func HasShadowRoot(elem dom.Node) bool {
+	rs := RootElement(elem)
+	return rs.Underlying().Call("toString").String() == "[object ShadowRoot]"
+}
+
+// ShadowRootDocument returns the DocumentFragment interface for the provided
+// shadowRoot.
+func ShadowRootDocument(elem dom.Node) dom.DocumentFragment {
+	rs := RootElement(elem)
+	return dom.WrapDocumentFragment(rs.Underlying())
+}
+
+// GetShadowRoot retrieves the shadowRoot connected to the pass dom.Node, else
+// returns false as the second argument if the node has no shadowRoot.
+func GetShadowRoot(elem dom.Node) (dom.DocumentFragment, bool) {
+	var root *js.Object
+
+	if root = elem.Underlying().Get("shadowRoot"); root == nil {
+		if root = elem.Underlying().Get("root"); root == nil {
+			return nil, false
+		}
+	}
+
+	return dom.WrapDocumentFragment(root), true
+}
+
 //==============================================================================
 
 // topScrollAttr defines the apppropriate property to retrieve the top scroll

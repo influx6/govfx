@@ -10,7 +10,10 @@ import (
 
 func main() {
 
-	width := govfx.QuerySequence(".zapps",
+	root := govfx.NewShadowRoot(govfx.QuerySelector(".root-shadow"))
+	elems := root.QuerySelectorAll(".zapps")
+
+	width := govfx.DOMSequence(elems,
 		govfx.NewStat(govfx.StatConfig{
 			Duration: 1 * time.Second,
 			Delay:    2 * time.Second,

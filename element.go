@@ -27,8 +27,13 @@ type Elementals []Elemental
 
 // NewElement returns an instancee of the Element struct.
 func NewElement(elem dom.Element, pseudo string) Elemental {
-	css, err := GetComputedStyleMap(elem, pseudo)
+	var shadow dom.DocumentFragment
 
+	if HasShadowRoot(elem) {
+		shadow = ShadowRootDocument(elem)
+	}
+
+	css, err := GetComputedStyleMap(elem, pseudo)
 	if err != nil {
 		panic(err)
 	}
@@ -48,7 +53,7 @@ func NewElement(elem dom.Element, pseudo string) Elemental {
 		Element: elem,
 		css:     css,
 		cssDiff: ds.NewTruthMap(ds.NewBoolStore()),
-		style:   NewStyleSync(id),
+		style:   NewStyleSync(id, shadow),
 	}
 
 	return &em
@@ -154,13 +159,15 @@ func (e *Element) Sync() {
 type StyleSync struct {
 	id   string
 	elem dom.Element // the corresponding style sheet used for syncing.
+	root dom.Node
 }
 
 // NewStyleSync returns a new style syncer.
-func NewStyleSync(id string) *StyleSync {
+func NewStyleSync(id string, root dom.Node) *StyleSync {
 	sync := StyleSync{
 		id:   id,
 		elem: Document().CreateElement("style"),
+		root: root,
 	}
 
 	sync.elem.SetAttribute("id", fmt.Sprintf("%s-styles", id))
@@ -172,12 +179,20 @@ func NewStyleSync(id string) *StyleSync {
 
 // Disconnect the style from the head node.
 func (s *StyleSync) Disconnect() {
-	Document().QuerySelector("head").RemoveChild(s.elem)
+	if s.root == nil {
+		Document().QuerySelector("head").RemoveChild(s.elem)
+		return
+	}
+	s.root.RemoveChild(s.elem)
 }
 
 // Connect adds the giving StyleSync internal style into the dom.
 func (s *StyleSync) Connect() {
-	Document().QuerySelector("head").AppendChild(s.elem)
+	if s.root == nil {
+		Document().QuerySelector("head").AppendChild(s.elem)
+		return
+	}
+	s.root.AppendChild(s.elem)
 }
 
 // Write re-writes the content of the style with the provided data.
