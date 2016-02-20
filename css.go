@@ -130,33 +130,34 @@ func (c ComputedStyleMap) Get(name string) (*ComputedStyle, error) {
 
 //==============================================================================
 
-// RGBA turns a hexademicmal color into rgba format.
-// Alpha values ranges from 0-100
-func RGBA(hex string, alpha int) string {
-	var rgba = "rgba(%d,%d,%d,%.2f)"
-
+// ToRGB turns a hexademicmal color into rgba format.
+// Returns the read, green and blue values as int.
+func ToRGB(hex string) (red, green, blue int) {
 	if strings.HasPrefix(hex, "#") {
 		hex = strings.TrimPrefix(hex, "#")
 	}
 
-	af := float64(alpha) / 100
-
-	var r, g, b int
-
 	// We are dealing with a 3 string hex.
 	if len(hex) < 6 {
 		parts := strings.Split(hex, "")
-		r = parseIntBase16(doubleString(parts[0]))
-		g = parseIntBase16(doubleString(parts[1]))
-		b = parseIntBase16(doubleString(parts[2]))
-		return fmt.Sprintf(rgba, r, g, b, af)
+		red = parseIntBase16(doubleString(parts[0]))
+		green = parseIntBase16(doubleString(parts[1]))
+		blue = parseIntBase16(doubleString(parts[2]))
+		return
 	}
 
-	r = parseIntBase16(hex[0:2])
-	g = parseIntBase16(hex[2:4])
-	b = parseIntBase16(hex[4:6])
+	red = parseIntBase16(hex[0:2])
+	green = parseIntBase16(hex[2:4])
+	blue = parseIntBase16(hex[4:6])
 
-	return fmt.Sprintf(rgba, r, g, b, af)
+	return
+}
+
+// RGBA turns a hexademicmal color into rgba format.
+// Alpha values ranges from 0-100
+func RGBA(hex string, alpha int) string {
+	r, g, b := ToRGB(hex)
+	return fmt.Sprintf("rgba(%d,%d,%d,%.2f)", r, g, b, alpha/100)
 }
 
 // Unit returns a valid unit type in the browser, if the supplied unit is
