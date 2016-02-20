@@ -35459,7 +35459,7 @@ $packages["regexp"] = (function() {
 	return $pkg;
 })();
 $packages["github.com/influx6/govfx"] = (function() {
-	var $pkg = {}, $init, bytes, errors, fmt, detect, js, ds, fque, loop, web, utils, dom, regexp, strconv, strings, sync, atomic, time, DeferWriterList, DeferWriterCache, loopCache, ComputedStyle, ComputedStyleMap, EaseIn, EaseInQuad, EaseOutQuad, EaseInOutQuad, Easing, EaseConfig, easingRegister, Elemental, Elementals, Element, StyleSync, FramePhase, Frame, AnimationSequence, ShadowRoot, Stats, StatConfig, Stat, DeferWriter, DeferWriters, Sequence, StoppableSequence, SequenceList, frameController, delayedWriter, frameBeginWriter, frameEndWriter, ptrType, ptrType$1, ptrType$2, sliceType, sliceType$1, ptrType$3, sliceType$2, arrayType, arrayType$1, funcType, sliceType$3, sliceType$4, sliceType$5, ptrType$4, sliceType$6, ptrType$5, mapType, mapType$1, ptrType$6, mapType$2, funcType$1, ptrType$7, funcType$2, mapType$3, sliceType$8, ptrType$8, ptrType$9, funcType$3, ptrType$10, ptrType$11, ptrType$12, ptrType$13, ptrType$14, ptrType$15, nodigits, window, doc, topScrollAttr, leftScrollAttr, useDocForOffset, rootName, expandable, engine, wcache, easingProviders, stopCache, _r, _r$1, _r$2, NewDeferWriterCache, newLoopCache, ParseInt, DigitsOnly, GetComputedStyle, GetComputedStylePriority, GetComputedStyleMap, Root, Window, Document, QuerySelector, TransformElements, RootElement, HasShadowRoot, ShadowRootDocument, GetShadowRoot, initScrollProperties, init, NewEasingRegister, NewElement, NewStyleSync, Animate, Stop, RegisterEasing, DOMSequence, ElementalSequence, Init, init$1, GetWriterCache, GetEasing, NewShadowRoot, GetIterations, NewStat;
+	var $pkg = {}, $init, bytes, errors, fmt, detect, js, ds, fque, loop, web, utils, dom, regexp, strconv, strings, sync, atomic, time, DeferWriterList, DeferWriterCache, loopCache, ComputedStyle, ComputedStyleMap, Linear, EaseIn, EaseOut, EaseInOut, Easing, EaseConfig, easingRegister, Elemental, Elementals, Element, StyleSync, FramePhase, Frame, AnimationSequence, ShadowRoot, Spline, Stats, StatConfig, Stat, DeferWriter, DeferWriters, Sequence, StoppableSequence, SequenceList, frameController, delayedWriter, frameBeginWriter, frameEndWriter, ptrType, ptrType$1, ptrType$2, sliceType, sliceType$1, ptrType$3, sliceType$2, arrayType, arrayType$1, funcType, sliceType$3, sliceType$4, sliceType$5, ptrType$4, sliceType$6, ptrType$5, mapType, mapType$1, ptrType$6, mapType$2, funcType$1, ptrType$7, funcType$2, mapType$3, sliceType$8, ptrType$8, ptrType$9, funcType$3, ptrType$10, ptrType$11, ptrType$12, ptrType$13, ptrType$14, ptrType$15, ptrType$16, nodigits, window, doc, topScrollAttr, leftScrollAttr, useDocForOffset, rootName, expandable, engine, wcache, easingProviders, stopCache, _r, _r$1, _r$2, NewDeferWriterCache, newLoopCache, ParseInt, DigitsOnly, GetComputedStyle, GetComputedStylePriority, GetComputedStyleMap, Root, Window, Document, QuerySelector, TransformElements, RootElement, HasShadowRoot, ShadowRootDocument, GetShadowRoot, initScrollProperties, init, NewEasingRegister, NewElement, NewStyleSync, Animate, Stop, RegisterEasing, DOMSequence, ElementalSequence, Init, init$1, GetWriterCache, GetEasing, NewShadowRoot, NewSpline, GetSlope, CalculateBezier, a, b, c, GetIterations, NewStat;
 	bytes = $packages["bytes"];
 	errors = $packages["errors"];
 	fmt = $packages["fmt"];
@@ -35511,25 +35511,25 @@ $packages["github.com/influx6/govfx"] = (function() {
 		this.Priority = Priority_;
 	});
 	ComputedStyleMap = $pkg.ComputedStyleMap = $newType(4, $kindMap, "govfx.ComputedStyleMap", "ComputedStyleMap", "github.com/influx6/govfx", null);
+	Linear = $pkg.Linear = $newType(0, $kindStruct, "govfx.Linear", "Linear", "github.com/influx6/govfx", function() {
+		this.$val = this;
+		if (arguments.length === 0) {
+			return;
+		}
+	});
 	EaseIn = $pkg.EaseIn = $newType(0, $kindStruct, "govfx.EaseIn", "EaseIn", "github.com/influx6/govfx", function() {
 		this.$val = this;
 		if (arguments.length === 0) {
 			return;
 		}
 	});
-	EaseInQuad = $pkg.EaseInQuad = $newType(0, $kindStruct, "govfx.EaseInQuad", "EaseInQuad", "github.com/influx6/govfx", function() {
+	EaseOut = $pkg.EaseOut = $newType(0, $kindStruct, "govfx.EaseOut", "EaseOut", "github.com/influx6/govfx", function() {
 		this.$val = this;
 		if (arguments.length === 0) {
 			return;
 		}
 	});
-	EaseOutQuad = $pkg.EaseOutQuad = $newType(0, $kindStruct, "govfx.EaseOutQuad", "EaseOutQuad", "github.com/influx6/govfx", function() {
-		this.$val = this;
-		if (arguments.length === 0) {
-			return;
-		}
-	});
-	EaseInOutQuad = $pkg.EaseInOutQuad = $newType(0, $kindStruct, "govfx.EaseInOutQuad", "EaseInOutQuad", "github.com/influx6/govfx", function() {
+	EaseInOut = $pkg.EaseInOut = $newType(0, $kindStruct, "govfx.EaseInOut", "EaseInOut", "github.com/influx6/govfx", function() {
 		this.$val = this;
 		if (arguments.length === 0) {
 			return;
@@ -35640,6 +35640,22 @@ $packages["github.com/influx6/govfx"] = (function() {
 		this.DocumentFragment = DocumentFragment_;
 		this.parent = parent_;
 	});
+	Spline = $pkg.Spline = $newType(0, $kindStruct, "govfx.Spline", "Spline", "github.com/influx6/govfx", function(x1_, x2_, y1_, y2_, optimize_) {
+		this.$val = this;
+		if (arguments.length === 0) {
+			this.x1 = 0;
+			this.x2 = 0;
+			this.y1 = 0;
+			this.y2 = 0;
+			this.optimize = false;
+			return;
+		}
+		this.x1 = x1_;
+		this.x2 = x2_;
+		this.y1 = y1_;
+		this.y2 = y2_;
+		this.optimize = optimize_;
+	});
 	Stats = $pkg.Stats = $newType(8, $kindInterface, "govfx.Stats", "Stats", "github.com/influx6/govfx", null);
 	StatConfig = $pkg.StatConfig = $newType(0, $kindStruct, "govfx.StatConfig", "StatConfig", "github.com/influx6/govfx", function(Duration_, Delay_, Easing_, Loop_, Reverse_, Optimize_) {
 		this.$val = this;
@@ -35745,10 +35761,11 @@ $packages["github.com/influx6/govfx"] = (function() {
 	funcType$3 = $funcType([Frame], [], false);
 	ptrType$10 = $ptrType(AnimationSequence);
 	ptrType$11 = $ptrType(ShadowRoot);
-	ptrType$12 = $ptrType(Stat);
-	ptrType$13 = $ptrType(delayedWriter);
-	ptrType$14 = $ptrType(frameBeginWriter);
-	ptrType$15 = $ptrType(frameEndWriter);
+	ptrType$12 = $ptrType(Spline);
+	ptrType$13 = $ptrType(Stat);
+	ptrType$14 = $ptrType(delayedWriter);
+	ptrType$15 = $ptrType(frameBeginWriter);
+	ptrType$16 = $ptrType(frameEndWriter);
 	NewDeferWriterCache = function() {
 		var $ptr, wc;
 		wc = new DeferWriterCache.ptr(new sync.RWMutex.ptr(new sync.Mutex.ptr(0, 0), 0, 0, 0, 0), {});
@@ -35996,23 +36013,23 @@ $packages["github.com/influx6/govfx"] = (function() {
 	};
 	$pkg.GetComputedStyleMap = GetComputedStyleMap;
 	ComputedStyleMap.prototype.Add = function(name, value, priority) {
-		var $ptr, _key, c, name, priority, value;
-		c = this.$val;
-		_key = name; (c || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key)] = { k: _key, v: new ComputedStyle.ptr(name, value, priority) };
+		var $ptr, _key, c$1, name, priority, value;
+		c$1 = this.$val;
+		_key = name; (c$1 || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key)] = { k: _key, v: new ComputedStyle.ptr(name, value, priority) };
 	};
 	$ptrType(ComputedStyleMap).prototype.Add = function(name, value, priority) { return new ComputedStyleMap(this.$get()).Add(name, value, priority); };
 	ComputedStyleMap.prototype.Has = function(name) {
-		var $ptr, _entry, _tuple, c, name, ok;
-		c = this.$val;
-		_tuple = (_entry = c[$String.keyFor(name)], _entry !== undefined ? [_entry.v, true] : [ptrType$2.nil, false]);
+		var $ptr, _entry, _tuple, c$1, name, ok;
+		c$1 = this.$val;
+		_tuple = (_entry = c$1[$String.keyFor(name)], _entry !== undefined ? [_entry.v, true] : [ptrType$2.nil, false]);
 		ok = _tuple[1];
 		return ok;
 	};
 	$ptrType(ComputedStyleMap).prototype.Has = function(name) { return new ComputedStyleMap(this.$get()).Has(name); };
 	ComputedStyleMap.prototype.Get = function(name) {
-		var $ptr, _entry, _tuple, c, cs, name, ok;
-		c = this.$val;
-		_tuple = (_entry = c[$String.keyFor(name)], _entry !== undefined ? [_entry.v, true] : [ptrType$2.nil, false]);
+		var $ptr, _entry, _tuple, c$1, cs, name, ok;
+		c$1 = this.$val;
+		_tuple = (_entry = c$1[$String.keyFor(name)], _entry !== undefined ? [_entry.v, true] : [ptrType$2.nil, false]);
 		cs = _tuple[0];
 		ok = _tuple[1];
 		if (!ok) {
@@ -36176,55 +36193,54 @@ $packages["github.com/influx6/govfx"] = (function() {
 			initScrollProperties();
 		}
 	};
-	EaseIn.ptr.prototype.Ease = function(c) {
-		var $ptr, _r$3, c, e, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r$3 = $f._r$3; c = $f.c; e = $f.e; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		c = $clone(c, EaseConfig);
+	Linear.ptr.prototype.Ease = function(c$1) {
+		var $ptr, _r$3, _r$4, c$1, l, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r$3 = $f._r$3; _r$4 = $f._r$4; c$1 = $f.c$1; l = $f.l; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		c$1 = $clone(c$1, EaseConfig);
+		l = $clone(this, Linear);
+		_r$3 = c$1.Stat.DeltaIteration(); /* */ $s = 1; case 1: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+		_r$4 = $pkg.LinearSpline.X(_r$3); /* */ $s = 2; case 2: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+		/* */ $s = 3; case 3:
+		return c$1.DeltaValue * _r$4 + c$1.CurrentValue;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Linear.ptr.prototype.Ease }; } $f.$ptr = $ptr; $f._r$3 = _r$3; $f._r$4 = _r$4; $f.c$1 = c$1; $f.l = l; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	Linear.prototype.Ease = function(c$1) { return this.$val.Ease(c$1); };
+	EaseIn.ptr.prototype.Ease = function(c$1) {
+		var $ptr, _r$3, _r$4, c$1, e, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r$3 = $f._r$3; _r$4 = $f._r$4; c$1 = $f.c$1; e = $f.e; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		c$1 = $clone(c$1, EaseConfig);
 		e = $clone(this, EaseIn);
-		_r$3 = c.Stat.DeltaIteration(); /* */ $s = 1; case 1: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
-		/* */ $s = 2; case 2:
-		return (c.DeltaValue * _r$3) + c.CurrentValue;
-		/* */ } return; } if ($f === undefined) { $f = { $blk: EaseIn.ptr.prototype.Ease }; } $f.$ptr = $ptr; $f._r$3 = _r$3; $f.c = c; $f.e = e; $f.$s = $s; $f.$r = $r; return $f;
+		_r$3 = c$1.Stat.DeltaIteration(); /* */ $s = 1; case 1: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+		_r$4 = $pkg.EaseInSpline.X(_r$3); /* */ $s = 2; case 2: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+		/* */ $s = 3; case 3:
+		return c$1.DeltaValue * _r$4 + c$1.CurrentValue;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: EaseIn.ptr.prototype.Ease }; } $f.$ptr = $ptr; $f._r$3 = _r$3; $f._r$4 = _r$4; $f.c$1 = c$1; $f.e = e; $f.$s = $s; $f.$r = $r; return $f;
 	};
-	EaseIn.prototype.Ease = function(c) { return this.$val.Ease(c); };
-	EaseInQuad.ptr.prototype.Ease = function(c) {
-		var $ptr, _r$3, c, e, ms, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r$3 = $f._r$3; c = $f.c; e = $f.e; ms = $f.ms; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		c = $clone(c, EaseConfig);
-		e = $clone(this, EaseInQuad);
-		_r$3 = c.Stat.DeltaIteration(); /* */ $s = 1; case 1: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
-		ms = _r$3;
-		return (c.DeltaValue * ms * ms) + c.CurrentValue;
-		/* */ } return; } if ($f === undefined) { $f = { $blk: EaseInQuad.ptr.prototype.Ease }; } $f.$ptr = $ptr; $f._r$3 = _r$3; $f.c = c; $f.e = e; $f.ms = ms; $f.$s = $s; $f.$r = $r; return $f;
+	EaseIn.prototype.Ease = function(c$1) { return this.$val.Ease(c$1); };
+	EaseOut.ptr.prototype.Ease = function(c$1) {
+		var $ptr, _r$3, _r$4, c$1, e, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r$3 = $f._r$3; _r$4 = $f._r$4; c$1 = $f.c$1; e = $f.e; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		c$1 = $clone(c$1, EaseConfig);
+		e = $clone(this, EaseOut);
+		_r$3 = c$1.Stat.DeltaIteration(); /* */ $s = 1; case 1: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+		_r$4 = $pkg.EaseOutSpline.X(_r$3); /* */ $s = 2; case 2: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+		/* */ $s = 3; case 3:
+		return c$1.DeltaValue * _r$4 + c$1.CurrentValue;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: EaseOut.ptr.prototype.Ease }; } $f.$ptr = $ptr; $f._r$3 = _r$3; $f._r$4 = _r$4; $f.c$1 = c$1; $f.e = e; $f.$s = $s; $f.$r = $r; return $f;
 	};
-	EaseInQuad.prototype.Ease = function(c) { return this.$val.Ease(c); };
-	EaseOutQuad.ptr.prototype.Ease = function(c) {
-		var $ptr, _r$3, _r$4, c, e, ms, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r$3 = $f._r$3; _r$4 = $f._r$4; c = $f.c; e = $f.e; ms = $f.ms; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		c = $clone(c, EaseConfig);
-		e = $clone(this, EaseOutQuad);
-		_r$3 = c.Stat.DeltaIteration(); /* */ $s = 1; case 1: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
-		_r$4 = c.Stat.CurrentIteration(); /* */ $s = 2; case 2: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
-		ms = (_r$3) * (_r$4 - 2 >> 0);
-		return ((c.DeltaValue * -1) * ms) + c.CurrentValue;
-		/* */ } return; } if ($f === undefined) { $f = { $blk: EaseOutQuad.ptr.prototype.Ease }; } $f.$ptr = $ptr; $f._r$3 = _r$3; $f._r$4 = _r$4; $f.c = c; $f.e = e; $f.ms = ms; $f.$s = $s; $f.$r = $r; return $f;
+	EaseOut.prototype.Ease = function(c$1) { return this.$val.Ease(c$1); };
+	EaseInOut.ptr.prototype.Ease = function(c$1) {
+		var $ptr, _r$3, _r$4, c$1, e, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r$3 = $f._r$3; _r$4 = $f._r$4; c$1 = $f.c$1; e = $f.e; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		c$1 = $clone(c$1, EaseConfig);
+		e = $clone(this, EaseInOut);
+		_r$3 = c$1.Stat.DeltaIteration(); /* */ $s = 1; case 1: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+		_r$4 = $pkg.EaseInOutSpline.X(_r$3); /* */ $s = 2; case 2: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+		/* */ $s = 3; case 3:
+		return c$1.DeltaValue * _r$4 + c$1.CurrentValue;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: EaseInOut.ptr.prototype.Ease }; } $f.$ptr = $ptr; $f._r$3 = _r$3; $f._r$4 = _r$4; $f.c$1 = c$1; $f.e = e; $f.$s = $s; $f.$r = $r; return $f;
 	};
-	EaseOutQuad.prototype.Ease = function(c) { return this.$val.Ease(c); };
-	EaseInOutQuad.ptr.prototype.Ease = function(c) {
-		var $ptr, _r$3, c, diff, e, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r$3 = $f._r$3; c = $f.c; diff = $f.diff; e = $f.e; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		c = $clone(c, EaseConfig);
-		e = $clone(this, EaseInOutQuad);
-		_r$3 = c.Stat.DeltaIteration(); /* */ $s = 1; case 1: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
-		diff = _r$3;
-		if (diff < 1) {
-			return (c.DeltaValue / 2) * diff * diff;
-		}
-		diff = diff - (1);
-		return (-1 * c.DeltaValue) * ((diff) * (diff - 2) - 1) + c.CurrentValue;
-		/* */ } return; } if ($f === undefined) { $f = { $blk: EaseInOutQuad.ptr.prototype.Ease }; } $f.$ptr = $ptr; $f._r$3 = _r$3; $f.c = c; $f.diff = diff; $f.e = e; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	EaseInOutQuad.prototype.Ease = function(c) { return this.$val.Ease(c); };
+	EaseInOut.prototype.Ease = function(c$1) { return this.$val.Ease(c$1); };
 	NewEasingRegister = function() {
 		var $ptr, esr;
 		esr = new easingRegister.ptr(new sync.RWMutex.ptr(new sync.Mutex.ptr(0, 0), 0, 0, 0, 0), {});
@@ -36889,10 +36905,10 @@ $packages["github.com/influx6/govfx"] = (function() {
 		var $ptr, x, x$1, x$2, x$3, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; x = $f.x; x$1 = $f.x$1; x$2 = $f.x$2; x$3 = $f.x$3; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		Init(web.Loop);
-		$r = RegisterEasing("ease-in", (x = new EaseIn.ptr(), new x.constructor.elem(x))); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = RegisterEasing("ease-in-quad", (x$1 = new EaseInQuad.ptr(), new x$1.constructor.elem(x$1))); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = RegisterEasing("ease-out-quad", (x$2 = new EaseOutQuad.ptr(), new x$2.constructor.elem(x$2))); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = RegisterEasing("ease-in-out-quad", (x$3 = new EaseInOutQuad.ptr(), new x$3.constructor.elem(x$3))); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = RegisterEasing("linear", (x = new Linear.ptr(), new x.constructor.elem(x))); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = RegisterEasing("ease-in", (x$1 = new EaseIn.ptr(), new x$1.constructor.elem(x$1))); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = RegisterEasing("ease-out", (x$2 = new EaseOut.ptr(), new x$2.constructor.elem(x$2))); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = RegisterEasing("ease-in-out", (x$3 = new EaseInOut.ptr(), new x$3.constructor.elem(x$3))); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: init$1 }; } $f.$ptr = $ptr; $f.x = x; $f.x$1 = x$1; $f.x$2 = x$2; $f.x$3 = x$3; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	GetWriterCache = function() {
@@ -36937,6 +36953,65 @@ $packages["github.com/influx6/govfx"] = (function() {
 		return s.parent;
 	};
 	ShadowRoot.prototype.Parent = function() { return this.$val.Parent(); };
+	NewSpline = function(x, y, x2, y2) {
+		var $ptr, ss, x, x2, y, y2;
+		ss = new Spline.ptr(x, x2, y, y2, false);
+		return ss;
+	};
+	$pkg.NewSpline = NewSpline;
+	Spline.ptr.prototype.X = function(t) {
+		var $ptr, s, t;
+		s = this;
+		if (s.optimize) {
+			return t;
+		}
+		if ((s.x1 === s.y1) && (s.x2 === s.y2)) {
+			s.optimize = true;
+			return t;
+		}
+		return CalculateBezier(s.GetTimeForX(t), s.y1, s.y2);
+	};
+	Spline.prototype.X = function(t) { return this.$val.X(t); };
+	Spline.ptr.prototype.GetTimeForX = function(aX) {
+		var $ptr, aGuessT, aX, currentSlope, currentX, i, s;
+		s = this;
+		aGuessT = aX;
+		i = 0;
+		while (true) {
+			if (!(i < 4)) { break; }
+			currentSlope = GetSlope(aGuessT, s.x1, s.y1);
+			if (currentSlope === 0) {
+				return aGuessT;
+			}
+			currentX = CalculateBezier(aGuessT, s.x1, s.x2) - aX;
+			aGuessT = aGuessT - (currentX / currentSlope);
+			i = i + (1) >> 0;
+		}
+		return aGuessT;
+	};
+	Spline.prototype.GetTimeForX = function(aX) { return this.$val.GetTimeForX(aX); };
+	GetSlope = function(aT, aA1, aA2) {
+		var $ptr, aA1, aA2, aT;
+		return 3 * a(aA1, aA2) * aT * aT + 2 * b(aA1, aA2) * aT + c(aA1);
+	};
+	$pkg.GetSlope = GetSlope;
+	CalculateBezier = function(aT, aA1, aA2) {
+		var $ptr, aA1, aA2, aT;
+		return ((a(aA1, aA2) * aT + b(aA1, aA2)) * aT + c(aA1)) * aT;
+	};
+	$pkg.CalculateBezier = CalculateBezier;
+	a = function(aA1, aA2) {
+		var $ptr, aA1, aA2;
+		return 1 - 3 * aA2 + 3 * aA1;
+	};
+	b = function(aA1, aA2) {
+		var $ptr, aA1, aA2;
+		return 3 * aA2 - 6 * aA1;
+	};
+	c = function(aA1) {
+		var $ptr, aA1;
+		return 3 * aA1;
+	};
 	GetIterations = function(ms) {
 		var $ptr, ms;
 		return $mul64($pkg.AnimationStepsPerSec, new $Int64(0, ms.Seconds()));
@@ -37140,29 +37215,30 @@ $packages["github.com/influx6/govfx"] = (function() {
 	ptrType$5.methods = [{prop: "Store", name: "Store", pkg: "", typ: $funcType([Frame, $Int, sliceType$6], [], true)}, {prop: "Writers", name: "Writers", pkg: "", typ: $funcType([Frame, $Int], [DeferWriters], false)}, {prop: "ClearIteration", name: "ClearIteration", pkg: "", typ: $funcType([Frame, $Int], [], false)}, {prop: "Clear", name: "Clear", pkg: "", typ: $funcType([Frame], [], false)}, {prop: "has", name: "has", pkg: "github.com/influx6/govfx", typ: $funcType([Frame], [$Bool], false)}, {prop: "get", name: "get", pkg: "github.com/influx6/govfx", typ: $funcType([Frame], [DeferWriterList], false)}, {prop: "remove", name: "remove", pkg: "github.com/influx6/govfx", typ: $funcType([Frame], [], false)}];
 	ptrType.methods = [{prop: "Get", name: "Get", pkg: "", typ: $funcType([Frame], [loop.Looper], false)}, {prop: "Add", name: "Add", pkg: "", typ: $funcType([Frame, loop.Looper], [], false)}, {prop: "Delete", name: "Delete", pkg: "", typ: $funcType([Frame], [], false)}];
 	ComputedStyleMap.methods = [{prop: "Add", name: "Add", pkg: "", typ: $funcType([$String, $String, $Bool], [], false)}, {prop: "Has", name: "Has", pkg: "", typ: $funcType([$String], [$Bool], false)}, {prop: "Get", name: "Get", pkg: "", typ: $funcType([$String], [ptrType$2, $error], false)}];
+	Linear.methods = [{prop: "Ease", name: "Ease", pkg: "", typ: $funcType([EaseConfig], [$Float64], false)}];
 	EaseIn.methods = [{prop: "Ease", name: "Ease", pkg: "", typ: $funcType([EaseConfig], [$Float64], false)}];
-	EaseInQuad.methods = [{prop: "Ease", name: "Ease", pkg: "", typ: $funcType([EaseConfig], [$Float64], false)}];
-	EaseOutQuad.methods = [{prop: "Ease", name: "Ease", pkg: "", typ: $funcType([EaseConfig], [$Float64], false)}];
-	EaseInOutQuad.methods = [{prop: "Ease", name: "Ease", pkg: "", typ: $funcType([EaseConfig], [$Float64], false)}];
+	EaseOut.methods = [{prop: "Ease", name: "Ease", pkg: "", typ: $funcType([EaseConfig], [$Float64], false)}];
+	EaseInOut.methods = [{prop: "Ease", name: "Ease", pkg: "", typ: $funcType([EaseConfig], [$Float64], false)}];
 	ptrType$6.methods = [{prop: "Get", name: "Get", pkg: "", typ: $funcType([$String], [Easing], false)}, {prop: "Add", name: "Add", pkg: "", typ: $funcType([$String, Easing], [], false)}];
 	ptrType$9.methods = [{prop: "Read", name: "Read", pkg: "", typ: $funcType([$String], [$String, $Bool, $Bool], false)}, {prop: "Write", name: "Write", pkg: "", typ: $funcType([$String, $String, $Bool], [], false)}, {prop: "End", name: "End", pkg: "", typ: $funcType([], [], false)}, {prop: "Sync", name: "Sync", pkg: "", typ: $funcType([], [], false)}];
 	ptrType$3.methods = [{prop: "Disconnect", name: "Disconnect", pkg: "", typ: $funcType([], [], false)}, {prop: "Connect", name: "Connect", pkg: "", typ: $funcType([], [], false)}, {prop: "Write", name: "Write", pkg: "", typ: $funcType([$String], [], false)}];
 	ptrType$10.methods = [{prop: "Then", name: "Then", pkg: "", typ: $funcType([Frame], [Frame], false)}, {prop: "IsOver", name: "IsOver", pkg: "", typ: $funcType([], [$Bool], false)}, {prop: "OnProgress", name: "OnProgress", pkg: "", typ: $funcType([funcType$3], [loop.Looper], false)}, {prop: "OnBegin", name: "OnBegin", pkg: "", typ: $funcType([funcType$3], [loop.Looper], false)}, {prop: "OnEnd", name: "OnEnd", pkg: "", typ: $funcType([funcType$3], [loop.Looper], false)}, {prop: "ResetListeners", name: "ResetListeners", pkg: "", typ: $funcType([], [], false)}, {prop: "Reset", name: "Reset", pkg: "", typ: $funcType([], [], false)}, {prop: "End", name: "End", pkg: "", typ: $funcType([], [], false)}, {prop: "Inited", name: "Inited", pkg: "", typ: $funcType([], [$Bool], false)}, {prop: "Init", name: "Init", pkg: "", typ: $funcType([$Float64], [DeferWriters], false)}, {prop: "LastCycles", name: "LastCycles", pkg: "", typ: $funcType([], [$Int], false)}, {prop: "Cycles", name: "Cycles", pkg: "", typ: $funcType([], [$Int], false)}, {prop: "BeginWriting", name: "BeginWriting", pkg: "", typ: $funcType([], [], false)}, {prop: "DoneWriting", name: "DoneWriting", pkg: "", typ: $funcType([], [], false)}, {prop: "Continue", name: "Continue", pkg: "", typ: $funcType([], [$Bool], false)}, {prop: "Sync", name: "Sync", pkg: "", typ: $funcType([], [], false)}, {prop: "Phase", name: "Phase", pkg: "", typ: $funcType([], [FramePhase], false)}, {prop: "Stats", name: "Stats", pkg: "", typ: $funcType([], [Stats], false)}, {prop: "Sequence", name: "Sequence", pkg: "", typ: $funcType([$Float64], [DeferWriters], false)}, {prop: "infiniteLoop", name: "infiniteLoop", pkg: "github.com/influx6/govfx", typ: $funcType([], [$Bool], false)}];
 	ptrType$11.methods = [{prop: "Parent", name: "Parent", pkg: "", typ: $funcType([], [dom.Node], false)}];
-	ptrType$12.methods = [{prop: "Clone", name: "Clone", pkg: "", typ: $funcType([], [Stats], false)}, {prop: "Delay", name: "Delay", pkg: "", typ: $funcType([], [time.Duration], false)}, {prop: "Easing", name: "Easing", pkg: "", typ: $funcType([], [$String], false)}, {prop: "Delta", name: "Delta", pkg: "", typ: $funcType([], [$Float64], false)}, {prop: "Next", name: "Next", pkg: "", typ: $funcType([$Float64], [], false)}, {prop: "NextIteration", name: "NextIteration", pkg: "", typ: $funcType([$Float64], [], false)}, {prop: "PreviousIteration", name: "PreviousIteration", pkg: "", typ: $funcType([$Float64], [], false)}, {prop: "Optimized", name: "Optimized", pkg: "", typ: $funcType([], [$Bool], false)}, {prop: "IsFirstDone", name: "IsFirstDone", pkg: "", typ: $funcType([], [$Bool], false)}, {prop: "IsDone", name: "IsDone", pkg: "", typ: $funcType([], [$Bool], false)}, {prop: "Reversed", name: "Reversed", pkg: "", typ: $funcType([], [$Bool], false)}, {prop: "Reversible", name: "Reversible", pkg: "", typ: $funcType([], [$Bool], false)}, {prop: "CompletedFirstTransition", name: "CompletedFirstTransition", pkg: "", typ: $funcType([], [$Bool], false)}, {prop: "TotalLoops", name: "TotalLoops", pkg: "", typ: $funcType([], [$Int], false)}, {prop: "Loop", name: "Loop", pkg: "", typ: $funcType([], [$Bool], false)}, {prop: "TotalIterations", name: "TotalIterations", pkg: "", typ: $funcType([], [$Int], false)}, {prop: "CurrentIteration", name: "CurrentIteration", pkg: "", typ: $funcType([], [$Int], false)}, {prop: "DeltaIteration", name: "DeltaIteration", pkg: "", typ: $funcType([], [$Float64], false)}];
+	ptrType$12.methods = [{prop: "X", name: "X", pkg: "", typ: $funcType([$Float64], [$Float64], false)}, {prop: "GetTimeForX", name: "GetTimeForX", pkg: "", typ: $funcType([$Float64], [$Float64], false)}];
+	ptrType$13.methods = [{prop: "Clone", name: "Clone", pkg: "", typ: $funcType([], [Stats], false)}, {prop: "Delay", name: "Delay", pkg: "", typ: $funcType([], [time.Duration], false)}, {prop: "Easing", name: "Easing", pkg: "", typ: $funcType([], [$String], false)}, {prop: "Delta", name: "Delta", pkg: "", typ: $funcType([], [$Float64], false)}, {prop: "Next", name: "Next", pkg: "", typ: $funcType([$Float64], [], false)}, {prop: "NextIteration", name: "NextIteration", pkg: "", typ: $funcType([$Float64], [], false)}, {prop: "PreviousIteration", name: "PreviousIteration", pkg: "", typ: $funcType([$Float64], [], false)}, {prop: "Optimized", name: "Optimized", pkg: "", typ: $funcType([], [$Bool], false)}, {prop: "IsFirstDone", name: "IsFirstDone", pkg: "", typ: $funcType([], [$Bool], false)}, {prop: "IsDone", name: "IsDone", pkg: "", typ: $funcType([], [$Bool], false)}, {prop: "Reversed", name: "Reversed", pkg: "", typ: $funcType([], [$Bool], false)}, {prop: "Reversible", name: "Reversible", pkg: "", typ: $funcType([], [$Bool], false)}, {prop: "CompletedFirstTransition", name: "CompletedFirstTransition", pkg: "", typ: $funcType([], [$Bool], false)}, {prop: "TotalLoops", name: "TotalLoops", pkg: "", typ: $funcType([], [$Int], false)}, {prop: "Loop", name: "Loop", pkg: "", typ: $funcType([], [$Bool], false)}, {prop: "TotalIterations", name: "TotalIterations", pkg: "", typ: $funcType([], [$Int], false)}, {prop: "CurrentIteration", name: "CurrentIteration", pkg: "", typ: $funcType([], [$Int], false)}, {prop: "DeltaIteration", name: "DeltaIteration", pkg: "", typ: $funcType([], [$Float64], false)}];
 	DeferWriters.methods = [{prop: "Write", name: "Write", pkg: "", typ: $funcType([], [], false)}];
-	ptrType$13.methods = [{prop: "Write", name: "Write", pkg: "", typ: $funcType([], [], false)}];
 	ptrType$14.methods = [{prop: "Write", name: "Write", pkg: "", typ: $funcType([], [], false)}];
 	ptrType$15.methods = [{prop: "Write", name: "Write", pkg: "", typ: $funcType([], [], false)}];
+	ptrType$16.methods = [{prop: "Write", name: "Write", pkg: "", typ: $funcType([], [], false)}];
 	DeferWriterList.init(DeferWriters);
 	DeferWriterCache.init([{prop: "wl", name: "wl", pkg: "github.com/influx6/govfx", typ: sync.RWMutex, tag: ""}, {prop: "w", name: "w", pkg: "github.com/influx6/govfx", typ: mapType, tag: ""}]);
 	loopCache.init([{prop: "rl", name: "rl", pkg: "github.com/influx6/govfx", typ: sync.RWMutex, tag: ""}, {prop: "c", name: "c", pkg: "github.com/influx6/govfx", typ: mapType$1, tag: ""}]);
 	ComputedStyle.init([{prop: "Name", name: "Name", pkg: "", typ: $String, tag: ""}, {prop: "Value", name: "Value", pkg: "", typ: $String, tag: ""}, {prop: "Priority", name: "Priority", pkg: "", typ: $Bool, tag: ""}]);
 	ComputedStyleMap.init($String, ptrType$2);
+	Linear.init([]);
 	EaseIn.init([]);
-	EaseInQuad.init([]);
-	EaseOutQuad.init([]);
-	EaseInOutQuad.init([]);
+	EaseOut.init([]);
+	EaseInOut.init([]);
 	Easing.init([{prop: "Ease", name: "Ease", pkg: "", typ: $funcType([EaseConfig], [$Float64], false)}]);
 	EaseConfig.init([{prop: "Stat", name: "Stat", pkg: "", typ: Stats, tag: ""}, {prop: "DeltaValue", name: "DeltaValue", pkg: "", typ: $Float64, tag: ""}, {prop: "CurrentValue", name: "CurrentValue", pkg: "", typ: $Float64, tag: ""}]);
 	easingRegister.init([{prop: "rl", name: "rl", pkg: "github.com/influx6/govfx", typ: sync.RWMutex, tag: ""}, {prop: "c", name: "c", pkg: "github.com/influx6/govfx", typ: mapType$2, tag: ""}]);
@@ -37173,6 +37249,7 @@ $packages["github.com/influx6/govfx"] = (function() {
 	Frame.init([{prop: "Cycles", name: "Cycles", pkg: "", typ: $funcType([], [$Int], false)}, {prop: "End", name: "End", pkg: "", typ: $funcType([], [], false)}, {prop: "Init", name: "Init", pkg: "", typ: $funcType([$Float64], [DeferWriters], false)}, {prop: "Inited", name: "Inited", pkg: "", typ: $funcType([], [$Bool], false)}, {prop: "IsOver", name: "IsOver", pkg: "", typ: $funcType([], [$Bool], false)}, {prop: "LastCycles", name: "LastCycles", pkg: "", typ: $funcType([], [$Int], false)}, {prop: "OnBegin", name: "OnBegin", pkg: "", typ: $funcType([funcType$3], [loop.Looper], false)}, {prop: "OnEnd", name: "OnEnd", pkg: "", typ: $funcType([funcType$3], [loop.Looper], false)}, {prop: "OnProgress", name: "OnProgress", pkg: "", typ: $funcType([funcType$3], [loop.Looper], false)}, {prop: "Phase", name: "Phase", pkg: "", typ: $funcType([], [FramePhase], false)}, {prop: "Reset", name: "Reset", pkg: "", typ: $funcType([], [], false)}, {prop: "ResetListeners", name: "ResetListeners", pkg: "", typ: $funcType([], [], false)}, {prop: "Sequence", name: "Sequence", pkg: "", typ: $funcType([$Float64], [DeferWriters], false)}, {prop: "Stats", name: "Stats", pkg: "", typ: $funcType([], [Stats], false)}, {prop: "Sync", name: "Sync", pkg: "", typ: $funcType([], [], false)}, {prop: "Then", name: "Then", pkg: "", typ: $funcType([Frame], [Frame], false)}]);
 	AnimationSequence.init([{prop: "sequences", name: "sequences", pkg: "github.com/influx6/govfx", typ: SequenceList, tag: ""}, {prop: "stoppers", name: "stoppers", pkg: "github.com/influx6/govfx", typ: sliceType$4, tag: ""}, {prop: "stat", name: "stat", pkg: "github.com/influx6/govfx", typ: Stats, tag: ""}, {prop: "inited", name: "inited", pkg: "github.com/influx6/govfx", typ: $Int64, tag: ""}, {prop: "done", name: "done", pkg: "github.com/influx6/govfx", typ: $Int64, tag: ""}, {prop: "completedFrame", name: "completedFrame", pkg: "github.com/influx6/govfx", typ: $Int64, tag: ""}, {prop: "iniWriters", name: "iniWriters", pkg: "github.com/influx6/govfx", typ: DeferWriters, tag: ""}, {prop: "elementals", name: "elementals", pkg: "github.com/influx6/govfx", typ: Elementals, tag: ""}, {prop: "totalCycles", name: "totalCycles", pkg: "github.com/influx6/govfx", typ: $Int64, tag: ""}, {prop: "lastCycle", name: "lastCycle", pkg: "github.com/influx6/govfx", typ: $Int64, tag: ""}, {prop: "writesOn", name: "writesOn", pkg: "github.com/influx6/govfx", typ: $Int64, tag: ""}, {prop: "progress", name: "progress", pkg: "github.com/influx6/govfx", typ: fque.Qu, tag: ""}, {prop: "begin", name: "begin", pkg: "github.com/influx6/govfx", typ: fque.Qu, tag: ""}, {prop: "ended", name: "ended", pkg: "github.com/influx6/govfx", typ: fque.Qu, tag: ""}, {prop: "fl", name: "fl", pkg: "github.com/influx6/govfx", typ: sync.RWMutex, tag: ""}, {prop: "frames", name: "frames", pkg: "github.com/influx6/govfx", typ: sliceType$5, tag: ""}]);
 	ShadowRoot.init([{prop: "DocumentFragment", name: "", pkg: "", typ: dom.DocumentFragment, tag: ""}, {prop: "parent", name: "parent", pkg: "github.com/influx6/govfx", typ: dom.Node, tag: ""}]);
+	Spline.init([{prop: "x1", name: "x1", pkg: "github.com/influx6/govfx", typ: $Float64, tag: ""}, {prop: "x2", name: "x2", pkg: "github.com/influx6/govfx", typ: $Float64, tag: ""}, {prop: "y1", name: "y1", pkg: "github.com/influx6/govfx", typ: $Float64, tag: ""}, {prop: "y2", name: "y2", pkg: "github.com/influx6/govfx", typ: $Float64, tag: ""}, {prop: "optimize", name: "optimize", pkg: "github.com/influx6/govfx", typ: $Bool, tag: ""}]);
 	Stats.init([{prop: "Clone", name: "Clone", pkg: "", typ: $funcType([], [Stats], false)}, {prop: "CurrentIteration", name: "CurrentIteration", pkg: "", typ: $funcType([], [$Int], false)}, {prop: "Delay", name: "Delay", pkg: "", typ: $funcType([], [time.Duration], false)}, {prop: "Delta", name: "Delta", pkg: "", typ: $funcType([], [$Float64], false)}, {prop: "DeltaIteration", name: "DeltaIteration", pkg: "", typ: $funcType([], [$Float64], false)}, {prop: "Easing", name: "Easing", pkg: "", typ: $funcType([], [$String], false)}, {prop: "IsDone", name: "IsDone", pkg: "", typ: $funcType([], [$Bool], false)}, {prop: "IsFirstDone", name: "IsFirstDone", pkg: "", typ: $funcType([], [$Bool], false)}, {prop: "Loop", name: "Loop", pkg: "", typ: $funcType([], [$Bool], false)}, {prop: "Next", name: "Next", pkg: "", typ: $funcType([$Float64], [], false)}, {prop: "Optimized", name: "Optimized", pkg: "", typ: $funcType([], [$Bool], false)}, {prop: "Reversed", name: "Reversed", pkg: "", typ: $funcType([], [$Bool], false)}, {prop: "Reversible", name: "Reversible", pkg: "", typ: $funcType([], [$Bool], false)}, {prop: "TotalIterations", name: "TotalIterations", pkg: "", typ: $funcType([], [$Int], false)}, {prop: "TotalLoops", name: "TotalLoops", pkg: "", typ: $funcType([], [$Int], false)}]);
 	StatConfig.init([{prop: "Duration", name: "Duration", pkg: "", typ: time.Duration, tag: ""}, {prop: "Delay", name: "Delay", pkg: "", typ: time.Duration, tag: ""}, {prop: "Easing", name: "Easing", pkg: "", typ: $String, tag: ""}, {prop: "Loop", name: "Loop", pkg: "", typ: $Int, tag: ""}, {prop: "Reverse", name: "Reverse", pkg: "", typ: $Bool, tag: ""}, {prop: "Optimize", name: "Optimize", pkg: "", typ: $Bool, tag: ""}]);
 	Stat.init([{prop: "config", name: "config", pkg: "github.com/influx6/govfx", typ: StatConfig, tag: ""}, {prop: "delay", name: "delay", pkg: "github.com/influx6/govfx", typ: time.Duration, tag: ""}, {prop: "totalIteration", name: "totalIteration", pkg: "github.com/influx6/govfx", typ: $Int64, tag: ""}, {prop: "currentIteration", name: "currentIteration", pkg: "github.com/influx6/govfx", typ: $Int64, tag: ""}, {prop: "reversed", name: "reversed", pkg: "github.com/influx6/govfx", typ: $Int64, tag: ""}, {prop: "completed", name: "completed", pkg: "github.com/influx6/govfx", typ: $Int64, tag: ""}, {prop: "completedReverse", name: "completedReverse", pkg: "github.com/influx6/govfx", typ: $Int64, tag: ""}, {prop: "delta", name: "delta", pkg: "github.com/influx6/govfx", typ: $Float64, tag: ""}, {prop: "done", name: "done", pkg: "github.com/influx6/govfx", typ: $Bool, tag: ""}]);
@@ -37221,6 +37298,11 @@ $packages["github.com/influx6/govfx"] = (function() {
 		$pkg.ErrNotFound = errors.New("Not Found");
 		_r$2 = regexp.MustCompile("([\\w\\d_-]+\\.[\\w\\d_-]+)+"); /* */ $s = 20; case 20: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
 		expandable = _r$2;
+		$pkg.EaseSpline = NewSpline(0.25, 0.1, 0.25, 1);
+		$pkg.LinearSpline = NewSpline(0, 0, 1, 1);
+		$pkg.EaseInSpline = NewSpline(0.42, 0, 1, 1);
+		$pkg.EaseOutSpline = NewSpline(0, 0, 0.58, 1);
+		$pkg.EaseInOutSpline = NewSpline(0.42, 0, 0.58, 1);
 		$pkg.AnimationStepsPerSec = new $Int64(0, 60);
 		init();
 		$r = init$1(); /* */ $s = 21; case 21: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
