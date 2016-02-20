@@ -42,10 +42,10 @@ func Init(gear loop.EngineGear) {
 // init initializes the selector code before the start of the animators.
 func init() {
 	Init(web.Loop)
+	RegisterEasing("linear", Linear{})
 	RegisterEasing("ease-in", EaseIn{})
-	RegisterEasing("ease-in-quad", EaseInQuad{})
-	RegisterEasing("ease-out-quad", EaseOutQuad{})
-	RegisterEasing("ease-in-out-quad", EaseInOutQuad{})
+	RegisterEasing("ease-out", EaseOut{})
+	RegisterEasing("ease-in-out", EaseInOut{})
 }
 
 //==============================================================================

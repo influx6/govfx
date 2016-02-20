@@ -2,52 +2,42 @@ package govfx
 
 //==============================================================================
 
+// Linear provides a struct for 'linear' based animation.
+type Linear struct{}
+
+// Ease returns a new value base on the EaseConfig received.
+func (l Linear) Ease(c EaseConfig) float64 {
+	return c.DeltaValue*LinearSpline.X(c.Stat.DeltaIteration()) + c.CurrentValue
+}
+
+//==============================================================================
+
 // EaseIn provides a struct for 'easing-in' based animation.
 type EaseIn struct{}
 
 // Ease returns a new value base on the EaseConfig received.
 func (e EaseIn) Ease(c EaseConfig) float64 {
-	return (c.DeltaValue * c.Stat.DeltaIteration()) + c.CurrentValue
+	return c.DeltaValue*EaseInSpline.X(c.Stat.DeltaIteration()) + c.CurrentValue
 }
 
 //==============================================================================
 
-// EaseInQuad provides a struct for 'easing-in-quad' based animation.
-type EaseInQuad struct{}
+// EaseOut provides a struct for 'easing-out' based animation.
+type EaseOut struct{}
 
 // Ease returns a new value base on the EaseConfig received.
-func (e EaseInQuad) Ease(c EaseConfig) float64 {
-	ms := c.Stat.DeltaIteration()
-	return (c.DeltaValue * ms * ms) + c.CurrentValue
+func (e EaseOut) Ease(c EaseConfig) float64 {
+	return c.DeltaValue*EaseOutSpline.X(c.Stat.DeltaIteration()) + c.CurrentValue
 }
 
 //==============================================================================
 
-// EaseOutQuad provides a struct for 'easing-out-quad' based animation.
-type EaseOutQuad struct{}
+// EaseInOut provides a struct for 'easing-in-out' based animation.
+type EaseInOut struct{}
 
 // Ease returns a new value base on the EaseConfig received.
-func (e EaseOutQuad) Ease(c EaseConfig) float64 {
-	ms := (c.Stat.DeltaIteration()) * float64(c.Stat.CurrentIteration()-2)
-	return ((c.DeltaValue * -1) * ms) + c.CurrentValue
-}
-
-//==============================================================================
-
-// EaseInOutQuad provides a struct for 'easing-in-out-quad' based animation.
-type EaseInOutQuad struct{}
-
-// Ease returns a new value base on the EaseConfig received.
-func (e EaseInOutQuad) Ease(c EaseConfig) float64 {
-	diff := c.Stat.DeltaIteration()
-
-	if diff < 1 {
-		return (c.DeltaValue / 2) * diff * diff
-	}
-
-	diff--
-
-	return (-1*c.DeltaValue)*((diff)*(diff-2)-1) + c.CurrentValue
+func (e EaseInOut) Ease(c EaseConfig) float64 {
+	return c.DeltaValue*EaseInOutSpline.X(c.Stat.DeltaIteration()) + c.CurrentValue
 }
 
 //==============================================================================
