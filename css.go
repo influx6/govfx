@@ -157,7 +157,7 @@ func ToRGB(hex string) (red, green, blue int) {
 // Alpha values ranges from 0-100
 func RGBA(hex string, alpha int) string {
 	r, g, b := ToRGB(hex)
-	return fmt.Sprintf("rgba(%d,%d,%d,%.2f)", r, g, b, alpha/100)
+	return fmt.Sprintf("rgba(%d,%d,%d,%.2f)", r, g, b, float64(alpha)/100)
 }
 
 // Unit returns a valid unit type in the browser, if the supplied unit is
