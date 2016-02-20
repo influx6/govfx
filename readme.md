@@ -59,92 +59,156 @@
   The way VFX was written makes it easy to build animations quickly with as much
   control as possible, yet with efficient optimization applied in.
 
+  - Animating Width Property
 
+      ```go
 
-  ```go
+      package main
 
-  package main
+      import (
+      	"fmt"
+      	"time"
 
-  import (
-  	"fmt"
-  	"time"
+      	"github.com/influx6/govfx"
+      	"github.com/influx6/govfx/animators"
+      )
 
-  	"github.com/influx6/govfx"
-  	"github.com/influx6/govfx/animations/boundaries"
-  )
+      func main() {
 
-  func main() {
+      	width := govfx.QuerySequence(".zapps",
+      		govfx.NewStat(govfx.StatConfig{
+      			Duration: 1 * time.Second,
+      			Delay:    2 * time.Second,
+      			Easing:   "ease-in",
+      			Loop:     4,
+      			Reverse:  true,
+      			Optimize: true,
+      		}),
+      		&animators.Width{Value: 500})
 
-  	width := govfx.NewAnimationSequence(".zapps",
-  		govfx.NewStat(govfx.StatConfig{
-  			Duration: 1 * time.Second,
-  			Delay:    2 * time.Second,
-  			Easing:   "ease-in",
-  			Loop:     4,
-  			Reverse:  true,
-  			Optimize: true,
-  		}),
-  		&boundaries.Width{Value: 500})
+      	width.OnBegin(func(stats govfx.Frame) {
+      		fmt.Println("Animation Has Begun.")
+      	})
 
-  	width.OnBegin(func(stats govfx.Frame) {
-  		fmt.Println("Animation Has Begun.")
-  	})
+      	width.OnEnd(func(stats govfx.Frame) {
+      		fmt.Println("Animation Has Ended.")
+      	})
 
-  	width.OnEnd(func(stats govfx.Frame) {
-  		fmt.Println("Animation Has Ended.")
-  	})
+      	width.OnProgress(func(stats govfx.Frame) {
+      		fmt.Println("Animation is progressing.")
+      	})
 
-  	width.OnProgress(func(stats govfx.Frame) {
-  		fmt.Println("Animation is progressing.")
-  	})
+      	govfx.Animate(width)
+      }
 
-  	govfx.Animate(width)
+      ```
 
-    // To stop a frame animation, simple use the vfx.Stop function call.
-    vfx.Stop(width)
-  }
+      ```html
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <meta charset="utf-8">
+            <title>VFX Size Animation</title>
+            <style>
 
-  ```
+              .zapps{
+                height: 3px;
+                background: red;
+                margin-bottom: 10px;
+              }
 
-  ```html
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <meta charset="utf-8">
-        <title>VFX Size Animation</title>
-        <style>
+              #zapp1{
+                width: 10px;
+              }
 
-          .zapps{
-            height: 3px;
-            background: red;
-            margin-bottom: 10px;
+              #zapp2{
+                width: 25px;
+              }
+
+              #zapp3{
+                width: 5px;
+              }
+
+              #zapp4{
+                width: 30px;
+              }
+
+            </style>
+          </head>
+          <body>
+            <div id="zapp1" class="zapps"></div>
+            <div id="zapp2" class="zapps"></div>
+            <div id="zapp3" class="zapps"></div>
+            <div id="zapp4" class="zapps"></div>
+          </body>
+          <script type="text/javascript" src="app.js"></script>
+        </html>
+
+      ```
+
+  - Animating Width Property With ShadowDOM
+
+      ```go
+
+          package main
+
+          import (
+          	"fmt"
+          	"time"
+
+          	"github.com/influx6/govfx"
+          	"github.com/influx6/govfx/animators"
+          )
+
+          func main() {
+
+          	root := govfx.NewShadowRoot(govfx.QuerySelector(".root-shadow"))
+          	elems := root.QuerySelectorAll(".zapps")
+
+          	width := govfx.DOMSequence(elems,
+          		govfx.NewStat(govfx.StatConfig{
+          			Duration: 1 * time.Second,
+          			Delay:    2 * time.Second,
+          			Easing:   "ease-in",
+          			Loop:     4,
+          			Reverse:  true,
+          			Optimize: true,
+          		}),
+          		&animators.Width{Value: 500})
+
+          	width.OnBegin(func(stats govfx.Frame) {
+          		fmt.Println("Animation Has Begun.")
+          	})
+
+          	width.OnEnd(func(stats govfx.Frame) {
+          		fmt.Println("Animation Has Ended.")
+          	})
+
+          	width.OnProgress(func(stats govfx.Frame) {
+          		fmt.Println("Animation is progressing.")
+          	})
+
+          	govfx.Animate(width)
           }
 
-          #zapp1{
-            width: 10px;
-          }
+      ```
 
-          #zapp2{
-            width: 25px;
-          }
+      ```html
+          <!DOCTYPE html>
+          <html>
+            <head>
+              <meta charset="utf-8">
+              <title>VFX Size Animation</title>
+            </head>
+            <body>
+              <div class="root-shadow"></div>
+            </body>
+            <script>
+              root = document.querySelector(".root-shadow")
+              shadowRoot = root.createShadowRoot()
+              shadowRoot.innerHTML = '<style>.zapps{ height: 3px; background: red; margin-bottom: 10px; } #zapp1{ width: 10px; } #zapp2{ width: 25px; } #zapp3{ width: 5px; } #zapp4{ width: 30px; } </style><div id="zapp1" class="zapps"></div><div id="zapp2" class="zapps"></div><div id="zapp3" class="zapps"></div><div id="zapp4" class="zapps"></div>'
+            </script>
+            <script type="text/javascript" src="app.js"></script>
+          </html>
 
-          #zapp3{
-            width: 5px;
-          }
-
-          #zapp4{
-            width: 30px;
-          }
-
-        </style>
-      </head>
-      <body>
-        <div id="zapp1" class="zapps"></div>
-        <div id="zapp2" class="zapps"></div>
-        <div id="zapp3" class="zapps"></div>
-        <div id="zapp4" class="zapps"></div>
-      </body>
-      <script type="text/javascript" src="app.js"></script>
-    </html>
-
-  ```
+      ```
