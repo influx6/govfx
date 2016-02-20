@@ -8,26 +8,12 @@ import (
 
 //==============================================================================
 
-// WidthCSSWriter defines a DeferWriter for writing width properties.
-type WidthCSSWriter struct {
-	width    int
-	unit     string
-	priority bool
-	elem     govfx.Elemental
-}
-
-// Write writes out the necessary output for a css width property.
-func (w *WidthCSSWriter) Write() {
-	val := fmt.Sprintf("%d%s", w.width, w.unit)
-	w.elem.Write("width", val, w.priority)
-	w.elem.Sync()
-}
-
 //==============================================================================
 
 // Width provides animation sequencing for width properties.
 type Width struct {
-	Width int
+	Value int
+	Unit  string
 }
 
 // Init returns the initial writers for the sequence.
@@ -35,13 +21,15 @@ func (w *Width) Init(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWrite
 	var writers govfx.DeferWriters
 
 	for _, elem := range elems {
-		width, priority, _ := elem.Read("width")
-		writers = append(writers, &WidthCSSWriter{
-			width:    govfx.ParseInt(width),
-			unit:     "px",
-			priority: priority,
-			elem:     elem,
-		})
+		width, priority, _ := elem.ReadInt("width")
+
+		(func(e govfx.Elemental) {
+			writers = append(writers, govfx.NewWriter(func() {
+				val := fmt.Sprintf("%d%s", width, govfx.Unit(w.Unit))
+				e.Write("width", val, priority)
+				e.Sync()
+			}))
+		})(elem)
 	}
 
 	return writers
@@ -54,23 +42,81 @@ func (w *Width) Next(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWrite
 	easing := govfx.GetEasing(stats.Easing())
 
 	for _, elem := range elems {
-		width, priority, _ := elem.Read("width")
+		(func(e govfx.Elemental) {
+			width, priority, _ := elem.ReadInt("width")
 
-		realWidth := govfx.ParseInt(width)
-		change := w.Width - realWidth
+			change := w.Value - width
 
-		newWidth := int(easing.Ease(govfx.EaseConfig{
-			Stat:         stats,
-			CurrentValue: float64(realWidth),
-			DeltaValue:   float64(change),
-		}))
+			newWidth := int(easing.Ease(govfx.EaseConfig{
+				Stat:         stats,
+				CurrentValue: float64(width),
+				DeltaValue:   float64(change),
+			}))
 
-		writers = append(writers, &WidthCSSWriter{
-			width:    newWidth,
-			unit:     "px",
-			priority: priority,
-			elem:     elem,
-		})
+			writers = append(writers, govfx.NewWriter(func() {
+				val := fmt.Sprintf("%d%s", newWidth, govfx.Unit(w.Unit))
+				e.Write("width", val, priority)
+				e.Sync()
+			}))
+		}(elem))
+
+	}
+
+	return writers
+}
+
+//==============================================================================
+
+// Height provides animation sequencing for Height properties.
+type Height struct {
+	Value int
+	Unit  string
+}
+
+// Init returns the initial writers for the sequence.
+func (h *Height) Init(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWriters {
+	var writers govfx.DeferWriters
+
+	for _, elem := range elems {
+		(func(e govfx.Elemental) {
+			height, priority, _ := elem.ReadInt("height")
+			writers = append(writers, govfx.NewWriter(func() {
+				val := fmt.Sprintf("%d%s", height, govfx.Unit(h.Unit))
+				e.Write("height", val, priority)
+				e.Sync()
+			}))
+		}(elem))
+	}
+
+	return writers
+}
+
+// Next returns the writers for the current sequence iteration.
+func (h *Height) Next(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWriters {
+	var writers govfx.DeferWriters
+
+	easing := govfx.GetEasing(stats.Easing())
+
+	for _, elem := range elems {
+
+		(func(e govfx.Elemental) {
+
+			height, priority, _ := e.ReadInt("height")
+
+			change := h.Value - height
+
+			newHeight := int(easing.Ease(govfx.EaseConfig{
+				Stat:         stats,
+				CurrentValue: float64(height),
+				DeltaValue:   float64(change),
+			}))
+
+			writers = append(writers, govfx.NewWriter(func() {
+				val := fmt.Sprintf("%d%s", newHeight, govfx.Unit(h.Unit))
+				e.Write("height", val, priority)
+				e.Sync()
+			}))
+		}(elem))
 	}
 
 	return writers

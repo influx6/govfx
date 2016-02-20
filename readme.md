@@ -1,8 +1,5 @@
 # GoVFX
- GoVFX is a idiomatic web animation library which brings the style of [VelocityJS](https://julian.com/research/velocity/)
- to Go. It brings a different approach in the way animations are built but
- has a solid foundation to allow the best performance ensuring to reduce layout
- trashing as much as possible.
+ GoVFX is a idiomatic web animation library which brings the style of [VelocityJS](https://julian.com/research/velocity/) to Go.
 
 ## Install
 
@@ -11,6 +8,14 @@
     go get -u github.com/influx6/govfx/...
 
   ```
+
+## Features
+
+  - Dead simple API.
+  - Ensures simple and fast execution of animations without hindering performance
+  - Provide extendibility in all parts including easing, and property animators
+  - Support animations with the Shadow DOM.
+  - Batch rendering optimization of animation rendering.
 
 ## Concept
 
@@ -50,7 +55,7 @@
   their writers by using the properties of the stats to produce the necessary change
   and easing behaviours that is desired to be achieved.
 
-## Usage
+## Example
   The way VFX was written makes it easy to build animations quickly with as much
   control as possible, yet with efficient optimization applied in.
 
@@ -79,7 +84,7 @@
   			Reverse:  true,
   			Optimize: true,
   		}),
-  		&boundaries.Width{Width: 500})
+  		&boundaries.Width{Value: 500})
 
   	width.OnBegin(func(stats govfx.Frame) {
   		fmt.Println("Animation Has Begun.")

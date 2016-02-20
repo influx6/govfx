@@ -159,6 +159,25 @@ func RGBA(hex string, alpha int) string {
 	return fmt.Sprintf(rgba, r, g, b, af)
 }
 
+// Unit returns a valid unit type in the browser, if the supplied unit is
+// standard then it is return else 'px' is returned as default.
+func Unit(u string) string {
+	switch u {
+	case "rem":
+		return u
+	case "em":
+		return u
+	case "px":
+		return u
+	case "%":
+		return u
+	case "vw":
+		return u
+	default:
+		return "px"
+	}
+}
+
 // doubleString doubles the giving string.
 func doubleString(c string) string {
 	return fmt.Sprintf("%s%s", c, c)

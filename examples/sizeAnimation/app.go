@@ -19,7 +19,7 @@ func main() {
 			Reverse:  true,
 			Optimize: true,
 		}),
-		&boundaries.Width{Width: 500})
+		&boundaries.Width{Value: 500})
 
 	width.OnBegin(func(stats govfx.Frame) {
 		fmt.Println("Animation Has Begun.")

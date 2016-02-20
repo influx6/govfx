@@ -4,6 +4,28 @@ import "time"
 
 //==============================================================================
 
+// NewWriter returns a new DeferWriter which executes the provided function
+// on its call to Write().
+func NewWriter(d func()) DeferWriter {
+	dw := dWriter{fx: d}
+	return &dw
+}
+
+// DWriter defines a concrete type of a DeferWriter which executes a function
+// on its call to write
+type dWriter struct {
+	fx func()
+}
+
+// Write executes the internal function attached to this writer.
+func (d *dWriter) Write() {
+	if d.fx != nil {
+		d.fx()
+	}
+}
+
+//==============================================================================
+
 // FrameController provides an internal controller for Frames to allow
 // controlling of a signal of the beginnning and finishing state of their
 // sequence writers. This helps to control the pace of which frames release

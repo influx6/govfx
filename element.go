@@ -18,6 +18,8 @@ import (
 type Elemental interface {
 	dom.Element
 	Read(string) (string, bool, bool)
+	ReadInt(string) (int, bool, bool)
+	ReadFloat(string) (float64, bool, bool)
 	Write(string, string, bool)
 	Sync()
 }
@@ -89,6 +91,20 @@ func (e *Element) Read(prop string) (string, bool, bool) {
 
 	// Read the value, return both value and true state.
 	return cs.Value, cs.Priority, true
+}
+
+// ReadInt reads the given property and attempts to convert its value into a
+// int type else returns 0 as that value type.
+func (e *Element) ReadInt(prop string) (int, bool, bool) {
+	val, po, ok := e.Read(prop)
+	return ParseInt(val), po, ok
+}
+
+// ReadFloat reads the given property and attempts to convert its value into a
+// float64 type else returns 0 as that value type.
+func (e *Element) ReadFloat(prop string) (float64, bool, bool) {
+	val, po, ok := e.Read(prop)
+	return ParseFloat(val), po, ok
 }
 
 // Write adds the necessary change of value to the giving property
