@@ -13,9 +13,9 @@
 
   - Dead simple API.
   - Ensures simple and fast execution of animations without hindering performance
-  - Provide extendibility in all parts including easing, and property animators
-  - Support animations with the Shadow DOM.
-  - Batch rendering optimization of animation rendering.
+  - Provides extendibility in all parts including easing, and property animators
+  - Supports animations with Shadow DOM.
+  - Batch rendering optimizations for animations.
 
 ## Concept
 
