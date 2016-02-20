@@ -12,6 +12,16 @@ func (l Linear) Ease(c EaseConfig) float64 {
 
 //==============================================================================
 
+// Ease provides a struct for 'ease' based animation.
+type Ease struct{}
+
+// Ease returns a new value base on the EaseConfig received.
+func (e Ease) Ease(c EaseConfig) float64 {
+	return c.DeltaValue*EaseSpline.X(c.Stat.DeltaIteration()) + c.CurrentValue
+}
+
+//==============================================================================
+
 // EaseIn provides a struct for 'easing-in' based animation.
 type EaseIn struct{}
 

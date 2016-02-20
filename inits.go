@@ -43,6 +43,7 @@ func Init(gear loop.EngineGear) {
 func init() {
 	Init(web.Loop)
 	RegisterEasing("linear", Linear{})
+	RegisterEasing("ease", Ease{})
 	RegisterEasing("ease-in", EaseIn{})
 	RegisterEasing("ease-out", EaseOut{})
 	RegisterEasing("ease-in-out", EaseInOut{})
