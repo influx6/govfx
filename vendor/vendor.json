@@ -28,6 +28,11 @@
 			"revisionTime": "2015-12-30T13:39:03-07:00"
 		},
 		{
+			"path": "github.com/fatih/camelcase",
+			"revision": "332844f2fb0193cce955f4687646abbdcc43ceeb",
+			"revisionTime": "2015-04-20T00:47:19+03:00"
+		},
+		{
 			"path": "github.com/go-humble/detect",
 			"revision": "714e9e4d821cb7daac42b10f6f91fe5da00fa6fb",
 			"revisionTime": "2015-07-11T22:04:33-07:00"

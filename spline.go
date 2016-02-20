@@ -1,21 +1,6 @@
 package govfx
 
-// EaseSpline provides a basic "easer" spline to genearte transistion points.
-var EaseSpline = NewSpline(0.25, 0.1, 0.25, 1.0)
-
-// LinearSpline provides a basic "linear" spline to genearte transistion points.
-var LinearSpline = NewSpline(0, 0, 1.0, 1.0)
-
-// EaseInSpline provides a basic "easein" spline to genearte transistion points.
-var EaseInSpline = NewSpline(0.42, 0.0, 1.0, 1.0)
-
-// EaseOutSpline provides a basic "easeout" spline to genearte transistion
-// points.
-var EaseOutSpline = NewSpline(0, 0, 0.58, 1.0)
-
-// EaseInOutSpline provides a basic "ease-in-out" spline to genearte transistion
-// points.
-var EaseInOutSpline = NewSpline(0.42, 0, 0.58, 1.0)
+//==============================================================================
 
 // Spline provides a implmenetation of the Keyspline which uses bezier curves
 // to generate the new positional value for change in time.
@@ -31,6 +16,12 @@ type Spline struct {
 func NewSpline(x, y, x2, y2 float64) *Spline {
 	ss := Spline{x1: x, y1: y, x2: x2, y2: y2}
 	return &ss
+}
+
+// Ease implements the Easings interface and allows us to use a spline
+// to provide easing behaviours.
+func (s *Spline) Ease(c EaseConfig) float64 {
+	return c.DeltaValue*s.X(c.Stat.DeltaIteration()) + c.CurrentValue
 }
 
 // X returns the provided x value for a giving time between 0 and 1.
@@ -106,6 +97,8 @@ func (s *Spline) GetTimeForX(aX float64) float64 {
 //
 // 	return aGuessT
 // }
+
+//==============================================================================
 
 // GetSlope returns dx/dt given t, x1, and x2, or dy/dt given t, y1, and y2.
 func GetSlope(aT, aA1, aA2 float64) float64 {

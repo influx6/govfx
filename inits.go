@@ -1,6 +1,9 @@
 package govfx
 
 import (
+	"strings"
+
+	"github.com/fatih/camelcase"
 	"github.com/influx6/faux/loop"
 	"github.com/influx6/faux/loop/web"
 )
@@ -42,11 +45,12 @@ func Init(gear loop.EngineGear) {
 // init initializes the selector code before the start of the animators.
 func init() {
 	Init(web.Loop)
-	RegisterEasing("linear", Linear{})
-	RegisterEasing("ease", Ease{})
-	RegisterEasing("ease-in", EaseIn{})
-	RegisterEasing("ease-out", EaseOut{})
-	RegisterEasing("ease-in-out", EaseInOut{})
+
+	// Register all our easing providers.
+	for name, vals := range EasingValues {
+		cased := strings.ToLower(strings.Join(camelcase.Split(name), "-"))
+		RegisterEasing(cased, NewSpline(vals[0], vals[1], vals[2], vals[3]))
+	}
 }
 
 //==============================================================================
