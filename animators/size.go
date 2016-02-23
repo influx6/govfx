@@ -96,9 +96,7 @@ func (h *Height) Next(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWrit
 	easing := govfx.GetEasing(stats.Easing())
 
 	for _, elem := range elems {
-
 		(func(e govfx.Elemental) {
-
 			height, priority, _ := e.ReadInt("height")
 
 			change := h.Value - height
