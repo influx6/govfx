@@ -4,13 +4,13 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/influx6/faux/vfx"
+	"github.com/influx6/govfx"
 )
 
 func main() {
 
-	div := vfx.Document().QuerySelector(".expandable")
-	expand := vfx.NewElement(div, "")
+	div := govfx.Document().QuerySelector(".expandable")
+	expand := govfx.NewElement(div, "")
 
 	report("margin-top", one(expand.Read("margin-top")))
 	report("margin-left", one(expand.Read("margin-left")))

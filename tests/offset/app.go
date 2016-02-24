@@ -3,15 +3,15 @@ package main
 import (
 	"fmt"
 
-	"github.com/influx6/faux/vfx"
+	"github.com/influx6/govfx"
 )
 
 func main() {
 
-	div := vfx.Document().QuerySelector("div.offset")
+	div := govfx.Document().QuerySelector("div.offset")
 
-	top, left := vfx.Offset(div)
-	ptop, pleft := vfx.Position(div)
+	top, left := govfx.Offset(div)
+	ptop, pleft := govfx.Position(div)
 
 	color := "#cccccc"
 	scolor := "#ccc"
@@ -25,5 +25,5 @@ func main() {
     <br/>
     Color: Hex(%s) Rgba(%s)
     <br/>
-  `, top, left, ptop, pleft, color, vfx.RGBA(color, 50), scolor, vfx.RGBA(scolor, 50)))
+  `, top, left, ptop, pleft, color, govfx.RGBA(color, 50), scolor, govfx.RGBA(scolor, 50)))
 }
