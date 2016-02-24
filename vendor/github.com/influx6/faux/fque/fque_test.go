@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/ardanlabs/kit/tests"
-	"github.com/influx6/faux/loop/fque"
+	"github.com/influx6/faux/fque"
 )
 
 func init() {

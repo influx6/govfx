@@ -84,33 +84,33 @@
 		},
 		{
 			"path": "github.com/influx6/faux/ds",
-			"revision": "a10ab4bfa801e77473c273de7f7b2e334168fd11",
-			"revisionTime": "2016-02-22T01:41:23+01:00"
+			"revision": "064e26c6b6e628f8431989004d378ef4fde7b392",
+			"revisionTime": "2016-02-24T08:09:45+01:00"
 		},
 		{
 			"path": "github.com/influx6/faux/fque",
-			"revision": "a10ab4bfa801e77473c273de7f7b2e334168fd11",
-			"revisionTime": "2016-02-22T01:41:23+01:00"
+			"revision": "064e26c6b6e628f8431989004d378ef4fde7b392",
+			"revisionTime": "2016-02-24T08:09:45+01:00"
 		},
 		{
 			"path": "github.com/influx6/faux/loop",
-			"revision": "a10ab4bfa801e77473c273de7f7b2e334168fd11",
-			"revisionTime": "2016-02-22T01:41:23+01:00"
+			"revision": "064e26c6b6e628f8431989004d378ef4fde7b392",
+			"revisionTime": "2016-02-24T08:09:45+01:00"
 		},
 		{
 			"path": "github.com/influx6/faux/loop/web",
-			"revision": "a10ab4bfa801e77473c273de7f7b2e334168fd11",
-			"revisionTime": "2016-02-22T01:41:23+01:00"
+			"revision": "064e26c6b6e628f8431989004d378ef4fde7b392",
+			"revisionTime": "2016-02-24T08:09:45+01:00"
 		},
 		{
 			"path": "github.com/influx6/faux/loop/web/raf",
-			"revision": "a10ab4bfa801e77473c273de7f7b2e334168fd11",
-			"revisionTime": "2016-02-22T01:41:23+01:00"
+			"revision": "064e26c6b6e628f8431989004d378ef4fde7b392",
+			"revisionTime": "2016-02-24T08:09:45+01:00"
 		},
 		{
 			"path": "github.com/influx6/faux/utils",
-			"revision": "a10ab4bfa801e77473c273de7f7b2e334168fd11",
-			"revisionTime": "2016-02-22T01:41:23+01:00"
+			"revision": "064e26c6b6e628f8431989004d378ef4fde7b392",
+			"revisionTime": "2016-02-24T08:09:45+01:00"
 		},
 		{
 			"path": "github.com/satori/go.uuid",
