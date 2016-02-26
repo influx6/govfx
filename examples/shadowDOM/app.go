@@ -20,11 +20,11 @@ func main() {
 			Duration: 1 * time.Second,
 			Delay:    2 * time.Second,
 			Easing:   "ease-in",
-			Loop:     4,
+			Loop:     0,
 			Reverse:  true,
 			Optimize: true,
 		}),
-		&animators.Width{Value: 500})
+		&animators.Width{Value: 500}, &animators.Height{Value: 10})
 
 	width.OnBegin(func(stats govfx.Frame) {
 		fmt.Println("Animation Has Begun.")

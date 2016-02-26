@@ -72,4 +72,10 @@ func RegisterEasing(name string, easing Easing) {
 	easingProviders.Add(name, easing)
 }
 
+// RegisterAnimator adds a animator into the lists with a giving name, this can
+// be retrieved later to build a animations lists from.
+func RegisterAnimator(name string, ani Animator) {
+	animationProviders.Add(name, ani)
+}
+
 //==============================================================================

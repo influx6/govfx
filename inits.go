@@ -25,6 +25,9 @@ var wcache WriterCache
 // easingProviders defines a global registery for easing functions.
 var easingProviders EasingProviders
 
+// animationProviders defines a global registery for animator functions.
+var animationProviders Animators
+
 // stopCache contains all loop.Loopers that pertain to any frame, to allow
 // stopping any frame immediately
 var stopCache *loopCache
@@ -39,6 +42,7 @@ func Init(gear loop.EngineGear) {
 	stopCache = newLoopCache()
 	wcache = NewDeferWriterCache()
 	easingProviders = NewEasingRegister()
+	animationProviders = NewAnimatorsRegister()
 	engine = loop.New(gear)
 }
 

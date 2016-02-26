@@ -8,11 +8,11 @@ import (
 
 //==============================================================================
 
-var tranlateMatch = regexp.MustCompile("translate( )")
+var tranlateMatch = regexp.MustCompile("translate([\\d,]+)")
 
 // TranslateY defines a sequence for animating css translate y-axes properties.
 type TranslateY struct {
-	Value int
+	Value int `govfx:"value"`
 }
 
 // Init returns the initial writers for the sequence.

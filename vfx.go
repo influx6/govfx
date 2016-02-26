@@ -2,6 +2,12 @@ package govfx
 
 //==============================================================================
 
+// VFXTag defines the tag to be associted with a giving struct field definition
+// to adequately allow the use of Animators map merge functions.
+const VFXTag = "govfx"
+
+//==============================================================================
+
 // WriterCache provides a interface type for writer cache structures, which catch
 // animation produced writers per sequence iteration state.
 type WriterCache interface {
