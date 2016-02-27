@@ -94,7 +94,7 @@ func NewSequence(name string, m Values) (Sequence, error) {
 // RegisterSequence adds a sequence by taking a sample value type of the real struct
 // that provides that and generating a new one when requested.
 func RegisterSequence(name string, structType interface{}) error {
-	if reflection.IsStruct(structType) {
+	if !reflection.IsStruct(structType) {
 		return errors.New("Not a Struct")
 	}
 

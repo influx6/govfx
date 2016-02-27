@@ -44,8 +44,8 @@ func TestDeferWriterCache(t *testing.T) {
 				Optimize: false,
 			})
 
-			frame := govfx.NewAnimationSequence("", stat)
-			frame2 := govfx.NewAnimationSequence("", stat2)
+			frame := govfx.ElementalSequence(nil, stat)
+			frame2 := govfx.ElementalSequence(nil, stat2)
 
 			defer cache.Clear(frame)
 			defer cache.Clear(frame2)
