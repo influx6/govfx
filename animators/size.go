@@ -8,10 +8,10 @@ import (
 
 //==============================================================================
 
-// Width provides animation sequencing for width properties.
+// Width provides animation sequencing for width properties, it uses flat integers
+// values and pixels.
 type Width struct {
 	Value int
-	Unit  string
 }
 
 // Init returns the initial writers for the sequence.
@@ -23,7 +23,7 @@ func (w *Width) Init(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWrite
 
 		(func(e govfx.Elemental) {
 			writers = append(writers, govfx.NewWriter(func() {
-				val := fmt.Sprintf("%d%s", width, govfx.Unit(w.Unit))
+				val := fmt.Sprintf("%d%s", width, "px")
 				e.Write("width", val, priority)
 				e.Sync()
 			}))
@@ -52,7 +52,7 @@ func (w *Width) Next(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWrite
 			}))
 
 			writers = append(writers, govfx.NewWriter(func() {
-				val := fmt.Sprintf("%d%s", newWidth, govfx.Unit(w.Unit))
+				val := fmt.Sprintf("%d%s", newWidth, "px")
 				e.Write("width", val, priority)
 				e.Sync()
 			}))
@@ -68,7 +68,6 @@ func (w *Width) Next(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWrite
 // Height provides animation sequencing for Height properties.
 type Height struct {
 	Value int
-	Unit  string
 }
 
 // Init returns the initial writers for the sequence.
@@ -79,7 +78,7 @@ func (h *Height) Init(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWrit
 		(func(e govfx.Elemental) {
 			height, priority, _ := elem.ReadInt("height")
 			writers = append(writers, govfx.NewWriter(func() {
-				val := fmt.Sprintf("%d%s", height, govfx.Unit(h.Unit))
+				val := fmt.Sprintf("%d%s", height, "px")
 				e.Write("height", val, priority)
 				e.Sync()
 			}))
@@ -108,7 +107,7 @@ func (h *Height) Next(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWrit
 			}))
 
 			writers = append(writers, govfx.NewWriter(func() {
-				val := fmt.Sprintf("%d%s", newHeight, govfx.Unit(h.Unit))
+				val := fmt.Sprintf("%d%s", newHeight, "px")
 				e.Write("height", val, priority)
 				e.Sync()
 			}))

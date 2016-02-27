@@ -195,6 +195,38 @@ func GetTagFields(elem interface{}, tag string) (Fields, error) {
 	return fields, nil
 }
 
+// ToMap returns a map of the giving values from a struct using a provided
+// tag to capture the needed values, it extracts those tags values out into
+// a map. It returns an error if the element is not a struct.
+func ToMap(tag string, elem interface{}) (map[string]interface{}, error) {
+	// Collect the fields that match the giving tag.
+	fields, err := GetTagFields(elem, tag)
+	if err != nil {
+		return nil, err
+	}
+
+	// If there exists no field matching the tag skip.
+	if len(fields) == 0 {
+		return nil, errors.New("No Tag Matches")
+	}
+
+	tl := reflect.ValueOf(elem)
+
+	if tl.Kind() == reflect.Ptr {
+		tl = tl.Elem()
+	}
+
+	data := make(map[string]interface{})
+
+	// Loop through  the fields and set the appropriate value as needed.
+	for _, field := range fields {
+		fl := tl.Field(field.Index)
+		data[field.Tag] = fl.Interface()
+	}
+
+	return data, nil
+}
+
 // MergeMap merges the key names of the provided map into the appropriate field
 // place where the element has the provided tag.
 func MergeMap(tag string, elem interface{}, values map[string]interface{}) error {

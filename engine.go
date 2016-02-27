@@ -83,12 +83,12 @@ func RegisterEasing(name string, easing Easing) {
 // values map to initialize the attributes accordingly, else returns an
 // error if the sequence name does not exists.
 func NewSequence(name string, m Values) (Sequence, error) {
-	ani := animationProviders.Get(name)
+	ani, defaults := animationProviders.Get(name)
 	if ani == nil {
 		return nil, fmt.Errorf("No Sequence with Name[%s]", name)
 	}
 
-	return ani(m), nil
+	return ani(defaults, m), nil
 }
 
 // RegisterSequence adds a sequence by taking a sample value type of the real struct
@@ -98,18 +98,20 @@ func RegisterSequence(name string, structType interface{}) error {
 		return errors.New("Not a Struct")
 	}
 
-	animationProviders.Add(name, func(m Values) Sequence {
+	d, _ := reflection.ToMap(VFXTag, structType)
+
+	animationProviders.Add(name, func(d, m Values) Sequence {
 		newSeq, _ := reflection.MakeNew(structType)
-		return Merge(newSeq, m)
-	})
+		return Merge(newSeq, d, m)
+	}, d)
 
 	return nil
 }
 
 // RegisterAnimator adds a sequence into the lists with a giving name, this can
 // be retrieved later to build a animations lists from.
-func RegisterAnimator(name string, ani Animator) {
-	animationProviders.Add(name, ani)
+func RegisterAnimator(name string, ani Animator, defaults Values) {
+	animationProviders.Add(name, ani, defaults)
 }
 
 //==============================================================================

@@ -7,15 +7,20 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"sync"
 	"testing"
 
 	"github.com/ardanlabs/kit/cfg"
+	"github.com/ardanlabs/kit/db"
 	"github.com/ardanlabs/kit/db/mongo"
 	"github.com/ardanlabs/kit/log"
 )
 
 // Context provides a base context for tests.
 var Context = "Test"
+
+// TestSession is the name used to register the MongoDB session.
+var TestSession = "test"
 
 // Success and failure markers.
 var (
@@ -25,11 +30,14 @@ var (
 
 // logdash is the central buffer where all logs are stored.
 var logdash bytes.Buffer
+var loglock sync.RWMutex
 
 //==============================================================================
 
 // ResetLog resets the contents of logdash.
 func ResetLog() {
+	loglock.Lock()
+	defer loglock.Unlock()
 	logdash.Reset()
 }
 
@@ -40,6 +48,8 @@ func DisplayLog() {
 		return
 	}
 
+	loglock.RLock()
+	defer loglock.RUnlock()
 	logdash.WriteTo(os.Stdout)
 }
 
@@ -59,7 +69,7 @@ func Init(cfgKey string) {
 
 // InitMongo initializes the mongodb connections for testing.
 func InitMongo(cfg mongo.Config) {
-	if err := mongo.Init(cfg); err != nil {
+	if err := db.RegMasterSession("Test", TestSession, cfg); err != nil {
 		log.Error("Test", "Init", err, "Completed")
 		logdash.WriteTo(os.Stdout)
 		os.Exit(1)

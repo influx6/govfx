@@ -3,9 +3,10 @@
 	"ignore": "",
 	"package": [
 		{
+			"origin": "github.com/influx6/govfx/vendor/github.com/ardanlabs/kit/cfg",
 			"path": "github.com/ardanlabs/kit/cfg",
-			"revision": "a837ae2f7693ba241efddf4225d85500c291bcfc",
-			"revisionTime": "2016-02-27T14:09:38+01:00"
+			"revision": "3b2875f67ddd0bfe336fdf07426bfaaaa382c5ae",
+			"revisionTime": "2016-02-27T14:45:29+01:00"
 		},
 		{
 			"path": "github.com/ardanlabs/kit/db",
@@ -13,19 +14,22 @@
 			"revisionTime": "2016-02-20T16:34:06+01:00"
 		},
 		{
+			"origin": "github.com/influx6/govfx/vendor/github.com/ardanlabs/kit/db/mongo",
 			"path": "github.com/ardanlabs/kit/db/mongo",
-			"revision": "a837ae2f7693ba241efddf4225d85500c291bcfc",
-			"revisionTime": "2016-02-27T14:09:38+01:00"
+			"revision": "3b2875f67ddd0bfe336fdf07426bfaaaa382c5ae",
+			"revisionTime": "2016-02-27T14:45:29+01:00"
 		},
 		{
+			"origin": "github.com/influx6/govfx/vendor/github.com/ardanlabs/kit/log",
 			"path": "github.com/ardanlabs/kit/log",
-			"revision": "a837ae2f7693ba241efddf4225d85500c291bcfc",
-			"revisionTime": "2016-02-27T14:09:38+01:00"
+			"revision": "3b2875f67ddd0bfe336fdf07426bfaaaa382c5ae",
+			"revisionTime": "2016-02-27T14:45:29+01:00"
 		},
 		{
+			"origin": "github.com/influx6/govfx/vendor/github.com/ardanlabs/kit/tests",
 			"path": "github.com/ardanlabs/kit/tests",
-			"revision": "a837ae2f7693ba241efddf4225d85500c291bcfc",
-			"revisionTime": "2016-02-27T14:09:38+01:00"
+			"revision": "3b2875f67ddd0bfe336fdf07426bfaaaa382c5ae",
+			"revisionTime": "2016-02-27T14:45:29+01:00"
 		},
 		{
 			"path": "github.com/fatih/camelcase",
@@ -84,75 +88,64 @@
 		},
 		{
 			"path": "github.com/influx6/faux/ds",
-			"revision": "064e26c6b6e628f8431989004d378ef4fde7b392",
-			"revisionTime": "2016-02-24T08:09:45+01:00"
+			"revision": "3b2875f67ddd0bfe336fdf07426bfaaaa382c5ae",
+			"revisionTime": "2016-02-27T14:45:29+01:00"
 		},
 		{
 			"path": "github.com/influx6/faux/fque",
-			"revision": "064e26c6b6e628f8431989004d378ef4fde7b392",
-			"revisionTime": "2016-02-24T08:09:45+01:00"
+			"revision": "3b2875f67ddd0bfe336fdf07426bfaaaa382c5ae",
+			"revisionTime": "2016-02-27T14:45:29+01:00"
 		},
 		{
 			"path": "github.com/influx6/faux/loop",
-			"revision": "064e26c6b6e628f8431989004d378ef4fde7b392",
-			"revisionTime": "2016-02-24T08:09:45+01:00"
+			"revision": "3b2875f67ddd0bfe336fdf07426bfaaaa382c5ae",
+			"revisionTime": "2016-02-27T14:45:29+01:00"
 		},
 		{
 			"path": "github.com/influx6/faux/loop/web",
-			"revision": "064e26c6b6e628f8431989004d378ef4fde7b392",
-			"revisionTime": "2016-02-24T08:09:45+01:00"
+			"revision": "3b2875f67ddd0bfe336fdf07426bfaaaa382c5ae",
+			"revisionTime": "2016-02-27T14:45:29+01:00"
 		},
 		{
 			"path": "github.com/influx6/faux/loop/web/raf",
-			"revision": "064e26c6b6e628f8431989004d378ef4fde7b392",
-			"revisionTime": "2016-02-24T08:09:45+01:00"
+			"revision": "3b2875f67ddd0bfe336fdf07426bfaaaa382c5ae",
+			"revisionTime": "2016-02-27T14:45:29+01:00"
 		},
 		{
 			"path": "github.com/influx6/faux/reflection",
-			"revision": "a837ae2f7693ba241efddf4225d85500c291bcfc",
-			"revisionTime": "2016-02-27T14:09:38+01:00"
+			"revision": "3b2875f67ddd0bfe336fdf07426bfaaaa382c5ae",
+			"revisionTime": "2016-02-27T14:45:29+01:00"
 		},
 		{
 			"path": "github.com/influx6/faux/utils",
-			"revision": "064e26c6b6e628f8431989004d378ef4fde7b392",
-			"revisionTime": "2016-02-24T08:09:45+01:00"
+			"revision": "3b2875f67ddd0bfe336fdf07426bfaaaa382c5ae",
+			"revisionTime": "2016-02-27T14:45:29+01:00"
 		},
 		{
 			"path": "github.com/satori/go.uuid",
 			"revision": ""
 		},
 		{
-			"origin": "github.com/ardanlabs/kit/vendor/gopkg.in/check.v1",
-			"path": "gopkg.in/check.v1",
-			"revision": "4fd7738014f4f2a833fc64f4b2d09dd880e06ba1",
-			"revisionTime": "2016-02-20T16:34:06+01:00"
-		},
-		{
-			"origin": "github.com/ardanlabs/kit/vendor/gopkg.in/mgo.v2",
 			"path": "gopkg.in/mgo.v2",
 			"revision": "03c9f3ee4c14c8e51ee521a6a7d0425658dd6f64",
 			"revisionTime": "2016-01-18T12:58:58-02:00"
 		},
 		{
-			"origin": "github.com/ardanlabs/kit/vendor/gopkg.in/mgo.v2/bson",
 			"path": "gopkg.in/mgo.v2/bson",
 			"revision": "03c9f3ee4c14c8e51ee521a6a7d0425658dd6f64",
 			"revisionTime": "2016-01-18T12:58:58-02:00"
 		},
 		{
-			"origin": "github.com/ardanlabs/kit/vendor/gopkg.in/mgo.v2/internal/sasl",
 			"path": "gopkg.in/mgo.v2/internal/sasl",
 			"revision": "03c9f3ee4c14c8e51ee521a6a7d0425658dd6f64",
 			"revisionTime": "2016-01-18T12:58:58-02:00"
 		},
 		{
-			"origin": "github.com/ardanlabs/kit/vendor/gopkg.in/mgo.v2/internal/scram",
 			"path": "gopkg.in/mgo.v2/internal/scram",
 			"revision": "03c9f3ee4c14c8e51ee521a6a7d0425658dd6f64",
 			"revisionTime": "2016-01-18T12:58:58-02:00"
 		},
 		{
-			"origin": "github.com/ardanlabs/kit/vendor/gopkg.in/yaml.v2",
 			"path": "gopkg.in/yaml.v2",
 			"revision": "f7716cbe52baa25d2e9b0d0da546fcf909fc16b4",
 			"revisionTime": "2015-12-01T14:27:45-02:00"
