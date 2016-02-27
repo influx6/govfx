@@ -38612,36 +38612,33 @@ $packages["github.com/influx6/govfx/animators"] = (function() {
 	};
 	TranslateY.prototype.Init = function(stats, elems) { return this.$val.Init(stats, elems); };
 	TranslateY.ptr.prototype.Next = function(stats, elems) {
-		var $ptr, _i, _r$2, _ref, _tuple, elem, elems, priority, stats, t, transform, writers, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _i = $f._i; _r$2 = $f._r$2; _ref = $f._ref; _tuple = $f._tuple; elem = $f.elem; elems = $f.elems; priority = $f.priority; stats = $f.stats; t = $f.t; transform = $f.transform; writers = $f.writers; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		writers = [writers];
+		var $ptr, _i, _r$2, _r$3, _r$4, _r$5, _r$6, _ref, _tuple, elem, elems, mx, stats, t, transform, writers, x, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _i = $f._i; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _ref = $f._ref; _tuple = $f._tuple; elem = $f.elem; elems = $f.elems; mx = $f.mx; stats = $f.stats; t = $f.t; transform = $f.transform; writers = $f.writers; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		t = $clone(this, TranslateY);
-		writers[0] = govfx.DeferWriters.nil;
+		writers = govfx.DeferWriters.nil;
 		_ref = elems;
 		_i = 0;
 		/* while (true) { */ case 1:
 			/* if (!(_i < _ref.$length)) { break; } */ if(!(_i < _ref.$length)) { $s = 2; continue; }
-			priority = [priority];
-			transform = [transform];
 			elem = ((_i < 0 || _i >= _ref.$length) ? $throwRuntimeError("index out of range") : _ref.$array[_ref.$offset + _i]);
 			_r$2 = elem.Read("transform"); /* */ $s = 3; case 3: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
 			_tuple = _r$2;
-			transform[0] = _tuple[0];
-			priority[0] = _tuple[1];
-			(function(priority, transform, writers) { return function(e) {
-				var $ptr, e;
-				writers[0] = $append(writers[0], govfx.NewWriter((function(priority, transform, writers) { return function $b() {
-					var $ptr, $s, $r;
-					/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-					$r = e.Write("transform", transform[0], priority[0]); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-					$r = e.Sync(); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-					/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f.$s = $s; $f.$r = $r; return $f;
-				}; })(priority, transform, writers)));
-			}; })(priority, transform, writers)(elem);
+			transform = _tuple[0];
+			_r$3 = matrixMatch.MatchString(transform); /* */ $s = 6; case 6: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+			/* */ if (_r$3) { $s = 4; continue; }
+			/* */ $s = 5; continue;
+			/* if (_r$3) { */ case 4:
+				_r$4 = matrixMatch.FindStringSubmatch(transform); /* */ $s = 7; case 7: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+				mx = (x = _r$4, (1 >= x.$length ? $throwRuntimeError("index out of range") : x.$array[x.$offset + 1]));
+				_r$5 = fmt.Printf("Current matrix: %s\n", new sliceType([new $String(mx)])); /* */ $s = 8; case 8: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
+				_r$5;
+			/* } */ case 5:
+			_r$6 = fmt.Printf("Value matrix: %s\n", new sliceType([new $String(transform)])); /* */ $s = 9; case 9: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
+			_r$6;
 			_i++;
 		/* } */ $s = 1; continue; case 2:
-		return writers[0];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: TranslateY.ptr.prototype.Next }; } $f.$ptr = $ptr; $f._i = _i; $f._r$2 = _r$2; $f._ref = _ref; $f._tuple = _tuple; $f.elem = elem; $f.elems = elems; $f.priority = priority; $f.stats = stats; $f.t = t; $f.transform = transform; $f.writers = writers; $f.$s = $s; $f.$r = $r; return $f;
+		return writers;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: TranslateY.ptr.prototype.Next }; } $f.$ptr = $ptr; $f._i = _i; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._ref = _ref; $f._tuple = _tuple; $f.elem = elem; $f.elems = elems; $f.mx = mx; $f.stats = stats; $f.t = t; $f.transform = transform; $f.writers = writers; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	TranslateY.prototype.Next = function(stats, elems) { return this.$val.Next(stats, elems); };
 	init = function() {
@@ -38860,7 +38857,7 @@ $packages["main"] = (function() {
 		var $ptr, _r, _r$1, width, x, x$1, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _r$1 = $f._r$1; width = $f.width; x = $f.x; x$1 = $f.x$1; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		_r = govfx.QuerySelectorAll(".zapps"); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_r$1 = (new govfx.Animation.ptr(4, "ease-in", true, new time.Duration(0, 1000000000), new time.Duration(0, 2000000000), (x = new sliceType([$makeMap($String.keyFor, [{ k: "animate", v: new $String("width") }, { k: "value", v: new $Int(500) }])]), $subslice(new govfx.Values(x.$array), x.$offset, x.$offset + x.$length)))).B((x$1 = _r, $subslice(new sliceType$1(x$1.$array), x$1.$offset, x$1.$offset + x$1.$length))); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		_r$1 = (new govfx.Animation.ptr(4, "ease-in", true, new time.Duration(0, 1000000000), new time.Duration(0, 2000000000), (x = new sliceType([$makeMap($String.keyFor, [{ k: "animate", v: new $String("width") }, { k: "value", v: new $Int(500) }]), $makeMap($String.keyFor, [{ k: "animate", v: new $String("translate-y") }, { k: "value", v: new $Int(100) }])]), $subslice(new govfx.Values(x.$array), x.$offset, x.$offset + x.$length)))).B((x$1 = _r, $subslice(new sliceType$1(x$1.$array), x$1.$offset, x$1.$offset + x$1.$length))); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
 		width = _r$1;
 		$r = govfx.Animate(width); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: main }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f.width = width; $f.x = x; $f.x$1 = x$1; $f.$s = $s; $f.$r = $r; return $f;

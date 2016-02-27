@@ -3,9 +3,21 @@
 
 ## Install
 
-  ```go
+  ```bash
 
     go get -u github.com/influx6/govfx/...
+
+  ```
+
+## Building Examples
+  To build the sample files in the `examples` directory, navigate into the
+  directory you wish to test and execute the giving command as below.
+  The folders will contain basic html and javascript files that will be
+  executed once the html as being opened up in a browser.
+
+  ```bash
+
+    gopherjs build app.go
 
   ```
 

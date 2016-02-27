@@ -19,6 +19,7 @@ func main() {
 		Reverse:  true,
 		Animates: []govfx.Value{
 			{"animate": "width", "value": 500},
+			{"animate": "translate-y", "value": 100},
 		},
 	}).B(govfx.QuerySelectorAll(".zapps")...)
 

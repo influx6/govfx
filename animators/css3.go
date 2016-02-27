@@ -1,6 +1,7 @@
 package animators
 
 import (
+	"fmt"
 	"regexp"
 
 	"github.com/influx6/govfx"
@@ -39,14 +40,23 @@ func (t TranslateY) Next(stats govfx.Stats, elems govfx.Elementals) govfx.DeferW
 	var writers govfx.DeferWriters
 
 	for _, elem := range elems {
-		transform, priority, _ := elem.Read("transform")
+		transform, _, _ := elem.Read("transform")
 
-		func(e govfx.Elemental) {
-			writers = append(writers, govfx.NewWriter(func() {
-				e.Write("transform", transform, priority)
-				e.Sync()
-			}))
-		}(elem)
+		// var x, y int
+
+		if matrixMatch.MatchString(transform) {
+			mx := matrixMatch.FindStringSubmatch(transform)[1]
+			fmt.Printf("Current matrix: %s\n", mx)
+		}
+
+		fmt.Printf("Value matrix: %s\n", transform)
+		// func(e govfx.Elemental) {
+		// 	writers = append(writers, govfx.NewWriter(func() {
+		// 		mx := fmt.Sprintf("transform")
+		// 		e.Write("transform", transform, priority)
+		// 		e.Sync()
+		// 	}))
+		// }(elem)
 	}
 
 	return writers
