@@ -21,26 +21,45 @@ const (
 	OPTIMISEPHASE
 )
 
-// Frame defines the interface for a animation sequence generator,
-// it defines the sequence of a organized step for animation.
-type Frame interface {
-	End()
-	Sync()
-	Reset()
-	Cycles() int
-	Stats() Stats
-	Inited() bool
-	IsOver() bool
+// Cycles defines an interface that reports the current cycle run of a animation.
+type Cycles interface {
 	LastCycles() int
-	ResetListeners()
-	Use(Elementals)
-	Then(Frame) Frame
+	Cycles() int
 	Phase() FramePhase
-	Init(float64) DeferWriters
-	Sequence(float64) DeferWriters
+}
+
+// Listeners defines an interface that provides callback hooks for animations.
+type Listeners interface {
 	OnEnd(func(Frame)) loop.Looper
 	OnBegin(func(Frame)) loop.Looper
 	OnProgress(func(Frame)) loop.Looper
+	ResetListeners()
+}
+
+// WriterMaker defines an interface that define animators providing DeferWriters
+// as optimization providers.
+type WriterMaker interface {
+	Init(float64) DeferWriters
+	Sequence(float64) DeferWriters
+}
+
+// Frame defines the interface for a animation sequence generator,
+// it defines the sequence of a organized step for animation.
+type Frame interface {
+	Cycles
+	Listeners
+	WriterMaker
+
+	End()
+	Sync()
+	Reset()
+
+	Stats() Stats
+	Inited() bool
+	IsOver() bool
+
+	Use(Elementals)
+	Then(Frame) Frame
 }
 
 // AnimationSequence defines a set of sequences that operate on the behaviour of
