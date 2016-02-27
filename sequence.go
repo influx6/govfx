@@ -54,7 +54,7 @@ func RegisterSequence(name string, structType interface{}) error {
 		return errors.New("Not a Struct")
 	}
 
-	d, _ := reflection.ToMap(VFXTag, structType)
+	d, _ := reflection.ToMap(VFXTag, structType, false)
 
 	animationProviders.Add(name, func(d, m Value) Sequence {
 		newSeq, _ := reflection.MakeNew(structType)

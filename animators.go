@@ -91,9 +91,9 @@ const VFXTag = "govfx"
 // struct passed in using the govfx tag: "govfx".
 func Merge(instance interface{}, defaults, newVals Value) Sequence {
 	if defaults != nil {
-		reflection.MergeMap(VFXTag, instance, defaults)
+		reflection.MergeMap(VFXTag, instance, defaults, false)
 	}
 
-	reflection.MergeMap(VFXTag, instance, newVals)
+	reflection.MergeMap(VFXTag, instance, newVals, false)
 	return instance.(Sequence)
 }

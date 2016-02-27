@@ -77,15 +77,19 @@ func GetComputedStylePriority(css *dom.CSSStyleDeclaration, prop string) (int, e
 
 // ComputedStyle defines a style property item.
 type ComputedStyle struct {
-	Name     string
-	Value    string
-	Priority bool // values between [0,1] to indicate use of '!important'
+	Name       string
+	VendorName string
+	Value      string
+	Values     []string
+	Priority   bool // values between [0,1] to indicate use of '!important'
 }
 
 // ComputedStyleMap defines a map type of computed style properties and values.
 type ComputedStyleMap map[string]*ComputedStyle
 
 // GetComputedStyleMap returns a map of computed style properties and values.
+// Also all vendored names are cleaned up to allow quick and easy access
+// regardless of vendor.
 func GetComputedStyleMap(elem dom.Element, ps string) (ComputedStyleMap, error) {
 	css, err := GetComputedStyle(elem, ps)
 	if err != nil {
@@ -97,10 +101,20 @@ func GetComputedStyleMap(elem dom.Element, ps string) (ComputedStyleMap, error) 
 	// Get the map and pull the necessary property:value and importance facts.
 	for key, val := range css.ToMap() {
 		priority, _ := GetComputedStylePriority(css, key)
-		styleMap[key] = &ComputedStyle{
-			Name:     key,
-			Value:    val,
-			Priority: (priority > 0),
+
+		unvendoredName := key
+
+		// Clean key of any vendored name to allow easy access.
+		for _, vo := range vendorTags {
+			unvendoredName = strings.TrimPrefix(unvendoredName, fmt.Sprintf("-%s-", vo))
+		}
+
+		styleMap[unvendoredName] = &ComputedStyle{
+			Name:       unvendoredName,
+			VendorName: key,
+			Value:      val,
+			Values:     []string{val},
+			Priority:   (priority > 0),
 		}
 	}
 
@@ -109,7 +123,30 @@ func GetComputedStyleMap(elem dom.Element, ps string) (ComputedStyleMap, error) 
 
 // Add adjusts the stylemap with a new property.
 func (c ComputedStyleMap) Add(name string, value string, priority bool) {
-	c[name] = &ComputedStyle{Name: name, Value: value, Priority: priority}
+	c[name] = &ComputedStyle{
+		Name:       name,
+		VendorName: name,
+		Value:      value,
+		Values:     []string{value},
+		Priority:   priority,
+	}
+}
+
+// AddMore adjusts the stylemap for a exisiting property adding the new value
+// into the values lists else adds as just a new value if it does not exists.
+func (c ComputedStyleMap) AddMore(name string, value string, priority bool) {
+	if !c.Has(name) {
+		c[name] = &ComputedStyle{
+			Name:       name,
+			VendorName: name,
+			Value:      value,
+			Values:     []string{value},
+			Priority:   priority,
+		}
+	}
+
+	m := c[name]
+	m.Values = append(m.Values, value)
 }
 
 // Has returns true/false if the property exists.
@@ -121,6 +158,7 @@ func (c ComputedStyleMap) Has(name string) bool {
 // Get retrieves the specific property if it exists.
 func (c ComputedStyleMap) Get(name string) (*ComputedStyle, error) {
 	cs, ok := c[name]
+
 	if !ok {
 		return nil, ErrNotFound
 	}
@@ -158,6 +196,21 @@ func ToRGB(hex string) (red, green, blue int) {
 func RGBA(hex string, alpha int) string {
 	r, g, b := ToRGB(hex)
 	return fmt.Sprintf("rgba(%d,%d,%d,%.2f)", r, g, b, float64(alpha)/100)
+}
+
+// vendorTags provides a lists of different browser specific vendor names.
+var vendorTags = []string{"moz", "webki", "o", "ms"}
+
+// Vendorize returns a property name with the different versions known according
+// browsers.
+func Vendorize(u string) []string {
+	var v []string
+
+	for _, vn := range vendorTags {
+		v = append(v, fmt.Sprintf("-%s-%s", vn, u))
+	}
+
+	return v
 }
 
 // Unit returns a valid unit type in the browser, if the supplied unit is

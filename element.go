@@ -18,9 +18,11 @@ import (
 type Elemental interface {
 	dom.Element
 	Read(string) (string, bool, bool)
+	ReadMore(string) ([]string, bool, bool)
 	ReadInt(string) (int, bool, bool)
 	ReadFloat(string) (float64, bool, bool)
 	Write(string, string, bool)
+	WriteMore(string, string, bool)
 	Sync()
 }
 
@@ -77,7 +79,23 @@ type Element struct {
 	css     ComputedStyleMap // css holds the map of computed styles.
 }
 
-// Read reads out the elements internal css property rules and returns its
+// ReadMore reads out the elements internal css property rule and returns its
+// values list and priority(whether it has !important attached).
+// If the property does not exists a false value is returned.
+func (e *Element) ReadMore(prop string) ([]string, bool, bool) {
+	e.rl.RLock()
+	defer e.rl.RUnlock()
+
+	cs, err := e.css.Get(prop)
+	if err != nil {
+		return nil, false, false
+	}
+
+	// Read the value, return both value and true state.
+	return cs.Values, cs.Priority, true
+}
+
+// Read reads out the elements internal css property rule and returns its
 // value and priority(wether it has !important attached).
 // If the property does not exists a false value is returned.
 func (e *Element) Read(prop string) (string, bool, bool) {
@@ -109,7 +127,10 @@ func (e *Element) ReadFloat(prop string) (float64, bool, bool) {
 
 // Write adds the necessary change of value to the giving property
 // with the necessary adjustments. If the property is not found in
-// the elements css stylesheet rules, it will be ignored.
+// the elements css stylesheet rules, it will be ignored. Write replaces
+// both the value and value lists for a property,setting that property
+// as the sole only value. Usefully for a first reset of a multivalue
+// property.
 func (e *Element) Write(prop string, value string, priority bool) {
 	e.rl.RLock()
 	cs, err := e.css.Get(prop)
@@ -122,6 +143,7 @@ func (e *Element) Write(prop string, value string, priority bool) {
 	}
 
 	cs.Value = value
+	cs.Values = []string{value}
 
 	if priority {
 		cs.Priority = true
@@ -129,7 +151,32 @@ func (e *Element) Write(prop string, value string, priority bool) {
 
 	// Add the property into our diff map to ensure we deal with this
 	// efficiently without re-writing untouched rules.
-	e.cssDiff.Set(prop)
+	e.cssDiff.Set(cs.VendorName)
+}
+
+// WriteMore allows writing a multi value property, eg transform, which can
+// take a scale, translate,etc properties, it allows augmenting the
+// property lists rather than replacing it.
+func (e *Element) WriteMore(prop string, value string, priority bool) {
+	e.rl.RLock()
+	cs, err := e.css.Get(prop)
+	e.rl.RUnlock()
+
+	if err != nil {
+		e.rl.Lock()
+		e.css.AddMore(prop, value, priority)
+		e.rl.Unlock()
+	}
+
+	cs.Values = append(cs.Values, value)
+
+	if priority {
+		cs.Priority = true
+	}
+
+	// Add the property into our diff map to ensure we deal with this
+	// efficiently without re-writing untouched rules.
+	e.cssDiff.Set(cs.VendorName)
 }
 
 // End removes this element styles from the dom.
@@ -148,15 +195,19 @@ func (e *Element) Sync() {
 	e.cssDiff.Each(func(key string, stop func()) {
 		val, _ := e.css.Get(key)
 
-		var valueContent string
+		// Range over the values lists instead incase we are dealing with
+		// multiple assignables.
+		for _, item := range val.Values {
+			var valueContent string
 
-		if val.Priority {
-			valueContent = "\t%s:%s !important;\n"
-		} else {
-			valueContent = "\t%s:%s;\n"
+			if val.Priority {
+				valueContent = "\t%s:%s !important;\n"
+			} else {
+				valueContent = "\t%s:%s;\n"
+			}
+
+			fmt.Fprint(&content, fmt.Sprintf(valueContent, key, item))
 		}
-
-		fmt.Fprint(&content, fmt.Sprintf(valueContent, key, val.Value))
 	})
 
 	e.style.Write(fmt.Sprintf(`

@@ -160,7 +160,7 @@ type Fields []Field
 
 // GetTagFields retrieves all fields of the giving elements with the giving tag
 // type.
-func GetTagFields(elem interface{}, tag string) (Fields, error) {
+func GetTagFields(elem interface{}, tag string, allowNaturalNames bool) (Fields, error) {
 	if !IsStruct(elem) {
 		return nil, ErrNotStruct
 	}
@@ -180,8 +180,16 @@ func GetTagFields(elem interface{}, tag string) (Fields, error) {
 		tagVal := strings.TrimSpace(field.Tag.Get(tag))
 
 		// If its a - item in the tag then skip or if its an empty string.
-		if tagVal == "-" || tagVal == "" {
+		if tagVal == "-" {
 			continue
+		}
+
+		if !allowNaturalNames && tagVal == "" {
+			continue
+		}
+
+		if tagVal == "" {
+			tagVal = strings.ToLower(field.Name)
 		}
 
 		fields = append(fields, Field{
@@ -198,9 +206,9 @@ func GetTagFields(elem interface{}, tag string) (Fields, error) {
 // ToMap returns a map of the giving values from a struct using a provided
 // tag to capture the needed values, it extracts those tags values out into
 // a map. It returns an error if the element is not a struct.
-func ToMap(tag string, elem interface{}) (map[string]interface{}, error) {
+func ToMap(tag string, elem interface{}, allowNaturalNames bool) (map[string]interface{}, error) {
 	// Collect the fields that match the giving tag.
-	fields, err := GetTagFields(elem, tag)
+	fields, err := GetTagFields(elem, tag, allowNaturalNames)
 	if err != nil {
 		return nil, err
 	}
@@ -229,10 +237,10 @@ func ToMap(tag string, elem interface{}) (map[string]interface{}, error) {
 
 // MergeMap merges the key names of the provided map into the appropriate field
 // place where the element has the provided tag.
-func MergeMap(tag string, elem interface{}, values map[string]interface{}) error {
+func MergeMap(tag string, elem interface{}, values map[string]interface{}, allowAll bool) error {
 
 	// Collect the fields that match the giving tag.
-	fields, err := GetTagFields(elem, tag)
+	fields, err := GetTagFields(elem, tag, allowAll)
 	if err != nil {
 		return err
 	}
