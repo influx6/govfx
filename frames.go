@@ -4,8 +4,6 @@ import (
 	"sync"
 	"sync/atomic"
 
-	"honnef.co/go/js/dom"
-
 	"github.com/influx6/faux/fque"
 	"github.com/influx6/faux/loop"
 )
@@ -35,6 +33,7 @@ type Frame interface {
 	IsOver() bool
 	LastCycles() int
 	ResetListeners()
+	Use(Elementals)
 	Then(Frame) Frame
 	Phase() FramePhase
 	Init(float64) DeferWriters
@@ -66,29 +65,15 @@ type AnimationSequence struct {
 	frames         []Frame
 }
 
-// QuerySequence uses a selector to retrieve the desired elements needed
-// to be animated, returning the frame for the animation sequence.
-func QuerySequence(selector string, stat Stats, s ...Sequence) Frame {
-	return ElementalSequence(TransformElements(QuerySelectorAll(selector)), stat, s...)
-}
-
-// DOMSequence returns a new Frame transforming the lists of
-// accordingly dom.Elements into its desired elementals for the animation
-// sequence.
-func DOMSequence(elems []dom.Element, stat Stats, s ...Sequence) Frame {
-	return ElementalSequence(TransformElements(elems), stat, s...)
-}
-
-// ElementalSequence returns a new frame using the selected Elementals for
-// the animation sequence.
-func ElementalSequence(elems Elementals, stat Stats, s ...Sequence) Frame {
+// NewAnimationSequence returns a new instance that implements a Frame, which
+// builds the concrete structure for a animation sequence
+func NewAnimationSequence(stat Stats, s ...Sequence) *AnimationSequence {
 	as := AnimationSequence{
-		sequences:  s,
-		stat:       stat,
-		progress:   fque.New(),
-		begin:      fque.New(),
-		ended:      fque.New(),
-		elementals: elems,
+		sequences: s,
+		stat:      stat,
+		progress:  fque.New(),
+		begin:     fque.New(),
+		ended:     fque.New(),
 	}
 
 	return &as
@@ -148,6 +133,12 @@ func (f *AnimationSequence) ResetListeners() {
 	f.begin.Flush()
 	f.progress.Flush()
 	f.ended.Flush()
+}
+
+// Use allows setting the internal elementals which the frame will use to
+// perform its animations.
+func (f *AnimationSequence) Use(e Elementals) {
+	f.elementals = e
 }
 
 // Reset resets the frame sequence to default state.
@@ -246,6 +237,9 @@ func (f *AnimationSequence) Continue() bool {
 }
 
 // Sync allows the frame to check and perform any update to its operation.
+// It also handles the situation of sheduling any next Frame that has been
+// added to this frame as a next call sequence, passing its current lists of
+// Elementals.
 func (f *AnimationSequence) Sync() {
 	if f.Stats().IsFirstDone() {
 
@@ -259,12 +253,13 @@ func (f *AnimationSequence) Sync() {
 
 		if f.Stats().Loop() {
 
-			// If this is an infinite loop, schedule our next frames into the animation
-			// runner.
+			// If this is an infinite loop, schedule our next frames into the
+			// animation runner.
 			if f.infiniteLoop() {
 				f.fl.RLock()
 
 				for _, fr := range f.frames {
+					fr.Use(f.elementals)
 					Animate(fr)
 				}
 

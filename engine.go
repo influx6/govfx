@@ -1,10 +1,11 @@
 package govfx
 
 import (
-	"errors"
-	"fmt"
+	"strings"
 
-	"github.com/influx6/faux/reflection"
+	"github.com/fatih/camelcase"
+	"github.com/influx6/faux/loop"
+	"github.com/influx6/faux/loop/web"
 )
 
 //==============================================================================
@@ -32,9 +33,6 @@ func Animate(frame Frame) {
 
 			// Stop this frame for being executed anymore.
 			Stop(frame)
-
-			// Reset the frame for re-use.
-			// frame.Reset()
 
 			return
 		}
@@ -73,45 +71,37 @@ func Stop(frame Frame) {
 	}
 }
 
-// RegisterEasing adds a easing provider into the registery with the specified
-// name, we allow replacing a easing provider for a keyed name, if you so wish.
-func RegisterEasing(name string, easing Easing) {
-	easingProviders.Add(name, easing)
+//==============================================================================
+
+// engine is the global gameloop engine used in managing animations within the
+// global loop.
+var engine loop.GameEngine
+
+// stopCache contains all loop.Loopers that pertain to any frame, to allow
+// stopping any frame immediately
+var stopCache *loopCache
+
+// Init initializes the animation system with the necessary loop engine,
+// desired to be used in running the animation. This is runned by default
+// by the runtime using init() functions, but you can reset the animation
+// looper using this.
+func Init(gear loop.EngineGear) {
+	stopCache = newLoopCache()
+	wcache = NewDeferWriterCache()
+	easingProviders = NewEasingRegister()
+	animationProviders = NewAnimatorsRegister()
+	engine = loop.New(gear)
 }
 
-// NewSequence returns a new sequence tagged by the giving name, using the
-// values map to initialize the attributes accordingly, else returns an
-// error if the sequence name does not exists.
-func NewSequence(name string, m Values) (Sequence, error) {
-	ani, defaults := animationProviders.Get(name)
-	if ani == nil {
-		return nil, fmt.Errorf("No Sequence with Name[%s]", name)
+// init initializes the selector code before the start of the animators.
+func init() {
+	Init(web.Loop)
+
+	// Register all our easing providers.
+	for name, vals := range EasingValues {
+		cased := strings.ToLower(strings.Join(camelcase.Split(name), "-"))
+		RegisterEasing(cased, NewSpline(vals[0], vals[1], vals[2], vals[3]))
 	}
-
-	return ani(defaults, m), nil
-}
-
-// RegisterSequence adds a sequence by taking a sample value type of the real struct
-// that provides that and generating a new one when requested.
-func RegisterSequence(name string, structType interface{}) error {
-	if !reflection.IsStruct(structType) {
-		return errors.New("Not a Struct")
-	}
-
-	d, _ := reflection.ToMap(VFXTag, structType)
-
-	animationProviders.Add(name, func(d, m Values) Sequence {
-		newSeq, _ := reflection.MakeNew(structType)
-		return Merge(newSeq, d, m)
-	}, d)
-
-	return nil
-}
-
-// RegisterAnimator adds a sequence into the lists with a giving name, this can
-// be retrieved later to build a animations lists from.
-func RegisterAnimator(name string, ani Animator, defaults Values) {
-	animationProviders.Add(name, ani, defaults)
 }
 
 //==============================================================================

@@ -17,7 +17,7 @@ func TestAnimatorRegistery(t *testing.T) {
 		t.Logf("\tWhen giving a sequence to register")
 		{
 
-			govfx.RegisterSequence("wix", width{})
+			govfx.RegisterSequence("wix", width{Name: "wix"})
 
 			wix, err := govfx.NewSequence("wix", map[string]interface{}{
 				"value": 20,
@@ -33,6 +33,11 @@ func TestAnimatorRegistery(t *testing.T) {
 				t.Fatalf("\t%s\tShould have a sequence with its udnerline type as 'width'", tests.Failed)
 			}
 			t.Logf("\t%s\tShould have a sequence with its udnerline type as 'width'", tests.Success)
+
+			if wx.Name != "wix" {
+				t.Fatalf("\t%s\tShould expect to find attribute Name equal to 'wix': %s", tests.Failed, wx.Name)
+			}
+			t.Logf("\t%s\tShould expect to find attribute Name equal to 'wix': %s", tests.Success, wx.Name)
 
 			if wx.Value != 20 {
 				t.Fatalf("\t%s\tShould expect to find attribute Value equal to 20: %d", tests.Failed, wx.Value)
@@ -55,7 +60,8 @@ func TestAnimatorRegistery(t *testing.T) {
 //==============================================================================
 
 type width struct {
-	Value int `govfx:"value"`
+	Name  string `govfx:"name"`
+	Value int    `govfx:"value"`
 }
 
 func (w width) Init(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWriters {

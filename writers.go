@@ -4,6 +4,46 @@ import "time"
 
 //==============================================================================
 
+// DeferWriter provides an interface that allows deferring the write effects
+// of a sequence, these way we can collate all effects of a set of sequences
+// together to perform a batch right, reducing layout trashing.
+type DeferWriter interface {
+	Write()
+}
+
+// DeferWriters defines a lists of DeferWriter implementing structures.
+type DeferWriters []DeferWriter
+
+// Write calls the internal writers Write() method, within the
+// DeferWriters lists.
+func (d DeferWriters) Write() {
+	for _, dw := range d {
+		dw.Write()
+	}
+}
+
+//==============================================================================
+
+// WriterCache provides a interface type for writer cache structures, which catch
+// animation produced writers per sequence iteration state.
+type WriterCache interface {
+	Store(Frame, int, ...DeferWriter)
+	Writers(Frame, int) DeferWriters
+	ClearIteration(Frame, int)
+	Clear(Frame)
+}
+
+//==============================================================================
+
+// wcache contains all writers cache with respect to each stats for a specific
+// frame.
+var wcache WriterCache
+
+// GetWriterCache returns the writer cache used by the animation library.
+func GetWriterCache() WriterCache {
+	return wcache
+}
+
 // NewWriter returns a new DeferWriter which executes the provided function
 // on its call to Write().
 func NewWriter(d func()) DeferWriter {

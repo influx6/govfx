@@ -39,6 +39,38 @@ var EasingValues = map[string][]float64{
 
 //==============================================================================
 
+// DefaultEasing defines the default easing key when a invalid easing name is
+// given or no easing name is giving.
+const DefaultEasing = "ease-in"
+
+// easingProviders defines a global registery for easing functions.
+var easingProviders EasingProviders
+
+// RegisterEasing adds a easing provider into the registery with the specified
+// name, we allow replacing a easing provider for a keyed name, if you so wish.
+func RegisterEasing(name string, easing Easing) {
+	easingProviders.Add(name, easing)
+}
+
+// GetEasingProvider returns the central easing provider for vfx.
+func GetEasingProvider() EasingProviders {
+	return easingProviders
+}
+
+// GetEasing returns the easing function matching the specific easing function
+// name if it exists else it returns the default easing provider set by
+// DefaultEasing constant.
+func GetEasing(easing string) Easing {
+	es := easingProviders.Get(easing)
+	if es == nil {
+		es = easingProviders.Get(DefaultEasing)
+	}
+
+	return es
+}
+
+//==============================================================================
+
 // Easing defines a interface that returns a new value for the provided values.
 type Easing interface {
 	Ease(esc EaseConfig) float64

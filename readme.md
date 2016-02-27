@@ -70,21 +70,21 @@
       	"time"
 
       	"github.com/influx6/govfx"
-      	"github.com/influx6/govfx/animators"
+      	_ "github.com/influx6/govfx/animators"
       )
 
       func main() {
 
-      	width := govfx.QuerySequence(".zapps",
-      		govfx.NewStat(govfx.StatConfig{
-      			Duration: 1 * time.Second,
-      			Delay:    2 * time.Second,
-      			Easing:   "ease-in",
-      			Loop:     4,
-      			Reverse:  true,
-      			Optimize: true,
-      		}),
-      		&animators.Width{Value: 500})
+      	width := (govfx.Animation{
+      		Duration: 1 * time.Second,
+      		Delay:    2 * time.Second,
+      		Easing:   "ease-in",
+      		Loop:     4,
+      		Reverse:  true,
+      		Animates: []govfx.Value{
+      			{"animate": "width", "value": 500},
+      		},
+      	}).B(govfx.QuerySelectorAll(".zapps")...)
 
       	width.OnBegin(func(stats govfx.Frame) {
       		fmt.Println("Animation Has Begun.")
@@ -157,24 +157,23 @@
           	"time"
 
           	"github.com/influx6/govfx"
-          	"github.com/influx6/govfx/animators"
+          	_ "github.com/influx6/govfx/animators"
           )
 
           func main() {
 
           	root := govfx.NewShadowRoot(govfx.QuerySelector(".root-shadow"))
-          	elems := root.QuerySelectorAll(".zapps")
 
-          	width := govfx.DOMSequence(elems,
-          		govfx.NewStat(govfx.StatConfig{
-          			Duration: 1 * time.Second,
-          			Delay:    2 * time.Second,
-          			Easing:   "ease-in",
-          			Loop:     4,
-          			Reverse:  true,
-          			Optimize: true,
-          		}),
-          		&animators.Width{Value: 500})
+          	width := (govfx.Animation{
+          		Duration: 1 * time.Second,
+          		Delay:    2 * time.Second,
+          		Easing:   "ease-in",
+          		Loop:     4,
+          		Reverse:  true,
+          		Animates: []govfx.Value{
+          			{"animate": "width", "value": 500},
+          		},
+          	}).B(root.QuerySelectorAll(".zapps")...)
 
           	width.OnBegin(func(stats govfx.Frame) {
           		fmt.Println("Animation Has Begun.")

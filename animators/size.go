@@ -11,7 +11,7 @@ import (
 // Width provides animation sequencing for width properties, it uses flat integers
 // values and pixels.
 type Width struct {
-	Value int
+	Value int `govfx:"value"`
 }
 
 // Init returns the initial writers for the sequence.
@@ -67,7 +67,7 @@ func (w *Width) Next(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWrite
 
 // Height provides animation sequencing for Height properties.
 type Height struct {
-	Value int
+	Value int `govfx:"value"`
 }
 
 // Init returns the initial writers for the sequence.

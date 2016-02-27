@@ -26,6 +26,30 @@ func NewShadowRoot(node dom.Node) *ShadowRoot {
 	return &sr
 }
 
+// QuerySelectorAll returns the underline nodes from the dom as Elementals.
+func (s *ShadowRoot) QuerySelectorAll(selector string) Elementals {
+	var eml Elementals
+
+	items := s.DocumentFragment.QuerySelectorAll(selector)
+
+	for _, item := range items {
+		eml = append(eml, NewElement(item, ""))
+	}
+
+	return eml
+
+}
+
+// QuerySelector uses the underline query selector to return elementals
+func (s *ShadowRoot) QuerySelector(selector string) Elemental {
+	node := s.DocumentFragment.QuerySelector(selector)
+	if node == nil {
+		return nil
+	}
+
+	return NewElement(node, "")
+}
+
 // Parent returns the parent for this shadowRoot.
 func (s *ShadowRoot) Parent() dom.Node {
 	return s.parent

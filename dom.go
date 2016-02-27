@@ -53,7 +53,12 @@ func QuerySelectorAll(selector string) Elementals {
 // QuerySelector returns the elemental that maches the selector else returns
 // nil.
 func QuerySelector(selector string) Elemental {
-	return NewElement(Document().QuerySelector(selector), "")
+	node := Document().QuerySelector(selector)
+	if node == nil {
+		return nil
+	}
+
+	return NewElement(node, "")
 }
 
 // TransformElements returns a lists of Elementals if the argument provided

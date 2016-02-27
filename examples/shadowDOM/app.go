@@ -3,40 +3,27 @@
 package main
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/influx6/govfx"
-	"github.com/influx6/govfx/animators"
+	_ "github.com/influx6/govfx/animators"
 )
 
 func main() {
 
 	root := govfx.NewShadowRoot(govfx.QuerySelector(".root-shadow"))
-	elems := root.QuerySelectorAll(".zapps")
 
-	width := govfx.DOMSequence(elems,
-		govfx.NewStat(govfx.StatConfig{
-			Duration: 1 * time.Second,
-			Delay:    2 * time.Second,
-			Easing:   "ease-in",
-			Loop:     0,
-			Reverse:  true,
-			Optimize: true,
-		}),
-		&animators.Width{Value: 500}, &animators.Height{Value: 10})
-
-	width.OnBegin(func(stats govfx.Frame) {
-		fmt.Println("Animation Has Begun.")
-	})
-
-	width.OnEnd(func(stats govfx.Frame) {
-		fmt.Println("Animation Has Ended.")
-	})
-
-	width.OnProgress(func(stats govfx.Frame) {
-		fmt.Println("Animation is progressing.")
-	})
+	width := (govfx.Animation{
+		Duration: 1 * time.Second,
+		Delay:    2 * time.Second,
+		Easing:   "ease-in",
+		Loop:     0,
+		Reverse:  true,
+		Animates: []govfx.Value{
+			{"animate": "width", "value": 500},
+			{"animate": "height", "value": 10},
+		},
+	}).B(root.QuerySelectorAll(".zapps")...)
 
 	govfx.Animate(width)
 }
