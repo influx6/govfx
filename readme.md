@@ -15,6 +15,8 @@
   The folders will contain basic html and javascript files that will be
   executed once the html as being opened up in a browser.
 
+  Note: Any sample that deals with the shadow DOM must be opened in Google chrome/chromium, has the shadow DOM API has no full browser support by default
+
   ```bash
 
     gopherjs build app.go
