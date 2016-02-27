@@ -389,11 +389,6 @@ func (socket *mongoSocket) Query(ops ...interface{}) (err error) {
 
 	for _, op := range ops {
 		debugf("Socket %p to %s: serializing op: %#v", socket, socket.addr, op)
-		if qop, ok := op.(*queryOp); ok {
-			if cmd, ok := qop.query.(*findCmd); ok {
-				debugf("Socket %p to %s: find command: %#v", socket, socket.addr, cmd)
-			}
-		}
 		start := len(buf)
 		var replyFunc replyFunc
 		switch op := op.(type) {
@@ -548,6 +543,7 @@ func (socket *mongoSocket) readLoop() {
 	s := make([]byte, 4)
 	conn := socket.conn // No locking, conn never changes.
 	for {
+		// XXX Handle timeouts, , etc
 		err := fill(conn, p)
 		if err != nil {
 			socket.kill(err, true)
