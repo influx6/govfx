@@ -246,7 +246,7 @@ func RGBA(hex string, alpha int) string {
 }
 
 // vendorTags provides a lists of different browser specific vendor names.
-var vendorTags = []string{"moz", "webki", "o", "ms"}
+var vendorTags = []string{"moz", "webki", "O", "ms"}
 
 // Vendorize returns a property name with the different versions known according
 // browsers.
