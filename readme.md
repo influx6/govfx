@@ -16,9 +16,7 @@ go get -u github.com/influx6/govfx/...
   Note: Any sample that deals with the shadow DOM must be opened in Google chrome/chromium, has the shadow DOM API has no full browser support by default
 
   ```bash
-
-    gopherjs build app.go
-
+gopherjs build app.go
   ```
 
 ## Features
