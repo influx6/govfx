@@ -4,9 +4,7 @@
 ## Install
 
   ```bash
-
-    go get -u github.com/influx6/govfx/...
-
+go get -u github.com/influx6/govfx/...
   ```
 
 ## Building Examples
