@@ -22,7 +22,7 @@ func (t TranslateY) Init(stats govfx.Stats, elems govfx.Elementals) govfx.DeferW
 	var writers govfx.DeferWriters
 
 	for _, elem := range elems {
-		transform, priority, _ := elem.Read("transform")
+		transform, priority, _ := elem.Read("transform", "")
 
 		func(e govfx.Elemental) {
 			writers = append(writers, govfx.NewWriter(func() {
@@ -40,7 +40,7 @@ func (t TranslateY) Next(stats govfx.Stats, elems govfx.Elementals) govfx.DeferW
 	var writers govfx.DeferWriters
 
 	for _, elem := range elems {
-		transform, _, _ := elem.Read("transform")
+		transform, _, _ := elem.Read("transform", "")
 
 		// var x, y int
 

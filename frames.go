@@ -181,50 +181,6 @@ func (f *AnimationSequence) Inited() bool {
 	return atomic.LoadInt64(&f.inited) > 0
 }
 
-// Init calls the initialization writers for each sequence, returning their
-// respective initialization writers if any to be runned on the first loop.
-func (f *AnimationSequence) Init(ms float64) DeferWriters {
-	if atomic.LoadInt64(&f.inited) > 0 {
-		return f.iniWriters
-	}
-
-	var writers DeferWriters
-
-	// Add the BeginWriting writer to set p execution reconciliation policy.
-	writers = append(writers, &frameBeginWriter{f: f})
-
-	if f.Stats().Delay() > 0 {
-		writers = append(writers, &delayedWriter{
-			ms: f.Stats().Delay(),
-			f:  f,
-		})
-	}
-
-	// Collect all writers from each sequence within the frame.
-	for _, seq := range f.sequences {
-		if ssq, ok := seq.(StoppableSequence); ok {
-			f.stoppers = append(f.stoppers, ssq)
-		}
-
-		writers = append(writers, seq.Init(f.Stats(), f.elementals)...)
-	}
-
-	// Add the DoneWriting writer to setup execution reconciliation ending policy.
-	writers = append(writers, &frameEndWriter{f: f})
-
-	// If we are allowed to optimize, store the writers for this sequence step.
-	if f.Stats().Optimized() && f.Phase() < OPTIMISEPHASE {
-		GetWriterCache().Store(f, f.Stats().CurrentIteration(), writers)
-	}
-
-	atomic.StoreInt64(&f.inited, 1)
-	f.iniWriters = append(f.iniWriters, writers...)
-
-	f.begin.Run()
-	f.Stats().Next(ms)
-	return writers
-}
-
 // LastCycles returns the previous cycles count for this sequence frame.
 func (f *AnimationSequence) LastCycles() int {
 	return int(atomic.LoadInt64(&f.lastCycle))
@@ -343,6 +299,50 @@ func (f *AnimationSequence) Stats() Stats {
 	return f.stat
 }
 
+// Init calls the initialization writers for each sequence, returning their
+// respective initialization writers if any to be runned on the first loop.
+func (f *AnimationSequence) Init(ms float64) DeferWriters {
+	if atomic.LoadInt64(&f.inited) > 0 {
+		return f.iniWriters
+	}
+
+	var writers DeferWriters
+
+	// Add the BeginWriting writer to set p execution reconciliation policy.
+	writers = append(writers, &frameBeginWriter{f: f})
+
+	if f.Stats().Delay() > 0 {
+		writers = append(writers, &delayedWriter{
+			ms: f.Stats().Delay(),
+			f:  f,
+		})
+	}
+
+	// Collect all writers from each sequence within the frame.
+	for _, seq := range f.sequences {
+		if ssq, ok := seq.(StoppableSequence); ok {
+			f.stoppers = append(f.stoppers, ssq)
+		}
+
+		writers = append(writers, seq.Init(f.Stats(), f.elementals))
+	}
+
+	// Add the DoneWriting writer to setup execution reconciliation ending policy.
+	writers = append(writers, &frameEndWriter{f: f})
+
+	// If we are allowed to optimize, store the writers for this sequence step.
+	if f.Stats().Optimized() && f.Phase() < OPTIMISEPHASE {
+		GetWriterCache().Store(f, f.Stats().CurrentIteration(), writers)
+	}
+
+	atomic.StoreInt64(&f.inited, 1)
+	f.iniWriters = append(f.iniWriters, writers...)
+
+	f.begin.Run()
+	f.Stats().Next(ms)
+	return writers
+}
+
 // Sequence builds the lists of writers from each sequence item within
 // the frame sequence lists.
 func (f *AnimationSequence) Sequence(ms float64) DeferWriters {
@@ -369,7 +369,7 @@ func (f *AnimationSequence) Sequence(ms float64) DeferWriters {
 
 	// Collect all writers from each sequence within the frame.
 	for _, seq := range f.sequences {
-		writers = append(writers, seq.Next(f.Stats(), f.elementals)...)
+		writers = append(writers, seq.Next(f.Stats(), f.elementals))
 	}
 
 	// Add the DoneWriting writer to setup execution reconciliation ending policy.

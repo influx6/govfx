@@ -17,13 +17,12 @@ import (
 // the real browser dom for that specific dom element.
 type Elemental interface {
 	dom.Element
-	Read(string) (string, bool, bool)
-	ReadMore(string) ([]string, bool, bool)
-	ReadInt(string) (int, bool, bool)
-	ReadFloat(string) (float64, bool, bool)
+	Sync()
+	ReadInt(string, string) (int, bool, bool)
+	ReadFloat(string, string) (float64, bool, bool)
+	Read(string, string) (string, bool, bool)
 	Write(string, string, bool)
 	WriteMore(string, string, bool)
-	Sync()
 }
 
 // Elementals defines a lists of elementals,
@@ -79,26 +78,10 @@ type Element struct {
 	css     ComputedStyleMap // css holds the map of computed styles.
 }
 
-// ReadMore reads out the elements internal css property rule and returns its
+// Read reads out the elements internal css property rule and returns its
 // values list and priority(whether it has !important attached).
 // If the property does not exists a false value is returned.
-func (e *Element) ReadMore(prop string) ([]string, bool, bool) {
-	e.rl.RLock()
-	defer e.rl.RUnlock()
-
-	cs, err := e.css.Get(prop)
-	if err != nil {
-		return nil, false, false
-	}
-
-	// Read the value, return both value and true state.
-	return cs.Values, cs.Priority, true
-}
-
-// Read reads out the elements internal css property rule and returns its
-// value and priority(wether it has !important attached).
-// If the property does not exists a false value is returned.
-func (e *Element) Read(prop string) (string, bool, bool) {
+func (e *Element) Read(prop string, selector string) (string, bool, bool) {
 	e.rl.RLock()
 	defer e.rl.RUnlock()
 
@@ -107,21 +90,30 @@ func (e *Element) Read(prop string) (string, bool, bool) {
 		return "", false, false
 	}
 
+	for _, val := range cs.Values {
+		valName := propName.FindStringSubmatch(val)[1]
+		if valName != selector {
+			continue
+		}
+
+		return val, cs.Priority, true
+	}
+
 	// Read the value, return both value and true state.
-	return cs.Value, cs.Priority, true
+	return cs.Value, cs.Priority, false
 }
 
 // ReadInt reads the given property and attempts to convert its value into a
 // int type else returns 0 as that value type.
-func (e *Element) ReadInt(prop string) (int, bool, bool) {
-	val, po, ok := e.Read(prop)
+func (e *Element) ReadInt(prop string, sel string) (int, bool, bool) {
+	val, po, ok := e.Read(prop, sel)
 	return ParseInt(val), po, ok
 }
 
 // ReadFloat reads the given property and attempts to convert its value into a
 // float64 type else returns 0 as that value type.
-func (e *Element) ReadFloat(prop string) (float64, bool, bool) {
-	val, po, ok := e.Read(prop)
+func (e *Element) ReadFloat(prop string, sel string) (float64, bool, bool) {
+	val, po, ok := e.Read(prop, sel)
 	return ParseFloat(val), po, ok
 }
 
@@ -132,22 +124,13 @@ func (e *Element) ReadFloat(prop string) (float64, bool, bool) {
 // as the sole only value. Usefully for a first reset of a multivalue
 // property.
 func (e *Element) Write(prop string, value string, priority bool) {
+	e.rl.Lock()
+	e.css.Add(prop, value, priority)
+	e.rl.Unlock()
+
 	e.rl.RLock()
-	cs, err := e.css.Get(prop)
+	cs, _ := e.css.Get(prop)
 	e.rl.RUnlock()
-
-	if err != nil {
-		e.rl.Lock()
-		e.css.Add(prop, value, priority)
-		e.rl.Unlock()
-	}
-
-	cs.Value = value
-	cs.Values = []string{value}
-
-	if priority {
-		cs.Priority = true
-	}
 
 	// Add the property into our diff map to ensure we deal with this
 	// efficiently without re-writing untouched rules.
@@ -158,21 +141,13 @@ func (e *Element) Write(prop string, value string, priority bool) {
 // take a scale, translate,etc properties, it allows augmenting the
 // property lists rather than replacing it.
 func (e *Element) WriteMore(prop string, value string, priority bool) {
+	e.rl.Lock()
+	e.css.AddMore(prop, value, priority)
+	e.rl.Unlock()
+
 	e.rl.RLock()
-	cs, err := e.css.Get(prop)
+	cs, _ := e.css.Get(prop)
 	e.rl.RUnlock()
-
-	if err != nil {
-		e.rl.Lock()
-		e.css.AddMore(prop, value, priority)
-		e.rl.Unlock()
-	}
-
-	cs.Values = append(cs.Values, value)
-
-	if priority {
-		cs.Priority = true
-	}
 
 	// Add the property into our diff map to ensure we deal with this
 	// efficiently without re-writing untouched rules.

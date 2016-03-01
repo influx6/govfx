@@ -2,6 +2,7 @@ package govfx
 
 import (
 	"fmt"
+	"regexp"
 	"strings"
 
 	"github.com/gopherjs/gopherjs/js"
@@ -106,14 +107,21 @@ func GetComputedStyleMap(elem dom.Element, ps string) (ComputedStyleMap, error) 
 
 		// Clean key of any vendored name to allow easy access.
 		for _, vo := range vendorTags {
+			unvendoredName = strings.TrimPrefix(unvendoredName, fmt.Sprintf("%s", vo))
 			unvendoredName = strings.TrimPrefix(unvendoredName, fmt.Sprintf("-%s-", vo))
+		}
+
+		var vals []string
+
+		if strings.TrimSpace(val) != "none" {
+			vals = append(vals, val)
 		}
 
 		styleMap[unvendoredName] = &ComputedStyle{
 			Name:       unvendoredName,
 			VendorName: key,
 			Value:      val,
-			Values:     []string{val},
+			Values:     vals,
 			Priority:   (priority > 0),
 		}
 	}
@@ -123,14 +131,25 @@ func GetComputedStyleMap(elem dom.Element, ps string) (ComputedStyleMap, error) 
 
 // Add adjusts the stylemap with a new property.
 func (c ComputedStyleMap) Add(name string, value string, priority bool) {
-	c[name] = &ComputedStyle{
-		Name:       name,
-		VendorName: name,
-		Value:      value,
-		Values:     []string{value},
-		Priority:   priority,
+	if !c.Has(name) {
+		c[name] = &ComputedStyle{
+			Name:       name,
+			VendorName: name,
+			Value:      value,
+			Values:     []string{value},
+			Priority:   priority,
+		}
+		return
 	}
+
+	m := c[name]
+	m.Value = value
+	m.Priority = priority
+	m.Values = []string{value}
 }
+
+// propName defines a regexp to pull the name of a css property setter.
+var propName = regexp.MustCompile("([\\w\\-0-9]+)\\(?\\)?")
 
 // AddMore adjusts the stylemap for a exisiting property adding the new value
 // into the values lists else adds as just a new value if it does not exists.
@@ -143,10 +162,38 @@ func (c ComputedStyleMap) AddMore(name string, value string, priority bool) {
 			Values:     []string{value},
 			Priority:   priority,
 		}
+		return
 	}
 
 	m := c[name]
-	m.Values = append(m.Values, value)
+
+	if len(m.Values) == 1 && m.Values[0] == "none" {
+		m.Values[0] = value
+		return
+	}
+
+	var found bool
+
+	prop := propName.FindStringSubmatch(value)[1]
+
+	// We must first check if we have a property with the name in list then
+	// replace it else append it into list.
+	for ind, val := range m.Values {
+
+		valName := propName.FindStringSubmatch(val)[1]
+
+		if valName != prop {
+			continue
+		}
+
+		m.Values[ind] = value
+		found = true
+	}
+
+	// If not found, then append
+	if !found {
+		m.Values = append(m.Values, value)
+	}
 }
 
 // Has returns true/false if the property exists.

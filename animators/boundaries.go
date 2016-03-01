@@ -19,7 +19,7 @@ func (w *Width) Init(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWrite
 	var writers govfx.DeferWriters
 
 	for _, elem := range elems {
-		width, priority, _ := elem.ReadInt("width")
+		width, priority, _ := elem.ReadInt("width", "")
 
 		(func(e govfx.Elemental) {
 			writers = append(writers, govfx.NewWriter(func() {
@@ -41,7 +41,7 @@ func (w *Width) Next(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWrite
 
 	for _, elem := range elems {
 		(func(e govfx.Elemental) {
-			width, priority, _ := elem.ReadInt("width")
+			width, priority, _ := elem.ReadInt("width", "")
 
 			change := w.Value - width
 
@@ -76,7 +76,7 @@ func (h *Height) Init(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWrit
 
 	for _, elem := range elems {
 		(func(e govfx.Elemental) {
-			height, priority, _ := elem.ReadInt("height")
+			height, priority, _ := elem.ReadInt("height", "")
 			writers = append(writers, govfx.NewWriter(func() {
 				val := fmt.Sprintf("%d%s", height, "px")
 				e.Write("height", val, priority)
@@ -96,7 +96,7 @@ func (h *Height) Next(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWrit
 
 	for _, elem := range elems {
 		(func(e govfx.Elemental) {
-			height, priority, _ := e.ReadInt("height")
+			height, priority, _ := e.ReadInt("height", "")
 
 			change := h.Value - height
 
