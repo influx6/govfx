@@ -7,19 +7,6 @@
 go get -u github.com/influx6/govfx/...
   ```
 
-## Differences with VelocityJS
-
- Although Govfx tries to bring the spirit of VelocityJS towards providing a optimize and fast animation library, the implementations
- do differ, through out the development of Govfx, which had its own unique challenges, only the concepts of optimized read-writes
- with reduction in layout trashing are the only major concept that Govfx holds similar to VelocityJS.
- Govfx does not try to imitate the API for velocity in Go but provides a fully distinct approach that borrows ideas where
- possible and where optimum to do so. This is no way reduces the power of VelocityJS which is a awesome library and
- should be heavily used by JS counterparts.
-
- Although velocityJS has a large source file combining alot of concepts into a single minifiable file, Govfx following an idiomatic
- and structure thinking when it comes to package files, by providing such structured, it allows a simple concepts outline, which in
- turns helps anyone to easily read through and understand what makes it work.
-
 
 ## Building Examples
   To build the sample files in the `examples` directory, navigate into the
@@ -41,49 +28,12 @@ gopherjs build app.go
   - Supports animations with Shadow DOM.
   - Batch rendering optimizations for animations.
 
-## Concept
-
-  - Sequence and Writers
-
-  `Sequence` in VFX define a behaviour that changes respectively on every tick of
-  the animation clock, they hold the calculations that are necessary to achieve
-  the desired behaviour. In a way, they define a means of providing a
-  processing of the deferred expected behaviour.
-
-  A `sequence` can be a width or height transition, or an opacity animator that
-  produces for every iteration the desired end result.
-  `Sequences` can be of any type as defined by the animation creator, which
-  provides a powerful but flexible system because multiple sequences can be bundled
-  together to produce new ones.
-
-  `Sequences` return `Writers`, which are the calculated end result for a animation step.
-  The reason there exists such a concept, is due to the need in reducing the effects of
-  massive layout trashing, which is basically the browser re-rendering of the DOM
-  due to massive multiple changes of properties of different elements, which create
-  high costs in performance.
-
-  Writers are returned from sequences to allow effective batching of these changes
-  which reduces and minimizes the update calculation performed by the browser DOM.
-
-  - Animation Frames
-
-  `Animation frames` in VFX are a collection of sequences which according to a
-  supplied stat will produce the total necessary sequence writers need to
-  achieve the desired animation within a specific frame or time of the animation
-  loop. It is the central organizational structure in VFX.
-
-  - Stats
-
-  Stats in VFX are captions of current measurements of the animation loop and the
-  properties for `Animation Frames`, using stats VFX calls all sequence to produce
-  their writers by using the properties of the stats to produce the necessary change
-  and easing behaviours that is desired to be achieved.
 
 ## Example
   The way VFX was written makes it easy to build animations quickly with as much
   control as possible, yet with efficient optimization applied in.
 
-  - Animating Width Property
+  - [Animating Width and Transistion](http://influx6.github.io/govfx/examples/sizeAnimation/)
 
       ```go
 
@@ -170,7 +120,7 @@ gopherjs build app.go
 
       ```
 
-  - Animating Width Property With ShadowDOM
+  - [Animating Width and Height with ShadowDOM](http://influx6.github.io/govfx/examples/shadowDOM/)
 
       ```go
 
@@ -236,3 +186,55 @@ gopherjs build app.go
           </html>
 
       ```
+
+## Differences with VelocityJS
+
+ Although Govfx tries to bring the spirit of VelocityJS towards providing a optimize and fast animation library, the implementations
+ do differ, through out the development of Govfx, which had its own unique challenges, only the concepts of optimized read-writes
+ with reduction in layout trashing are the only major concept that Govfx holds similar to VelocityJS.
+ Govfx does not try to imitate the API for velocity in Go but provides a fully distinct approach that borrows ideas where
+ possible and where optimum to do so. This is no way reduces the power of VelocityJS which is a awesome library and
+ should be heavily used by JS counterparts.
+
+ Although velocityJS has a large source file combining alot of concepts into a single minifiable file, Govfx following an idiomatic
+ and structure thinking when it comes to package files, by providing such structured, it allows a simple concepts outline, which in
+ turns helps anyone to easily read through and understand what makes it work.
+
+
+## Concept
+
+  - Sequence and Writers
+
+  `Sequence` in VFX define a behaviour that changes respectively on every tick of
+  the animation clock, they hold the calculations that are necessary to achieve
+  the desired behaviour. In a way, they define a means of providing a
+  processing of the deferred expected behaviour.
+
+  A `sequence` can be a width or height transition, or an opacity animator that
+  produces for every iteration the desired end result.
+  `Sequences` can be of any type as defined by the animation creator, which
+  provides a powerful but flexible system because multiple sequences can be bundled
+  together to produce new ones.
+
+  `Sequences` return `Writers`, which are the calculated end result for a animation step.
+  The reason there exists such a concept, is due to the need in reducing the effects of
+  massive layout trashing, which is basically the browser re-rendering of the DOM
+  due to massive multiple changes of properties of different elements, which create
+  high costs in performance.
+
+  Writers are returned from sequences to allow effective batching of these changes
+  which reduces and minimizes the update calculation performed by the browser DOM.
+
+  - Animation Frames
+
+  `Animation frames` in VFX are a collection of sequences which according to a
+  supplied stat will produce the total necessary sequence writers need to
+  achieve the desired animation within a specific frame or time of the animation
+  loop. It is the central organizational structure in VFX.
+
+  - Stats
+
+  Stats in VFX are captions of current measurements of the animation loop and the
+  properties for `Animation Frames`, using stats VFX calls all sequence to produce
+  their writers by using the properties of the stats to produce the necessary change
+  and easing behaviours that is desired to be achieved.
