@@ -22,7 +22,6 @@ type Stats interface {
 	Next(float64)
 	Delta() float64
 	Clone() Stats
-	Easing() string
 	IsDone() bool
 	IsFirstDone() bool
 	Reversed() bool
@@ -47,7 +46,6 @@ func GetIterations(ms time.Duration) int64 {
 type StatConfig struct {
 	Duration time.Duration
 	Delay    time.Duration
-	Easing   string
 	Loop     int
 	Reverse  bool
 	Optimize bool
@@ -87,11 +85,6 @@ func (s *Stat) Clone() Stats {
 // a animation sequence on every complete cycle(after a forward+reverse run).
 func (s *Stat) Delay() time.Duration {
 	return s.config.Delay
-}
-
-// Easing returns the easing value for this specifc stat.
-func (s *Stat) Easing() string {
-	return s.config.Easing
 }
 
 // Delta returns the current time delta from the last update.

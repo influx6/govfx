@@ -20,8 +20,8 @@ func main() {
 		Loop:     0,
 		Reverse:  true,
 		Animates: []govfx.Value{
-			{"animate": "width", "value": 500},
-			{"animate": "height", "value": 10},
+			{"animate": "width", "easing": "ease-in", "value": 500},
+			{"animate": "height", "easing": "ease-in", "value": 10},
 		},
 	}).B(root.QuerySelectorAll(".zapps")...)
 

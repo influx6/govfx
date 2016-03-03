@@ -1,6 +1,7 @@
 package govfx
 
 import (
+	"errors"
 	"fmt"
 	"regexp"
 	"strings"
@@ -284,4 +285,144 @@ func doubleString(c string) string {
 	return fmt.Sprintf("%s%s", c, c)
 }
 
+//==============================================================================
+
+// rotationMatch defines a matcher for the formation rotate(90deg).
+var rotationMatch = regexp.MustCompile("rotate\\(([\\d]+)deg\\)")
+
+// Rotation defines the concrete representation of the css3 skew
+// transform property.
+type Rotation struct {
+	Angle float64
+}
+
+// IsRotation checks wether the giving string is a css rotation directive.
+func IsRotation(data string) bool {
+	return rotationMatch.MatchString(data)
+}
+
+// ToRotation returns the rotation from the giving string else returns
+// an error if it failed.
+func ToRotation(data string) (*Rotation, error) {
+	if !IsRotation(data) {
+		return nil, errors.New("Invalid Data")
+	}
+
+	ts := strings.Split(rotationMatch.FindStringSubmatch(data)[1], ",")
+
+	t := Rotation{
+		Angle: ParseFloat(ts[0]),
+	}
+
+	return &t, nil
+}
+
+//==============================================================================
+
+// skewMatch defines a matcher for the format eg skew(90px,40px).
+var skewMatch = regexp.MustCompile("skew\\(([\\d,\\s]+)\\)")
+
+// Skew defines the concrete representation of the css3 skew
+// transform property.
+type Skew struct {
+	X float64
+	Y float64
+}
+
+// IsSkew checks wether the giving string is a css skew directive.
+func IsSkew(data string) bool {
+	return skewMatch.MatchString(data)
+}
+
+// ToSkew returns the skew from the giving string else returns
+// an error if it failed.
+func ToSkew(data string) (*Skew, error) {
+	if !IsSkew(data) {
+		return nil, errors.New("Invalid Data")
+	}
+
+	ts := strings.Split(skewMatch.FindStringSubmatch(data)[1], ",")
+
+	t := Skew{
+		X: ParseFloat(ts[0]),
+		Y: ParseFloat(ts[1]),
+	}
+
+	return &t, nil
+}
+
+//==============================================================================
+
+var tranlateMatch = regexp.MustCompile("translate\\(([\\d,\\s]+)\\)")
+
+// Translation defines the concrete representation of the css3 translation
+// transform property.
+type Translation struct {
+	X float64
+	Y float64
+}
+
+// IsTranslation checks wether the giving string is a css translation directive.
+func IsTranslation(data string) bool {
+	return tranlateMatch.MatchString(data)
+}
+
+// ToTranslation returns the translation from the giving string else returns
+// an error if it failed.
+func ToTranslation(data string) (*Translation, error) {
+	if !IsTranslation(data) {
+		return nil, errors.New("Invalid Data")
+	}
+
+	ts := strings.Split(tranlateMatch.FindStringSubmatch(data)[1], ",")
+
+	t := Translation{
+		X: ParseFloat(ts[0]),
+		Y: ParseFloat(ts[1]),
+	}
+
+	return &t, nil
+}
+
+//==============================================================================
+
+var matrixMatch = regexp.MustCompile("matrix(3[d|D])?\\(([,\\d\\s]+)\\)")
+
+// IsMatrix returns true/false if the giving string is a matrix declaration.
+func IsMatrix(data string) bool {
+	return matrixMatch.MatchString(data)
+}
+
+// Matrix2D defines a transformation matrix generated from a transform directive.
+type Matrix2D struct {
+	ScaleX    float64
+	RotationX float64
+	ScaleY    float64
+	RotationY float64
+	PositionX float64
+	PositionY float64
+}
+
+// ToMatrix2D returns a matrix from the provided data (eg matrix(0,1,0,1,3,4))
+// else returns an error.
+func ToMatrix2D(data string) (*Matrix2D, error) {
+	if !IsMatrix(data) {
+		return nil, errors.New("Invalid Matrix data")
+	}
+
+	ms := strings.Split(matrixMatch.FindStringSubmatch(data)[1], ",")
+
+	m := Matrix2D{
+		ScaleX:    ParseFloat(ms[0]),
+		RotationX: ParseFloat(ms[1]),
+		ScaleY:    ParseFloat(ms[2]),
+		RotationY: ParseFloat(ms[3]),
+		PositionX: ParseFloat(ms[4]),
+		PositionY: ParseFloat(ms[5]),
+	}
+
+	return &m, nil
+}
+
+// type Matrix3D [3]*Matrix2D
 //==============================================================================

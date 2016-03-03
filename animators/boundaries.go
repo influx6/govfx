@@ -11,7 +11,8 @@ import (
 // Width provides animation sequencing for width properties, it uses flat integers
 // values and pixels.
 type Width struct {
-	Value int `govfx:"value"`
+	Value  int    `govfx:"value"`
+	Easing string `govfx:"easing"`
 }
 
 // Init returns the initial writers for the sequence.
@@ -37,7 +38,7 @@ func (w *Width) Init(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWrite
 func (w *Width) Next(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWriters {
 	var writers govfx.DeferWriters
 
-	easing := govfx.GetEasing(stats.Easing())
+	easing := govfx.GetEasing(w.Easing)
 
 	for _, elem := range elems {
 		(func(e govfx.Elemental) {
@@ -67,7 +68,8 @@ func (w *Width) Next(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWrite
 
 // Height provides animation sequencing for Height properties.
 type Height struct {
-	Value int `govfx:"value"`
+	Value  int    `govfx:"value"`
+	Easing string `govfx:"easing"`
 }
 
 // Init returns the initial writers for the sequence.
@@ -92,7 +94,7 @@ func (h *Height) Init(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWrit
 func (h *Height) Next(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWriters {
 	var writers govfx.DeferWriters
 
-	easing := govfx.GetEasing(stats.Easing())
+	easing := govfx.GetEasing(h.Easing)
 
 	for _, elem := range elems {
 		(func(e govfx.Elemental) {

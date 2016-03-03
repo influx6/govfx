@@ -15,7 +15,6 @@ const AnimateAttributeName = "animate"
 // new sequence frames and simplifes the creation of animations.
 type Animation struct {
 	Loop     int
-	Easing   string
 	Reverse  bool
 	Duration time.Duration
 	Delay    time.Duration
@@ -46,7 +45,6 @@ func (a Animation) B(e ...Elemental) Frame {
 	as := NewAnimationSequence(NewStat(StatConfig{
 		Duration: a.Duration,
 		Delay:    a.Delay,
-		Easing:   a.Easing,
 		Loop:     a.Loop,
 		Reverse:  a.Reverse,
 		Optimize: true,

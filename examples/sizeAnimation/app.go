@@ -14,12 +14,11 @@ func main() {
 	width := (govfx.Animation{
 		Duration: 1 * time.Second,
 		Delay:    2 * time.Second,
-		Easing:   "ease-in",
 		Loop:     4,
 		Reverse:  true,
 		Animates: []govfx.Value{
-			{"animate": "width", "value": 500},
-			{"animate": "translate-y", "value": 100},
+			{"animate": "width", "easing": "ease-in", "value": 500},
+			{"animate": "translate-y", "easing": "ease", "value": 100},
 		},
 	}).B(govfx.QuerySelectorAll(".zapps")...)
 
