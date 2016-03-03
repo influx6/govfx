@@ -11,13 +11,13 @@ go get -u github.com/influx6/govfx/...
 
  Although Govfx tries to bring the spirit of VelocityJS towards providing a optimize and fast animation library, the implementations
  do differ, through out the development of Govfx, which had its own unique challenges, only the concepts of optimized read-writes
- with reduction in layout trashing are the only major concept that Govfx holds similar to VelocityJS. 
+ with reduction in layout trashing are the only major concept that Govfx holds similar to VelocityJS.
  Govfx does not try to imitate the API for velocity in Go but provides a fully distinct approach that borrows ideas where
- possible and where optimum to do so. This is no way reduces the power of VelocityJS which is a awesome library and 
+ possible and where optimum to do so. This is no way reduces the power of VelocityJS which is a awesome library and
  should be heavily used by JS counterparts.
- 
+
  Although velocityJS has a large source file combining alot of concepts into a single minifiable file, Govfx following an idiomatic
- and structure thinking when it comes to package files, by providing such structured, it allows a simple concepts outline, which in 
+ and structure thinking when it comes to package files, by providing such structured, it allows a simple concepts outline, which in
  turns helps anyone to easily read through and understand what makes it work.
 
 
@@ -102,11 +102,11 @@ gopherjs build app.go
       	width := (govfx.Animation{
       		Duration: 1 * time.Second,
       		Delay:    2 * time.Second,
-      		Easing:   "ease-in",
       		Loop:     4,
       		Reverse:  true,
       		Animates: []govfx.Value{
-      			{"animate": "width", "value": 500},
+      			{"animate": "width", "easing": "ease-in", "value": 500},
+      			{"animate": "translate-y", "easing": "ease", "value": 100},
       		},
       	}).B(govfx.QuerySelectorAll(".zapps")...)
 
@@ -192,10 +192,11 @@ gopherjs build app.go
           		Duration: 1 * time.Second,
           		Delay:    2 * time.Second,
           		Easing:   "ease-in",
-          		Loop:     4,
+          		Loop:     0,
           		Reverse:  true,
           		Animates: []govfx.Value{
-          			{"animate": "width", "value": 500},
+          			{"animate": "width", "easing": "ease-in", "value": 500},
+          			{"animate": "height", "easing": "ease-in", "value": 10},
           		},
           	}).B(root.QuerySelectorAll(".zapps")...)
 
