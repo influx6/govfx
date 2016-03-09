@@ -14,7 +14,7 @@ func main() {
 	govfx.Animate(govfx.Animation{
 		Duration: 1 * time.Second,
 		Delay:    2 * time.Second,
-		Loop:     0,
+		Loop:     -1,
 		Reverse:  true,
 		Animates: []govfx.Value{
 			{"animate": "background-color", "easing": "ease-in-out", "color": "rgb(201, 30, 93)"},
@@ -24,7 +24,7 @@ func main() {
 	govfx.Animate(govfx.Animation{
 		Duration: 1 * time.Second,
 		Delay:    2 * time.Second,
-		Loop:     0,
+		Loop:     -1,
 		Reverse:  true,
 		Animates: []govfx.Value{
 			{"animate": "background-color", "easing": "ease-in-out", "color": "rgb(222, 233, 241)"},
