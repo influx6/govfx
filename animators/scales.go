@@ -19,27 +19,9 @@ func (t *ScaleY) Init(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWrit
 	var writers govfx.DeferWriters
 
 	for _, elem := range elems {
-		transform, priority, _ := elem.Read("transform", "scale")
-		// height, _, _ := elem.ReadInt("height")
-
 		func(e govfx.Elemental) {
-
-			var y float64
-
-			if govfx.IsMatrix(transform) {
-				mx, _ := govfx.ToMatrix2D(transform)
-				y = mx.PositionY
-			} else if govfx.IsScale(transform) {
-				mx, _ := govfx.ToScale(transform)
-				y = mx.Y
-			} else {
-				y = 1
-			}
-
-			transform = fmt.Sprintf("scaleY(%.2f)", y)
-
 			writers = append(writers, govfx.NewWriter(func() {
-				e.Write("transform", transform, priority)
+				e.Write("transform", "scaleY(1.0)", false)
 				e.Sync()
 			}))
 		}(elem)
@@ -78,6 +60,8 @@ func (t *ScaleY) Next(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWrit
 			})
 
 			transform = fmt.Sprintf("scaleY(%.2f)", yn)
+			e.EraseMore("transform", "matrix", false)
+
 			writers = append(writers, govfx.NewWriter(func() {
 				e.Write("transform", transform, priority)
 				e.Sync()
@@ -101,27 +85,9 @@ func (t *ScaleX) Init(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWrit
 	var writers govfx.DeferWriters
 
 	for _, elem := range elems {
-		transform, priority, _ := elem.Read("transform", "scale")
-		// width, _, _ := elem.ReadInt("width", "")
-
 		func(e govfx.Elemental) {
-
-			var x float64
-
-			if govfx.IsMatrix(transform) {
-				mx, _ := govfx.ToMatrix2D(transform)
-				x = mx.PositionX
-			} else if govfx.IsScale(transform) {
-				mx, _ := govfx.ToScale(transform)
-				x = mx.X
-			} else {
-				x = 1
-			}
-
-			transform = fmt.Sprintf("scaleX(%.2f)", x)
-
 			writers = append(writers, govfx.NewWriter(func() {
-				e.WriteMore("transform", transform, priority)
+				e.Write("transform", "scaleX(1.0)", false)
 				e.Sync()
 			}))
 		}(elem)
@@ -158,6 +124,8 @@ func (t *ScaleX) Next(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWrit
 				CurrentValue: x,
 				DeltaValue:   xd,
 			})
+
+			e.EraseMore("transform", "matrix", false)
 
 			transform = fmt.Sprintf("scaleX(%.2f)", xn)
 			writers = append(writers, govfx.NewWriter(func() {

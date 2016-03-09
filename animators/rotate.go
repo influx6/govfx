@@ -9,18 +9,18 @@ import (
 
 //==============================================================================
 
-// SkewY defines a sequence for animating css Skew y-axes properties.
-type SkewY struct {
+// RotateY defines a sequence for animating css Rotate y-axes properties.
+type RotateY struct {
 	Value  float64 `govfx:"value"`
 	Easing string  `govfx:"easing"`
 }
 
 // Init returns the initial writers for the sequence.
-func (t *SkewY) Init(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWriters {
+func (t *RotateY) Init(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWriters {
 	var writers govfx.DeferWriters
 
 	for _, elem := range elems {
-		transform, priority, _ := elem.Read("transform", "skew")
+		transform, priority, _ := elem.Read("transform", "rotate")
 		position, pr, _ := elem.Read("position", "")
 
 		if utils.MatchAny(position, "none", "") {
@@ -34,14 +34,14 @@ func (t *SkewY) Init(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWrite
 			if govfx.IsMatrix(transform) {
 				mx, _ := govfx.ToMatrix2D(transform)
 				x, y = mx.PositionX, mx.PositionY
-			} else if govfx.IsSkew(transform) {
-				mx, _ := govfx.ToSkew(transform)
+			} else if govfx.IsRotation(transform) {
+				mx, _ := govfx.ToRotation(transform)
 				x, y = mx.X, mx.Y
 			} else {
 				x, y = 0, 0
 			}
 
-			transform = fmt.Sprintf("skew(%.0fdeg, %.0fdeg)", x, y)
+			transform = fmt.Sprintf("rotate(%.0fdeg, %.0fdeg)", x, y)
 
 			writers = append(writers, govfx.NewWriter(func() {
 				e.Write("transform", transform, priority)
@@ -55,13 +55,13 @@ func (t *SkewY) Init(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWrite
 }
 
 // Next returns the writers for the next sequence.
-func (t *SkewY) Next(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWriters {
+func (t *RotateY) Next(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWriters {
 	var writers govfx.DeferWriters
 
 	easing := govfx.GetEasing(t.Easing)
 
 	for _, elem := range elems {
-		transform, priority, _ := elem.Read("transform", "skew")
+		transform, priority, _ := elem.Read("transform", "rotate")
 
 		func(e govfx.Elemental) {
 
@@ -70,8 +70,8 @@ func (t *SkewY) Next(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWrite
 			if govfx.IsMatrix(transform) {
 				mx, _ := govfx.ToMatrix2D(transform)
 				x, y = mx.PositionX, mx.PositionY
-			} else if govfx.IsSkew(transform) {
-				mx, _ := govfx.ToSkew(transform)
+			} else if govfx.IsRotate(transform) {
+				mx, _ := govfx.ToRotate(transform)
 				x, y = mx.X, mx.Y
 			}
 
@@ -83,7 +83,7 @@ func (t *SkewY) Next(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWrite
 				DeltaValue:   yd,
 			})
 
-			transform = fmt.Sprintf("skew(%.0fdeg, %.0fdeg)", x, yn)
+			transform = fmt.Sprintf("rotate(%.0fdeg, %.0fdeg)", x, yn)
 			e.EraseMore("transform", "matrix", false)
 
 			writers = append(writers, govfx.NewWriter(func() {
@@ -98,18 +98,18 @@ func (t *SkewY) Next(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWrite
 
 //==============================================================================
 
-// SkewX defines a sequence for animating css Skew x-axes properties.
-type SkewX struct {
+// RotateX defines a sequence for animating css Rotate x-axes properties.
+type RotateX struct {
 	Value  float64 `govfx:"value"`
 	Easing string  `govfx:"easing"`
 }
 
 // Init returns the initial writers for the sequence.
-func (t *SkewX) Init(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWriters {
+func (t *RotateX) Init(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWriters {
 	var writers govfx.DeferWriters
 
 	for _, elem := range elems {
-		transform, priority, _ := elem.Read("transform", "skew")
+		transform, priority, _ := elem.Read("transform", "rotate")
 		position, pr, _ := elem.Read("position", "")
 
 		if utils.MatchAny(position, "none", "") {
@@ -123,14 +123,14 @@ func (t *SkewX) Init(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWrite
 			if govfx.IsMatrix(transform) {
 				mx, _ := govfx.ToMatrix2D(transform)
 				x = mx.PositionX
-			} else if govfx.IsSkew(transform) {
-				mx, _ := govfx.ToSkew(transform)
+			} else if govfx.IsRotate(transform) {
+				mx, _ := govfx.ToRotate(transform)
 				x = mx.X
 			} else {
 				x = 0
 			}
 
-			transform = fmt.Sprintf("skewX(%.0fdeg)", x)
+			transform = fmt.Sprintf("rotateX(%.0fdeg)", x)
 
 			writers = append(writers, govfx.NewWriter(func() {
 				e.Write("transform", transform, priority)
@@ -144,13 +144,13 @@ func (t *SkewX) Init(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWrite
 }
 
 // Next returns the writers for the next sequence.
-func (t *SkewX) Next(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWriters {
+func (t *RotateX) Next(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWriters {
 	var writers govfx.DeferWriters
 
 	easing := govfx.GetEasing(t.Easing)
 
 	for _, elem := range elems {
-		transform, priority, _ := elem.Read("transform", "skew")
+		transform, priority, _ := elem.Read("transform", "rotate")
 
 		func(e govfx.Elemental) {
 
@@ -159,8 +159,8 @@ func (t *SkewX) Next(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWrite
 			if govfx.IsMatrix(transform) {
 				mx, _ := govfx.ToMatrix2D(transform)
 				x = mx.PositionX
-			} else if govfx.IsSkew(transform) {
-				mx, _ := govfx.ToSkew(transform)
+			} else if govfx.IsRotate(transform) {
+				mx, _ := govfx.ToRotate(transform)
 				x = mx.X
 			}
 
@@ -172,7 +172,7 @@ func (t *SkewX) Next(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWrite
 				DeltaValue:   xd,
 			})
 
-			transform = fmt.Sprintf("skewX(%.0fdeg)", xn)
+			transform = fmt.Sprintf("rotateX(%.0fdeg)", xn)
 			e.EraseMore("transform", "matrix", false)
 			writers = append(writers, govfx.NewWriter(func() {
 				e.Write("transform", transform, priority)

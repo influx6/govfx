@@ -23,6 +23,7 @@ type Elemental interface {
 	Read(string, string) (string, bool, bool)
 	Write(string, string, bool)
 	WriteMore(string, string, bool)
+	EraseMore(string, string, bool)
 }
 
 // Elementals defines a lists of elementals,
@@ -126,6 +127,23 @@ func (e *Element) ReadFloat(prop string, sel string) (float64, bool, bool) {
 func (e *Element) Write(prop string, value string, priority bool) {
 	e.rl.Lock()
 	e.css.Add(prop, value, priority)
+	e.rl.Unlock()
+
+	e.rl.RLock()
+	cs, _ := e.css.Get(prop)
+	e.rl.RUnlock()
+
+	// Add the property into our diff map to ensure we deal with this
+	// efficiently without re-writing untouched rules.
+	e.cssDiff.Set(cs.VendorName)
+}
+
+// EraseMore allows erasing a multi value property, eg transform, which can
+// take a scale, translate,etc properties, it allows augmenting the
+// property lists rather than replacing it.
+func (e *Element) EraseMore(prop string, value string, priority bool) {
+	e.rl.Lock()
+	e.css.RemoveMore(prop, value, priority)
 	e.rl.Unlock()
 
 	e.rl.RLock()

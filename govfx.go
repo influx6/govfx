@@ -8,7 +8,7 @@ import "honnef.co/go/js/dom"
 // sequence where each Animation within the lists begins after the ending of
 // the previous animation, it allows a simple way of stacking multiple sequences
 // easily.
-func X(ems Elementals, a ...Animation) Frame {
+func X(a ...Animation) Frame {
 	var initial, current Frame
 
 	for _, ani := range a {
@@ -16,14 +16,14 @@ func X(ems Elementals, a ...Animation) Frame {
 		// If we are just starting the loop, set the initial and current frame
 		// as needed.
 		if initial == nil {
-			initial = ani.B(ems...)
+			initial = ani.B()
 			current = initial
 			continue
 		}
 
 		// Generate the new frame and apply it to the last frame as its next
 		// Frame call, then set this as the current frame.
-		f := ani.B(ems...)
+		f := ani.B()
 		current.Then(f)
 		current = f
 	}

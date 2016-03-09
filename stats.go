@@ -126,7 +126,7 @@ func (s *Stat) PreviousIteration(m float64) {
 
 	ct := atomic.LoadInt64(&s.currentIteration)
 
-	if ct <= 0 {
+	if ct < 0 {
 		atomic.StoreInt64(&s.completedReverse, 1)
 	}
 

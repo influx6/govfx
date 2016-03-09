@@ -264,6 +264,7 @@ func (f *AnimationSequence) Sync() {
 		f.fl.RLock()
 
 		for _, fr := range f.frames {
+			fr.Use(f.elementals)
 			Animate(fr)
 		}
 

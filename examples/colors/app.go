@@ -11,26 +11,39 @@ import (
 
 func main() {
 
-	govfx.Animate(govfx.Animation{
+	colorScale := govfx.X(govfx.Animation{
 		Duration: 3 * time.Second,
 		Delay:    2 * time.Second,
-		Loop:     -1,
+		Loop:     1,
 		Reverse:  true,
 		Animates: []govfx.Value{
-			{"animate": "scale-x", "easing": "ease", "value": 0.5},
 			{"animate": "background-color", "easing": "ease-in-out", "color": "rgb(201, 30, 93)"},
 		},
-	}.B(govfx.QuerySelectorAll(".boxy")...))
-
-	govfx.Animate(govfx.Animation{
+	}, govfx.Animation{
 		Duration: 3 * time.Second,
 		Delay:    2 * time.Second,
-		Loop:     -1,
+		Loop:     1,
 		Reverse:  true,
 		Animates: []govfx.Value{
-			{"animate": "scale-x", "easing": "ease", "value": 0.5},
+			{"animate": "scale-x", "easing": "ease", "value": 1.0},
+		},
+	})
+
+	colorScale.Use(govfx.QuerySelectorAll(".boxy"))
+	govfx.Animate(colorScale)
+
+	colorScale2 := govfx.X(govfx.Animation{
+		Duration: 3 * time.Second,
+		Delay:    2 * time.Second,
+		Loop:     2,
+		Reverse:  true,
+		Animates: []govfx.Value{
+			{"animate": "scale-x", "easing": "ease", "value": 1.0},
 			{"animate": "background-color", "easing": "ease-in-out", "color": "rgb(222, 233, 241)"},
 		},
-	}.B(govfx.QuerySelectorAll(".box")...))
+	})
+
+	colorScale2.Use(govfx.QuerySelectorAll(".box"))
+	govfx.Animate(colorScale2)
 
 }

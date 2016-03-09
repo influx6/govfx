@@ -152,6 +152,31 @@ func (c ComputedStyleMap) Add(name string, value string, priority bool) {
 // propName defines a regexp to pull the name of a css property setter.
 var propName = regexp.MustCompile("([\\w\\-0-9]+)\\(?\\)?")
 
+// RemoveMore adjusts the stylemap removing a property's subvalue that matches a
+// the giving value provided.
+func (c ComputedStyleMap) RemoveMore(name string, value string, priority bool) {
+	if !c.Has(name) {
+		return
+	}
+
+	m := c[name]
+
+	prop := propName.FindStringSubmatch(value)[1]
+
+	// We must first check if we have a property with the name in list then
+	// replace it else append it into list.
+	for ind, val := range m.Values {
+
+		valName := propName.FindStringSubmatch(val)[1]
+		if valName != prop {
+			continue
+		}
+
+		m.Values[ind] = value
+		m.Values = append(m.Values[:ind], m.Values[ind+1:]...)
+	}
+}
+
 // AddMore adjusts the stylemap for a exisiting property adding the new value
 // into the values lists else adds as just a new value if it does not exists.
 func (c ComputedStyleMap) AddMore(name string, value string, priority bool) {
@@ -505,7 +530,6 @@ func ToMatrix2D(data string) (*Matrix2D, error) {
 	}
 
 	ms := strings.Split(matrixMatch.FindStringSubmatch(data)[1], ",")
-	fmt.Printf("MS: %q\n", ms)
 
 	if len(ms) < 6 {
 		return nil, errors.New("Invalid Matrix data")

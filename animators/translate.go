@@ -85,8 +85,9 @@ func (t TranslateY) Next(stats govfx.Stats, elems govfx.Elementals) govfx.DeferW
 			})
 
 			transform = fmt.Sprintf("translate(%.0fpx, %.0fpx)", x, yn)
+			e.EraseMore("transform", "matrix", false)
 			writers = append(writers, govfx.NewWriter(func() {
-				e.Write("transform", transform, priority)
+				e.WriteMore("transform", transform, priority)
 				e.Sync()
 			}))
 		}(elem)
@@ -173,8 +174,9 @@ func (t TranslateX) Next(stats govfx.Stats, elems govfx.Elementals) govfx.DeferW
 			})
 
 			transform = fmt.Sprintf("translate(%.0fpx, %.0fpx)", xn, y)
+			e.EraseMore("transform", "matrix", false)
 			writers = append(writers, govfx.NewWriter(func() {
-				e.Write("transform", transform, priority)
+				e.WriteMore("transform", transform, priority)
 				e.Sync()
 			}))
 		}(elem)
