@@ -17868,7 +17868,7 @@ $packages["reflect"] = (function() {
 	return $pkg;
 })();
 $packages["fmt"] = (function() {
-	var $pkg = {}, $init, errors, io, math, os, reflect, strconv, sync, utf8, fmtFlags, fmt, State, Formatter, Stringer, GoStringer, buffer, pp, runeUnreader, ScanState, scanError, ss, ssave, sliceType, sliceType$1, ptrType, arrayType, arrayType$1, ptrType$1, arrayType$2, sliceType$2, ptrType$2, ptrType$5, ptrType$25, funcType, padZeroBytes, padSpaceBytes, trueBytes, falseBytes, commaSpaceBytes, nilAngleBytes, nilParenBytes, nilBytes, mapBytes, percentBangBytes, missingBytes, badIndexBytes, panicBytes, extraBytes, irparenBytes, bytesBytes, badWidthBytes, badPrecBytes, noVerbBytes, ppFree, intBits, uintptrBits, byteType, space, ssFree, complexError, boolError, _r, _r$1, init, doPrec, newPrinter, Fprintf, Printf, Sprintf, Errorf, Fprint, getField, tooLarge, parsenum, intFromArg, parseArgNumber, isSpace, notSpace, indexRune;
+	var $pkg = {}, $init, errors, io, math, os, reflect, strconv, sync, utf8, fmtFlags, fmt, State, Formatter, Stringer, GoStringer, buffer, pp, runeUnreader, ScanState, scanError, ss, ssave, sliceType, sliceType$1, ptrType, arrayType, arrayType$1, ptrType$1, arrayType$2, sliceType$2, ptrType$2, ptrType$5, ptrType$25, funcType, padZeroBytes, padSpaceBytes, trueBytes, falseBytes, commaSpaceBytes, nilAngleBytes, nilParenBytes, nilBytes, mapBytes, percentBangBytes, missingBytes, badIndexBytes, panicBytes, extraBytes, irparenBytes, bytesBytes, badWidthBytes, badPrecBytes, noVerbBytes, ppFree, intBits, uintptrBits, byteType, space, ssFree, complexError, boolError, _r, _r$1, init, doPrec, newPrinter, Fprintf, Sprintf, Errorf, Fprint, getField, tooLarge, parsenum, intFromArg, parseArgNumber, isSpace, notSpace, indexRune;
 	errors = $packages["errors"];
 	io = $packages["io"];
 	math = $packages["math"];
@@ -18695,20 +18695,6 @@ $packages["fmt"] = (function() {
 		/* */ } return; } if ($f === undefined) { $f = { $blk: Fprintf }; } $f.$ptr = $ptr; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._tuple = _tuple; $f.a = a; $f.err = err; $f.format = format; $f.n = n; $f.p = p; $f.w = w; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.Fprintf = Fprintf;
-	Printf = function(format, a) {
-		var $ptr, _r$2, _tuple, a, err, format, n, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r$2 = $f._r$2; _tuple = $f._tuple; a = $f.a; err = $f.err; format = $f.format; n = $f.n; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		n = 0;
-		err = $ifaceNil;
-		_r$2 = Fprintf(os.Stdout, format, a); /* */ $s = 1; case 1: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-		_tuple = _r$2;
-		n = _tuple[0];
-		err = _tuple[1];
-		/* */ $s = 2; case 2:
-		return [n, err];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: Printf }; } $f.$ptr = $ptr; $f._r$2 = _r$2; $f._tuple = _tuple; $f.a = a; $f.err = err; $f.format = format; $f.n = n; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.Printf = Printf;
 	Sprintf = function(format, a) {
 		var $ptr, _r$2, a, format, p, s, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r$2 = $f._r$2; a = $f.a; format = $f.format; p = $f.p; s = $f.s; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -37521,12 +37507,10 @@ $packages["github.com/influx6/govfx"] = (function() {
 	};
 	$pkg.IsRGBA = IsRGBA;
 	ParseRGB = function(rgbData) {
-		var $ptr, _r$12, _r$13, _r$14, _r$15, _r$16, _r$17, _r$18, _tmp, _tmp$1, _tmp$2, alpha, b$1, g, r, rc, rgbData, subs, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r$12 = $f._r$12; _r$13 = $f._r$13; _r$14 = $f._r$14; _r$15 = $f._r$15; _r$16 = $f._r$16; _r$17 = $f._r$17; _r$18 = $f._r$18; _tmp = $f._tmp; _tmp$1 = $f._tmp$1; _tmp$2 = $f._tmp$2; alpha = $f.alpha; b$1 = $f.b$1; g = $f.g; r = $f.r; rc = $f.rc; rgbData = $f.rgbData; subs = $f.subs; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var $ptr, _r$12, _r$13, _r$14, _r$15, _r$16, _tmp, _tmp$1, _tmp$2, alpha, b$1, g, r, rc, rgbData, subs, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r$12 = $f._r$12; _r$13 = $f._r$13; _r$14 = $f._r$14; _r$15 = $f._r$15; _r$16 = $f._r$16; _tmp = $f._tmp; _tmp$1 = $f._tmp$1; _tmp$2 = $f._tmp$2; alpha = $f.alpha; b$1 = $f.b$1; g = $f.g; r = $f.r; rc = $f.rc; rgbData = $f.rgbData; subs = $f.subs; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		_r$12 = colorReg.FindStringSubmatch(rgbData); /* */ $s = 1; case 1: if($c) { $c = false; _r$12 = _r$12.$blk(); } if (_r$12 && _r$12.$blk !== undefined) { break s; }
 		subs = _r$12;
-		_r$13 = fmt.Printf("Parsing rgba: %s \n", new sliceType$3([subs])); /* */ $s = 2; case 2: if($c) { $c = false; _r$13 = _r$13.$blk(); } if (_r$13 && _r$13.$blk !== undefined) { break s; }
-		_r$13;
 		if (subs.$length < 2) {
 			return [0, 0, 0, 0];
 		}
@@ -37538,25 +37522,23 @@ $packages["github.com/influx6/govfx"] = (function() {
 		g = _tmp$1;
 		b$1 = _tmp$2;
 		alpha = 0;
-		_r$14 = ParseInt((0 >= rc.$length ? $throwRuntimeError("index out of range") : rc.$array[rc.$offset + 0])); /* */ $s = 3; case 3: if($c) { $c = false; _r$14 = _r$14.$blk(); } if (_r$14 && _r$14.$blk !== undefined) { break s; }
-		r = _r$14;
-		_r$15 = ParseInt((1 >= rc.$length ? $throwRuntimeError("index out of range") : rc.$array[rc.$offset + 1])); /* */ $s = 4; case 4: if($c) { $c = false; _r$15 = _r$15.$blk(); } if (_r$15 && _r$15.$blk !== undefined) { break s; }
-		g = _r$15;
-		_r$16 = ParseInt((2 >= rc.$length ? $throwRuntimeError("index out of range") : rc.$array[rc.$offset + 2])); /* */ $s = 5; case 5: if($c) { $c = false; _r$16 = _r$16.$blk(); } if (_r$16 && _r$16.$blk !== undefined) { break s; }
-		b$1 = _r$16;
-		/* */ if (rc.$length > 3) { $s = 6; continue; }
-		/* */ $s = 7; continue;
-		/* if (rc.$length > 3) { */ case 6:
-			_r$17 = ParseFloat((3 >= rc.$length ? $throwRuntimeError("index out of range") : rc.$array[rc.$offset + 3])); /* */ $s = 9; case 9: if($c) { $c = false; _r$17 = _r$17.$blk(); } if (_r$17 && _r$17.$blk !== undefined) { break s; }
-			alpha = _r$17;
-			_r$18 = fmt.Printf("Parsed Alpha %s to %.2f\n", new sliceType$3([new $String((3 >= rc.$length ? $throwRuntimeError("index out of range") : rc.$array[rc.$offset + 3])), new $Float64(alpha)])); /* */ $s = 10; case 10: if($c) { $c = false; _r$18 = _r$18.$blk(); } if (_r$18 && _r$18.$blk !== undefined) { break s; }
-			_r$18;
-			$s = 8; continue;
-		/* } else { */ case 7:
+		_r$13 = ParseInt((0 >= rc.$length ? $throwRuntimeError("index out of range") : rc.$array[rc.$offset + 0])); /* */ $s = 2; case 2: if($c) { $c = false; _r$13 = _r$13.$blk(); } if (_r$13 && _r$13.$blk !== undefined) { break s; }
+		r = _r$13;
+		_r$14 = ParseInt((1 >= rc.$length ? $throwRuntimeError("index out of range") : rc.$array[rc.$offset + 1])); /* */ $s = 3; case 3: if($c) { $c = false; _r$14 = _r$14.$blk(); } if (_r$14 && _r$14.$blk !== undefined) { break s; }
+		g = _r$14;
+		_r$15 = ParseInt((2 >= rc.$length ? $throwRuntimeError("index out of range") : rc.$array[rc.$offset + 2])); /* */ $s = 4; case 4: if($c) { $c = false; _r$15 = _r$15.$blk(); } if (_r$15 && _r$15.$blk !== undefined) { break s; }
+		b$1 = _r$15;
+		/* */ if (rc.$length > 3) { $s = 5; continue; }
+		/* */ $s = 6; continue;
+		/* if (rc.$length > 3) { */ case 5:
+			_r$16 = ParseFloat((3 >= rc.$length ? $throwRuntimeError("index out of range") : rc.$array[rc.$offset + 3])); /* */ $s = 8; case 8: if($c) { $c = false; _r$16 = _r$16.$blk(); } if (_r$16 && _r$16.$blk !== undefined) { break s; }
+			alpha = _r$16;
+			$s = 7; continue;
+		/* } else { */ case 6:
 			alpha = 1;
-		/* } */ case 8:
+		/* } */ case 7:
 		return [r, g, b$1, alpha];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: ParseRGB }; } $f.$ptr = $ptr; $f._r$12 = _r$12; $f._r$13 = _r$13; $f._r$14 = _r$14; $f._r$15 = _r$15; $f._r$16 = _r$16; $f._r$17 = _r$17; $f._r$18 = _r$18; $f._tmp = _tmp; $f._tmp$1 = _tmp$1; $f._tmp$2 = _tmp$2; $f.alpha = alpha; $f.b$1 = b$1; $f.g = g; $f.r = r; $f.rc = rc; $f.rgbData = rgbData; $f.subs = subs; $f.$s = $s; $f.$r = $r; return $f;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: ParseRGB }; } $f.$ptr = $ptr; $f._r$12 = _r$12; $f._r$13 = _r$13; $f._r$14 = _r$14; $f._r$15 = _r$15; $f._r$16 = _r$16; $f._tmp = _tmp; $f._tmp$1 = _tmp$1; $f._tmp$2 = _tmp$2; $f.alpha = alpha; $f.b$1 = b$1; $f.g = g; $f.r = r; $f.rc = rc; $f.rgbData = rgbData; $f.subs = subs; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.ParseRGB = ParseRGB;
 	HexToRGB = function(hex) {
