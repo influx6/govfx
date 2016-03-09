@@ -12,7 +12,7 @@ import (
 func main() {
 
 	govfx.Animate(govfx.Animation{
-		Duration: 1 * time.Second,
+		Duration: 3 * time.Second,
 		Delay:    2 * time.Second,
 		Loop:     -1,
 		Reverse:  true,
@@ -22,7 +22,7 @@ func main() {
 	}.B(govfx.QuerySelectorAll("#box1")...))
 
 	govfx.Animate(govfx.Animation{
-		Duration: 1 * time.Second,
+		Duration: 3 * time.Second,
 		Delay:    2 * time.Second,
 		Loop:     -1,
 		Reverse:  true,
