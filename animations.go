@@ -1,9 +1,6 @@
 package govfx
 
-import (
-	"fmt"
-	"time"
-)
+import "time"
 
 //==============================================================================
 
@@ -35,8 +32,9 @@ func (a Animation) B(e ...Elemental) Frame {
 	for _, prop := range a.Animates {
 		seq, err := NewSequence(prop[AnimateAttributeName].(string), prop)
 		if err != nil {
-			fmt.Printf("Error occured %s\n", err)
-			continue
+			// fmt.Printf("Error occured %s\n", err)
+			panic(err)
+			// continue
 		}
 
 		seqs = append(seqs, seq)

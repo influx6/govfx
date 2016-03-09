@@ -16,7 +16,6 @@ func main() {
 	width := (govfx.Animation{
 		Duration: 1 * time.Second,
 		Delay:    2 * time.Second,
-		Easing:   "ease-in",
 		Loop:     0,
 		Reverse:  true,
 		Animates: []govfx.Value{

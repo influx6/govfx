@@ -9,18 +9,18 @@ import (
 
 //==============================================================================
 
-// TranslateY defines a sequence for animating css translate y-axes properties.
-type TranslateY struct {
+// SkewY defines a sequence for animating css Skew y-axes properties.
+type SkewY struct {
 	Value  int    `govfx:"value"`
 	Easing string `govfx:"easing"`
 }
 
 // Init returns the initial writers for the sequence.
-func (t TranslateY) Init(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWriters {
+func (t SkewY) Init(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWriters {
 	var writers govfx.DeferWriters
 
 	for _, elem := range elems {
-		transform, priority, _ := elem.Read("transform", "translate")
+		transform, priority, _ := elem.Read("transform", "skew")
 		position, pr, _ := elem.Read("position", "")
 
 		if utils.MatchAny(position, "none", "") {
@@ -34,15 +34,14 @@ func (t TranslateY) Init(stats govfx.Stats, elems govfx.Elementals) govfx.DeferW
 			if govfx.IsMatrix(transform) {
 				mx, _ := govfx.ToMatrix2D(transform)
 				x, y = mx.PositionX, mx.PositionY
-			} else if govfx.IsTranslation(transform) {
-				mx, _ := govfx.ToTranslation(transform)
+			} else if govfx.IsSkew(transform) {
+				mx, _ := govfx.ToSkew(transform)
 				x, y = mx.X, mx.Y
 			} else {
-				// x, y = govfx.Position(e)
 				x, y = 0, 0
 			}
 
-			transform = fmt.Sprintf("translate(%.0fpx, %.0fpx)", x, y)
+			transform = fmt.Sprintf("skew(%.0fpx, %.0fpx)", x, y)
 
 			writers = append(writers, govfx.NewWriter(func() {
 				e.Write("transform", transform, priority)
@@ -56,13 +55,13 @@ func (t TranslateY) Init(stats govfx.Stats, elems govfx.Elementals) govfx.DeferW
 }
 
 // Next returns the writers for the next sequence.
-func (t TranslateY) Next(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWriters {
+func (t SkewY) Next(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWriters {
 	var writers govfx.DeferWriters
 
 	easing := govfx.GetEasing(t.Easing)
 
 	for _, elem := range elems {
-		transform, priority, _ := elem.Read("transform", "translate")
+		transform, priority, _ := elem.Read("transform", "skew")
 
 		func(e govfx.Elemental) {
 
@@ -71,8 +70,8 @@ func (t TranslateY) Next(stats govfx.Stats, elems govfx.Elementals) govfx.DeferW
 			if govfx.IsMatrix(transform) {
 				mx, _ := govfx.ToMatrix2D(transform)
 				x, y = mx.PositionX, mx.PositionY
-			} else if govfx.IsTranslation(transform) {
-				mx, _ := govfx.ToTranslation(transform)
+			} else if govfx.IsSkew(transform) {
+				mx, _ := govfx.ToSkew(transform)
 				x, y = mx.X, mx.Y
 			}
 
@@ -84,7 +83,7 @@ func (t TranslateY) Next(stats govfx.Stats, elems govfx.Elementals) govfx.DeferW
 				DeltaValue:   yd,
 			})
 
-			transform = fmt.Sprintf("translate(%.0fpx, %.0fpx)", x, yn)
+			transform = fmt.Sprintf("skew(%.0fpx, %.0fpx)", x, yn)
 			writers = append(writers, govfx.NewWriter(func() {
 				e.Write("transform", transform, priority)
 				e.Sync()
@@ -97,18 +96,18 @@ func (t TranslateY) Next(stats govfx.Stats, elems govfx.Elementals) govfx.DeferW
 
 //==============================================================================
 
-// TranslateX defines a sequence for animating css translate x-axes properties.
-type TranslateX struct {
+// SkewX defines a sequence for animating css Skew x-axes properties.
+type SkewX struct {
 	Value  int    `govfx:"value"`
 	Easing string `govfx:"easing"`
 }
 
 // Init returns the initial writers for the sequence.
-func (t TranslateX) Init(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWriters {
+func (t SkewX) Init(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWriters {
 	var writers govfx.DeferWriters
 
 	for _, elem := range elems {
-		transform, priority, _ := elem.Read("transform", "translate")
+		transform, priority, _ := elem.Read("transform", "skew")
 		position, pr, _ := elem.Read("position", "")
 
 		if utils.MatchAny(position, "none", "") {
@@ -121,16 +120,15 @@ func (t TranslateX) Init(stats govfx.Stats, elems govfx.Elementals) govfx.DeferW
 
 			if govfx.IsMatrix(transform) {
 				mx, _ := govfx.ToMatrix2D(transform)
-				x, y = mx.PositionX, mx.PositionX
-			} else if govfx.IsTranslation(transform) {
-				mx, _ := govfx.ToTranslation(transform)
-				x, y = mx.X, mx.X
+				x, y = mx.PositionX, mx.PositionY
+			} else if govfx.IsSkew(transform) {
+				mx, _ := govfx.ToSkew(transform)
+				x, y = mx.X, mx.Y
 			} else {
-				// x, y = govfx.Position(e)
 				x, y = 0, 0
 			}
 
-			transform = fmt.Sprintf("translate(%.0fpx, %.0fpx)", x, y)
+			transform = fmt.Sprintf("skew(%.0fpx, %.0fpx)", x, y)
 
 			writers = append(writers, govfx.NewWriter(func() {
 				e.Write("transform", transform, priority)
@@ -144,13 +142,13 @@ func (t TranslateX) Init(stats govfx.Stats, elems govfx.Elementals) govfx.DeferW
 }
 
 // Next returns the writers for the next sequence.
-func (t TranslateX) Next(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWriters {
+func (t SkewX) Next(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWriters {
 	var writers govfx.DeferWriters
 
 	easing := govfx.GetEasing(t.Easing)
 
 	for _, elem := range elems {
-		transform, priority, _ := elem.Read("transform", "translate")
+		transform, priority, _ := elem.Read("transform", "skew")
 
 		func(e govfx.Elemental) {
 
@@ -158,10 +156,10 @@ func (t TranslateX) Next(stats govfx.Stats, elems govfx.Elementals) govfx.DeferW
 
 			if govfx.IsMatrix(transform) {
 				mx, _ := govfx.ToMatrix2D(transform)
-				x, y = mx.PositionX, mx.PositionX
-			} else if govfx.IsTranslation(transform) {
-				mx, _ := govfx.ToTranslation(transform)
-				x, y = mx.X, mx.X
+				x, y = mx.PositionX, mx.PositionY
+			} else if govfx.IsSkew(transform) {
+				mx, _ := govfx.ToSkew(transform)
+				x, y = mx.X, mx.Y
 			}
 
 			xd := float64(t.Value) - x
@@ -172,7 +170,7 @@ func (t TranslateX) Next(stats govfx.Stats, elems govfx.Elementals) govfx.DeferW
 				DeltaValue:   xd,
 			})
 
-			transform = fmt.Sprintf("translate(%.0fpx, %.0fpx)", xn, y)
+			transform = fmt.Sprintf("skew(%.0fpx, %.0fpx)", xn, y)
 			writers = append(writers, govfx.NewWriter(func() {
 				e.Write("transform", transform, priority)
 				e.Sync()
@@ -181,12 +179,6 @@ func (t TranslateX) Next(stats govfx.Stats, elems govfx.Elementals) govfx.DeferW
 	}
 
 	return writers
-}
-
-//==============================================================================
-
-// Bounce provides a sequence to animating a bounce effect.
-type Bounce struct {
 }
 
 //==============================================================================

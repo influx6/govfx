@@ -216,9 +216,60 @@ func (c ComputedStyleMap) Get(name string) (*ComputedStyle, error) {
 
 //==============================================================================
 
-// ToRGB turns a hexademicmal color into rgba format.
+// colorReg defines a regexp for matching rgb/rgba header content.
+var colorReg = regexp.MustCompile("[rgb|rgba]\\(([\\d\\.,\\s]+)\\)")
+
+// IsRGBFormat returns true/false if the giving string is a rgb/rgba format data.
+func IsRGBFormat(c string) bool {
+	return colorReg.MatchString(c)
+}
+
+// rgbHeader defines a regexp for matching rgb/rgba header content.
+var rgbHeader = regexp.MustCompile("rgb\\(([\\d\\.,\\s]+)\\)")
+
+// IsRGB returns true/false if the giving string is a rgb format data.
+func IsRGB(c string) bool {
+	return rgbHeader.MatchString(c)
+}
+
+// rgbaHeader defines a regexp for matching rgb/rgba header content.
+var rgbaHeader = regexp.MustCompile("rgba\\(([\\d\\.,\\s]+)\\)")
+
+// IsRGBA returns true/false if the giving string is a rgba format data.
+func IsRGBA(c string) bool {
+	return rgbaHeader.MatchString(c)
+}
+
+// ParseRGB pulls out the rgb/rgba information from a rgba(9,9,9,9) type
+// formatted string.
+func ParseRGB(rgbData string) (int, int, int, float64) {
+	subs := colorReg.FindStringSubmatch(rgbData)
+
+	if len(subs) < 2 {
+		return 0, 0, 0, 0
+	}
+
+	rc := strings.Split(subs[1], ",")
+
+	var r, g, b int
+	var alpha float64
+
+	r = ParseInt(rc[0])
+	g = ParseInt(rc[1])
+	b = ParseInt(rc[2])
+
+	if len(rc) > 3 {
+		alpha = ParseFloat(rc[3])
+	} else {
+		alpha = 1
+	}
+
+	return r, g, b, alpha
+}
+
+// HexToRGB turns a hexademicmal color into rgba format.
 // Returns the read, green and blue values as int.
-func ToRGB(hex string) (red, green, blue int) {
+func HexToRGB(hex string) (red, green, blue int) {
 	if strings.HasPrefix(hex, "#") {
 		hex = strings.TrimPrefix(hex, "#")
 	}
@@ -239,10 +290,10 @@ func ToRGB(hex string) (red, green, blue int) {
 	return
 }
 
-// RGBA turns a hexademicmal color into rgba format.
+// HexToRGBA turns a hexademicmal color into rgba format.
 // Alpha values ranges from 0-100
-func RGBA(hex string, alpha int) string {
-	r, g, b := ToRGB(hex)
+func HexToRGBA(hex string, alpha int) string {
+	r, g, b := HexToRGB(hex)
 	return fmt.Sprintf("rgba(%d,%d,%d,%.2f)", r, g, b, float64(alpha)/100)
 }
 
@@ -344,6 +395,39 @@ func ToSkew(data string) (*Skew, error) {
 	ts := strings.Split(skewMatch.FindStringSubmatch(data)[1], ",")
 
 	t := Skew{
+		X: ParseFloat(ts[0]),
+		Y: ParseFloat(ts[1]),
+	}
+
+	return &t, nil
+}
+
+//==============================================================================
+
+var scaleMatch = regexp.MustCompile("translate\\(([\\d,\\s]+)\\)")
+
+// Scale defines the concrete representation of the css3 scale
+// transform property.
+type Scale struct {
+	X float64
+	Y float64
+}
+
+// IsScale checks wether the giving string is a css scale directive.
+func IsScale(data string) bool {
+	return scaleMatch.MatchString(data)
+}
+
+// ToScale returns the translation from the giving string else returns
+// an error if it failed.
+func ToScale(data string) (*Scale, error) {
+	if !IsScale(data) {
+		return nil, errors.New("Invalid Data")
+	}
+
+	ts := strings.Split(scaleMatch.FindStringSubmatch(data)[1], ",")
+
+	t := Scale{
 		X: ParseFloat(ts[0]),
 		Y: ParseFloat(ts[1]),
 	}

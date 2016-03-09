@@ -118,6 +118,10 @@ func ShadowRootDocument(elem dom.Node) dom.DocumentFragment {
 // GetShadowRoot retrieves the shadowRoot connected to the pass dom.Node, else
 // returns false as the second argument if the node has no shadowRoot.
 func GetShadowRoot(elem dom.Node) (dom.DocumentFragment, bool) {
+	if elem == nil {
+		return nil, false
+	}
+
 	var root *js.Object
 
 	if root = elem.Underlying().Get("shadowRoot"); root == nil {

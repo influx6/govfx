@@ -1,6 +1,9 @@
 package utils
 
-import "strconv"
+import (
+	"regexp"
+	"strconv"
+)
 
 // StringMatcher defines a function type to match a giving string against.
 type StringMatcher func(string) bool
@@ -46,6 +49,11 @@ func MatchAny(target string, possibilities ...interface{}) bool {
 			}
 		case float32, float64:
 			if target == strconv.FormatFloat(item.(float64), 'f', 1, 64) {
+				state = true
+				continue
+			}
+		case *regexp.Regexp:
+			if (item.(*regexp.Regexp)).MatchString(target) {
 				state = true
 				continue
 			}
@@ -96,6 +104,11 @@ func MatchAll(target string, possibilities ...interface{}) bool {
 		case float32, float64:
 			if target == strconv.FormatFloat(item.(float64), 'f', 1, 64) {
 				state = false
+				continue
+			}
+		case *regexp.Regexp:
+			if (item.(*regexp.Regexp)).MatchString(target) {
+				state = true
 				continue
 			}
 		}

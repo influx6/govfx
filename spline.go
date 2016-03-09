@@ -21,7 +21,7 @@ func NewSpline(x, y, x2, y2 float64) *Spline {
 // Ease implements the Easings interface and allows us to use a spline
 // to provide easing behaviours.
 func (s *Spline) Ease(c EaseConfig) float64 {
-	return c.DeltaValue*s.X(c.Stat.DeltaIteration()) + c.CurrentValue
+	return (c.CurrentValue + c.DeltaValue*s.X(c.Stat.DeltaIteration()))
 }
 
 // X returns the provided x value for a giving time between 0 and 1.

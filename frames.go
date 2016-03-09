@@ -346,7 +346,7 @@ func (f *AnimationSequence) Init(ms float64) DeferWriters {
 // Sequence builds the lists of writers from each sequence item within
 // the frame sequence lists.
 func (f *AnimationSequence) Sequence(ms float64) DeferWriters {
-
+	// fmt.Printf("Frame continue: inited %d %t\n", f.inited, f.Continue())
 	// If we are not allowed to continue then return nil writers
 	if !f.Continue() {
 		return nil

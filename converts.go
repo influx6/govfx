@@ -8,7 +8,7 @@ import (
 //==============================================================================
 
 // nodigits defines a regexp for matching non-digits.
-var nodigits = regexp.MustCompile("[^\\d]+")
+var nodigits = regexp.MustCompile("[^\\d\\.]+")
 
 // ParseFloat parses a string into a float if fails returns the default value 0.
 func ParseFloat(fl string) float64 {
