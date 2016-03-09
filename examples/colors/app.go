@@ -17,9 +17,10 @@ func main() {
 		Loop:     -1,
 		Reverse:  true,
 		Animates: []govfx.Value{
+			{"animate": "scale-x", "easing": "ease", "value": 0.5},
 			{"animate": "background-color", "easing": "ease-in-out", "color": "rgb(201, 30, 93)"},
 		},
-	}.B(govfx.QuerySelectorAll("#box1")...))
+	}.B(govfx.QuerySelectorAll(".boxy")...))
 
 	govfx.Animate(govfx.Animation{
 		Duration: 3 * time.Second,
@@ -27,8 +28,9 @@ func main() {
 		Loop:     -1,
 		Reverse:  true,
 		Animates: []govfx.Value{
+			{"animate": "scale-x", "easing": "ease", "value": 0.5},
 			{"animate": "background-color", "easing": "ease-in-out", "color": "rgb(222, 233, 241)"},
 		},
-	}.B(govfx.QuerySelectorAll("#box2")...))
+	}.B(govfx.QuerySelectorAll(".box")...))
 
 }

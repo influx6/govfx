@@ -474,7 +474,17 @@ var matrixMatch = regexp.MustCompile("matrix(3[d|D])?\\(([,\\d\\s]+)\\)")
 
 // IsMatrix returns true/false if the giving string is a matrix declaration.
 func IsMatrix(data string) bool {
-	return matrixMatch.MatchString(data)
+	if !matrixMatch.MatchString(data) {
+		return false
+	}
+
+	ms := strings.Split(matrixMatch.FindStringSubmatch(data)[1], ",")
+
+	if len(ms) < 6 {
+		return false
+	}
+
+	return true
 }
 
 // Matrix2D defines a transformation matrix generated from a transform directive.
@@ -495,6 +505,11 @@ func ToMatrix2D(data string) (*Matrix2D, error) {
 	}
 
 	ms := strings.Split(matrixMatch.FindStringSubmatch(data)[1], ",")
+	fmt.Printf("MS: %q\n", ms)
+
+	if len(ms) < 6 {
+		return nil, errors.New("Invalid Matrix data")
+	}
 
 	m := Matrix2D{
 		ScaleX:    ParseFloat(ms[0]),

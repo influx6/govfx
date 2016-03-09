@@ -56,7 +56,7 @@ func NewElement(elem dom.Element, pseudo string) Elemental {
 		Element: elem,
 		css:     css,
 		cssDiff: ds.NewTruthMap(ds.NewBoolStore()),
-		style:   NewStyleSync(id, shadow),
+		style:   NewStyleSync(id, elem, shadow),
 	}
 
 	return &em
@@ -176,20 +176,16 @@ func (e *Element) Sync() {
 			var valueContent string
 
 			if val.Priority {
-				valueContent = "\t%s:%s !important;\n"
+				valueContent = "%s:%s !important; "
 			} else {
-				valueContent = "\t%s:%s;\n"
+				valueContent = "%s:%s; "
 			}
 
 			fmt.Fprint(&content, fmt.Sprintf(valueContent, key, item))
 		}
 	})
 
-	e.style.Write(fmt.Sprintf(`
-  #%s {
-%s
-  }
-`, e.id, content.String()))
+	e.style.Write(content.String())
 
 }
 
@@ -205,14 +201,14 @@ type StyleSync struct {
 }
 
 // NewStyleSync returns a new style syncer.
-func NewStyleSync(id string, root dom.Node) *StyleSync {
+func NewStyleSync(id string, elem dom.Element, root dom.Node) *StyleSync {
 	sync := StyleSync{
 		id:   id,
-		elem: Document().CreateElement("style"),
+		elem: elem,
 		root: root,
 	}
 
-	sync.elem.SetAttribute("id", fmt.Sprintf("%s-styles", id))
+	// sync.elem.SetAttribute("id", fmt.Sprintf("%s-styles", id))
 
 	sync.Connect()
 
@@ -221,23 +217,15 @@ func NewStyleSync(id string, root dom.Node) *StyleSync {
 
 // Disconnect the style from the head node.
 func (s *StyleSync) Disconnect() {
-	if s.root == nil {
-		Document().QuerySelector("head").RemoveChild(s.elem)
-		return
-	}
-	s.root.RemoveChild(s.elem)
+	s.elem.RemoveAttribute("style")
 }
 
 // Connect adds the giving StyleSync internal style into the dom.
 func (s *StyleSync) Connect() {
-	if s.root == nil {
-		Document().QuerySelector("head").AppendChild(s.elem)
-		return
-	}
-	s.root.AppendChild(s.elem)
+	s.elem.SetAttribute("style", "")
 }
 
 // Write re-writes the content of the style with the provided data.
 func (s *StyleSync) Write(styleContent string) {
-	s.elem.SetInnerHTML(styleContent)
+	s.elem.SetAttribute("style", styleContent)
 }

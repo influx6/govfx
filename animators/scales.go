@@ -3,7 +3,6 @@ package animators
 import (
 	"fmt"
 
-	"github.com/influx6/faux/utils"
 	"github.com/influx6/govfx"
 )
 
@@ -11,41 +10,36 @@ import (
 
 // ScaleY defines a sequence for animating css Scale y-axes properties.
 type ScaleY struct {
-	Value  int    `govfx:"value"`
-	Easing string `govfx:"easing"`
+	Value  float64 `govfx:"value"`
+	Easing string  `govfx:"easing"`
 }
 
 // Init returns the initial writers for the sequence.
-func (t ScaleY) Init(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWriters {
+func (t *ScaleY) Init(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWriters {
 	var writers govfx.DeferWriters
 
 	for _, elem := range elems {
 		transform, priority, _ := elem.Read("transform", "scale")
-		position, pr, _ := elem.Read("position", "")
-
-		if utils.MatchAny(position, "none", "") {
-			position = "relative"
-		}
+		// height, _, _ := elem.ReadInt("height")
 
 		func(e govfx.Elemental) {
 
-			var x, y float64
+			var y float64
 
 			if govfx.IsMatrix(transform) {
 				mx, _ := govfx.ToMatrix2D(transform)
-				x, y = mx.PositionX, mx.PositionY
+				y = mx.PositionY
 			} else if govfx.IsScale(transform) {
 				mx, _ := govfx.ToScale(transform)
-				x, y = mx.X, mx.Y
+				y = mx.Y
 			} else {
-				x, y = 0, 0
+				y = 1
 			}
 
-			transform = fmt.Sprintf("scale(%.0fpx, %.0fpx)", x, y)
+			transform = fmt.Sprintf("scaleY(%.2f)", y)
 
 			writers = append(writers, govfx.NewWriter(func() {
 				e.Write("transform", transform, priority)
-				e.Write("position", position, pr)
 				e.Sync()
 			}))
 		}(elem)
@@ -55,7 +49,7 @@ func (t ScaleY) Init(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWrite
 }
 
 // Next returns the writers for the next sequence.
-func (t ScaleY) Next(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWriters {
+func (t *ScaleY) Next(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWriters {
 	var writers govfx.DeferWriters
 
 	easing := govfx.GetEasing(t.Easing)
@@ -65,14 +59,14 @@ func (t ScaleY) Next(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWrite
 
 		func(e govfx.Elemental) {
 
-			var x, y float64
+			var y float64
 
 			if govfx.IsMatrix(transform) {
 				mx, _ := govfx.ToMatrix2D(transform)
-				x, y = mx.ScaleX, mx.ScaleY
+				y = mx.ScaleY
 			} else if govfx.IsScale(transform) {
 				mx, _ := govfx.ToScale(transform)
-				x, y = mx.X, mx.Y
+				y = mx.Y
 			}
 
 			yd := float64(t.Value) - y
@@ -83,7 +77,7 @@ func (t ScaleY) Next(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWrite
 				DeltaValue:   yd,
 			})
 
-			transform = fmt.Sprintf("scale(%.0fpx, %.0fpx)", x, yn)
+			transform = fmt.Sprintf("scaleY(%.2f)", yn)
 			writers = append(writers, govfx.NewWriter(func() {
 				e.Write("transform", transform, priority)
 				e.Sync()
@@ -98,41 +92,36 @@ func (t ScaleY) Next(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWrite
 
 // ScaleX defines a sequence for animating css Scale x-axes properties.
 type ScaleX struct {
-	Value  int    `govfx:"value"`
-	Easing string `govfx:"easing"`
+	Value  float64 `govfx:"value"`
+	Easing string  `govfx:"easing"`
 }
 
 // Init returns the initial writers for the sequence.
-func (t ScaleX) Init(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWriters {
+func (t *ScaleX) Init(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWriters {
 	var writers govfx.DeferWriters
 
 	for _, elem := range elems {
 		transform, priority, _ := elem.Read("transform", "scale")
-		position, pr, _ := elem.Read("position", "")
-
-		if utils.MatchAny(position, "none", "") {
-			position = "relative"
-		}
+		// width, _, _ := elem.ReadInt("width", "")
 
 		func(e govfx.Elemental) {
 
-			var x, y float64
+			var x float64
 
 			if govfx.IsMatrix(transform) {
 				mx, _ := govfx.ToMatrix2D(transform)
-				x, y = mx.PositionX, mx.PositionY
+				x = mx.PositionX
 			} else if govfx.IsScale(transform) {
 				mx, _ := govfx.ToScale(transform)
-				x, y = mx.X, mx.Y
+				x = mx.X
 			} else {
-				x, y = 0, 0
+				x = 1
 			}
 
-			transform = fmt.Sprintf("scale(%.0fpx, %.0fpx)", x, y)
+			transform = fmt.Sprintf("scaleX(%.2f)", x)
 
 			writers = append(writers, govfx.NewWriter(func() {
-				e.Write("transform", transform, priority)
-				e.Write("position", position, pr)
+				e.WriteMore("transform", transform, priority)
 				e.Sync()
 			}))
 		}(elem)
@@ -142,7 +131,7 @@ func (t ScaleX) Init(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWrite
 }
 
 // Next returns the writers for the next sequence.
-func (t ScaleX) Next(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWriters {
+func (t *ScaleX) Next(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWriters {
 	var writers govfx.DeferWriters
 
 	easing := govfx.GetEasing(t.Easing)
@@ -152,14 +141,14 @@ func (t ScaleX) Next(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWrite
 
 		func(e govfx.Elemental) {
 
-			var x, y float64
+			var x float64
 
 			if govfx.IsMatrix(transform) {
 				mx, _ := govfx.ToMatrix2D(transform)
-				x, y = mx.ScaleX, mx.ScaleY
+				x = mx.ScaleX
 			} else if govfx.IsScale(transform) {
 				mx, _ := govfx.ToScale(transform)
-				x, y = mx.X, mx.Y
+				x = mx.X
 			}
 
 			xd := float64(t.Value) - x
@@ -170,9 +159,9 @@ func (t ScaleX) Next(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWrite
 				DeltaValue:   xd,
 			})
 
-			transform = fmt.Sprintf("scale(%.0fpx, %.0fpx)", xn, y)
+			transform = fmt.Sprintf("scaleX(%.2f)", xn)
 			writers = append(writers, govfx.NewWriter(func() {
-				e.Write("transform", transform, priority)
+				e.WriteMore("transform", transform, priority)
 				e.Sync()
 			}))
 		}(elem)

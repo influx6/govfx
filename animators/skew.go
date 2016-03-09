@@ -11,12 +11,12 @@ import (
 
 // SkewY defines a sequence for animating css Skew y-axes properties.
 type SkewY struct {
-	Value  int    `govfx:"value"`
-	Easing string `govfx:"easing"`
+	Value  float64 `govfx:"value"`
+	Easing string  `govfx:"easing"`
 }
 
 // Init returns the initial writers for the sequence.
-func (t SkewY) Init(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWriters {
+func (t *SkewY) Init(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWriters {
 	var writers govfx.DeferWriters
 
 	for _, elem := range elems {
@@ -41,7 +41,7 @@ func (t SkewY) Init(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWriter
 				x, y = 0, 0
 			}
 
-			transform = fmt.Sprintf("skew(%.0fpx, %.0fpx)", x, y)
+			transform = fmt.Sprintf("skew(%.0fdeg, %.0fdeg)", x, y)
 
 			writers = append(writers, govfx.NewWriter(func() {
 				e.Write("transform", transform, priority)
@@ -55,7 +55,7 @@ func (t SkewY) Init(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWriter
 }
 
 // Next returns the writers for the next sequence.
-func (t SkewY) Next(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWriters {
+func (t *SkewY) Next(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWriters {
 	var writers govfx.DeferWriters
 
 	easing := govfx.GetEasing(t.Easing)
@@ -83,7 +83,7 @@ func (t SkewY) Next(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWriter
 				DeltaValue:   yd,
 			})
 
-			transform = fmt.Sprintf("skew(%.0fpx, %.0fpx)", x, yn)
+			transform = fmt.Sprintf("skew(%.0fdeg, %.0fdeg)", x, yn)
 			writers = append(writers, govfx.NewWriter(func() {
 				e.Write("transform", transform, priority)
 				e.Sync()
@@ -98,12 +98,12 @@ func (t SkewY) Next(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWriter
 
 // SkewX defines a sequence for animating css Skew x-axes properties.
 type SkewX struct {
-	Value  int    `govfx:"value"`
-	Easing string `govfx:"easing"`
+	Value  float64 `govfx:"value"`
+	Easing string  `govfx:"easing"`
 }
 
 // Init returns the initial writers for the sequence.
-func (t SkewX) Init(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWriters {
+func (t *SkewX) Init(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWriters {
 	var writers govfx.DeferWriters
 
 	for _, elem := range elems {
@@ -116,19 +116,19 @@ func (t SkewX) Init(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWriter
 
 		func(e govfx.Elemental) {
 
-			var x, y float64
+			var x float64
 
 			if govfx.IsMatrix(transform) {
 				mx, _ := govfx.ToMatrix2D(transform)
-				x, y = mx.PositionX, mx.PositionY
+				x = mx.PositionX
 			} else if govfx.IsSkew(transform) {
 				mx, _ := govfx.ToSkew(transform)
-				x, y = mx.X, mx.Y
+				x = mx.X
 			} else {
-				x, y = 0, 0
+				x = 0
 			}
 
-			transform = fmt.Sprintf("skew(%.0fpx, %.0fpx)", x, y)
+			transform = fmt.Sprintf("skewX(%.0fdeg)", x)
 
 			writers = append(writers, govfx.NewWriter(func() {
 				e.Write("transform", transform, priority)
@@ -142,7 +142,7 @@ func (t SkewX) Init(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWriter
 }
 
 // Next returns the writers for the next sequence.
-func (t SkewX) Next(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWriters {
+func (t *SkewX) Next(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWriters {
 	var writers govfx.DeferWriters
 
 	easing := govfx.GetEasing(t.Easing)
@@ -152,14 +152,14 @@ func (t SkewX) Next(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWriter
 
 		func(e govfx.Elemental) {
 
-			var x, y float64
+			var x float64
 
 			if govfx.IsMatrix(transform) {
 				mx, _ := govfx.ToMatrix2D(transform)
-				x, y = mx.PositionX, mx.PositionY
+				x = mx.PositionX
 			} else if govfx.IsSkew(transform) {
 				mx, _ := govfx.ToSkew(transform)
-				x, y = mx.X, mx.Y
+				x = mx.X
 			}
 
 			xd := float64(t.Value) - x
@@ -170,7 +170,7 @@ func (t SkewX) Next(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWriter
 				DeltaValue:   xd,
 			})
 
-			transform = fmt.Sprintf("skew(%.0fpx, %.0fpx)", xn, y)
+			transform = fmt.Sprintf("skewX(%.0fdeg)", xn)
 			writers = append(writers, govfx.NewWriter(func() {
 				e.Write("transform", transform, priority)
 				e.Sync()

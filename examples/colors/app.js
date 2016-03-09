@@ -17868,7 +17868,7 @@ $packages["reflect"] = (function() {
 	return $pkg;
 })();
 $packages["fmt"] = (function() {
-	var $pkg = {}, $init, errors, io, math, os, reflect, strconv, sync, utf8, fmtFlags, fmt, State, Formatter, Stringer, GoStringer, buffer, pp, runeUnreader, ScanState, scanError, ss, ssave, sliceType, sliceType$1, ptrType, arrayType, arrayType$1, ptrType$1, arrayType$2, sliceType$2, ptrType$2, ptrType$5, ptrType$25, funcType, padZeroBytes, padSpaceBytes, trueBytes, falseBytes, commaSpaceBytes, nilAngleBytes, nilParenBytes, nilBytes, mapBytes, percentBangBytes, missingBytes, badIndexBytes, panicBytes, extraBytes, irparenBytes, bytesBytes, badWidthBytes, badPrecBytes, noVerbBytes, ppFree, intBits, uintptrBits, byteType, space, ssFree, complexError, boolError, _r, _r$1, init, doPrec, newPrinter, Fprintf, Sprintf, Errorf, Fprint, getField, tooLarge, parsenum, intFromArg, parseArgNumber, isSpace, notSpace, indexRune;
+	var $pkg = {}, $init, errors, io, math, os, reflect, strconv, sync, utf8, fmtFlags, fmt, State, Formatter, Stringer, GoStringer, buffer, pp, runeUnreader, ScanState, scanError, ss, ssave, sliceType, sliceType$1, ptrType, arrayType, arrayType$1, ptrType$1, arrayType$2, sliceType$2, ptrType$2, ptrType$5, ptrType$25, funcType, padZeroBytes, padSpaceBytes, trueBytes, falseBytes, commaSpaceBytes, nilAngleBytes, nilParenBytes, nilBytes, mapBytes, percentBangBytes, missingBytes, badIndexBytes, panicBytes, extraBytes, irparenBytes, bytesBytes, badWidthBytes, badPrecBytes, noVerbBytes, ppFree, intBits, uintptrBits, byteType, space, ssFree, complexError, boolError, _r, _r$1, init, doPrec, newPrinter, Fprintf, Printf, Sprintf, Errorf, Fprint, getField, tooLarge, parsenum, intFromArg, parseArgNumber, isSpace, notSpace, indexRune;
 	errors = $packages["errors"];
 	io = $packages["io"];
 	math = $packages["math"];
@@ -18695,6 +18695,20 @@ $packages["fmt"] = (function() {
 		/* */ } return; } if ($f === undefined) { $f = { $blk: Fprintf }; } $f.$ptr = $ptr; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._tuple = _tuple; $f.a = a; $f.err = err; $f.format = format; $f.n = n; $f.p = p; $f.w = w; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.Fprintf = Fprintf;
+	Printf = function(format, a) {
+		var $ptr, _r$2, _tuple, a, err, format, n, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r$2 = $f._r$2; _tuple = $f._tuple; a = $f.a; err = $f.err; format = $f.format; n = $f.n; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		n = 0;
+		err = $ifaceNil;
+		_r$2 = Fprintf(os.Stdout, format, a); /* */ $s = 1; case 1: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+		_tuple = _r$2;
+		n = _tuple[0];
+		err = _tuple[1];
+		/* */ $s = 2; case 2:
+		return [n, err];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Printf }; } $f.$ptr = $ptr; $f._r$2 = _r$2; $f._tuple = _tuple; $f.a = a; $f.err = err; $f.format = format; $f.n = n; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.Printf = Printf;
 	Sprintf = function(format, a) {
 		var $ptr, _r$2, a, format, p, s, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r$2 = $f._r$2; a = $f.a; format = $f.format; p = $f.p; s = $f.s; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -37668,17 +37682,27 @@ $packages["github.com/influx6/govfx"] = (function() {
 	};
 	$pkg.ToTranslation = ToTranslation;
 	IsMatrix = function(data) {
-		var $ptr, _r$12, data, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r$12 = $f._r$12; data = $f.data; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		_r$12 = matrixMatch.MatchString(data); /* */ $s = 1; case 1: if($c) { $c = false; _r$12 = _r$12.$blk(); } if (_r$12 && _r$12.$blk !== undefined) { break s; }
-		/* */ $s = 2; case 2:
-		return _r$12;
-		/* */ } return; } if ($f === undefined) { $f = { $blk: IsMatrix }; } $f.$ptr = $ptr; $f._r$12 = _r$12; $f.data = data; $f.$s = $s; $f.$r = $r; return $f;
+		var $ptr, _r$12, _r$13, _r$14, data, ms, x, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r$12 = $f._r$12; _r$13 = $f._r$13; _r$14 = $f._r$14; data = $f.data; ms = $f.ms; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		_r$12 = matrixMatch.MatchString(data); /* */ $s = 3; case 3: if($c) { $c = false; _r$12 = _r$12.$blk(); } if (_r$12 && _r$12.$blk !== undefined) { break s; }
+		/* */ if (!_r$12) { $s = 1; continue; }
+		/* */ $s = 2; continue;
+		/* if (!_r$12) { */ case 1:
+			return false;
+		/* } */ case 2:
+		_r$13 = matrixMatch.FindStringSubmatch(data); /* */ $s = 4; case 4: if($c) { $c = false; _r$13 = _r$13.$blk(); } if (_r$13 && _r$13.$blk !== undefined) { break s; }
+		_r$14 = strings.Split((x = _r$13, (1 >= x.$length ? $throwRuntimeError("index out of range") : x.$array[x.$offset + 1])), ","); /* */ $s = 5; case 5: if($c) { $c = false; _r$14 = _r$14.$blk(); } if (_r$14 && _r$14.$blk !== undefined) { break s; }
+		ms = _r$14;
+		if (ms.$length < 6) {
+			return false;
+		}
+		return true;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: IsMatrix }; } $f.$ptr = $ptr; $f._r$12 = _r$12; $f._r$13 = _r$13; $f._r$14 = _r$14; $f.data = data; $f.ms = ms; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.IsMatrix = IsMatrix;
 	ToMatrix2D = function(data) {
-		var $ptr, _r$12, _r$13, _r$14, _r$15, _r$16, _r$17, _r$18, _r$19, _r$20, data, m, ms, x, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r$12 = $f._r$12; _r$13 = $f._r$13; _r$14 = $f._r$14; _r$15 = $f._r$15; _r$16 = $f._r$16; _r$17 = $f._r$17; _r$18 = $f._r$18; _r$19 = $f._r$19; _r$20 = $f._r$20; data = $f.data; m = $f.m; ms = $f.ms; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var $ptr, _r$12, _r$13, _r$14, _r$15, _r$16, _r$17, _r$18, _r$19, _r$20, _r$21, data, m, ms, x, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r$12 = $f._r$12; _r$13 = $f._r$13; _r$14 = $f._r$14; _r$15 = $f._r$15; _r$16 = $f._r$16; _r$17 = $f._r$17; _r$18 = $f._r$18; _r$19 = $f._r$19; _r$20 = $f._r$20; _r$21 = $f._r$21; data = $f.data; m = $f.m; ms = $f.ms; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		m = [m];
 		_r$12 = IsMatrix(data); /* */ $s = 3; case 3: if($c) { $c = false; _r$12 = _r$12.$blk(); } if (_r$12 && _r$12.$blk !== undefined) { break s; }
 		/* */ if (!_r$12) { $s = 1; continue; }
@@ -37689,15 +37713,20 @@ $packages["github.com/influx6/govfx"] = (function() {
 		_r$13 = matrixMatch.FindStringSubmatch(data); /* */ $s = 4; case 4: if($c) { $c = false; _r$13 = _r$13.$blk(); } if (_r$13 && _r$13.$blk !== undefined) { break s; }
 		_r$14 = strings.Split((x = _r$13, (1 >= x.$length ? $throwRuntimeError("index out of range") : x.$array[x.$offset + 1])), ","); /* */ $s = 5; case 5: if($c) { $c = false; _r$14 = _r$14.$blk(); } if (_r$14 && _r$14.$blk !== undefined) { break s; }
 		ms = _r$14;
-		_r$15 = ParseFloat((0 >= ms.$length ? $throwRuntimeError("index out of range") : ms.$array[ms.$offset + 0])); /* */ $s = 6; case 6: if($c) { $c = false; _r$15 = _r$15.$blk(); } if (_r$15 && _r$15.$blk !== undefined) { break s; }
-		_r$16 = ParseFloat((1 >= ms.$length ? $throwRuntimeError("index out of range") : ms.$array[ms.$offset + 1])); /* */ $s = 7; case 7: if($c) { $c = false; _r$16 = _r$16.$blk(); } if (_r$16 && _r$16.$blk !== undefined) { break s; }
-		_r$17 = ParseFloat((2 >= ms.$length ? $throwRuntimeError("index out of range") : ms.$array[ms.$offset + 2])); /* */ $s = 8; case 8: if($c) { $c = false; _r$17 = _r$17.$blk(); } if (_r$17 && _r$17.$blk !== undefined) { break s; }
-		_r$18 = ParseFloat((3 >= ms.$length ? $throwRuntimeError("index out of range") : ms.$array[ms.$offset + 3])); /* */ $s = 9; case 9: if($c) { $c = false; _r$18 = _r$18.$blk(); } if (_r$18 && _r$18.$blk !== undefined) { break s; }
-		_r$19 = ParseFloat((4 >= ms.$length ? $throwRuntimeError("index out of range") : ms.$array[ms.$offset + 4])); /* */ $s = 10; case 10: if($c) { $c = false; _r$19 = _r$19.$blk(); } if (_r$19 && _r$19.$blk !== undefined) { break s; }
-		_r$20 = ParseFloat((5 >= ms.$length ? $throwRuntimeError("index out of range") : ms.$array[ms.$offset + 5])); /* */ $s = 11; case 11: if($c) { $c = false; _r$20 = _r$20.$blk(); } if (_r$20 && _r$20.$blk !== undefined) { break s; }
-		m[0] = new Matrix2D.ptr(_r$15, _r$16, _r$17, _r$18, _r$19, _r$20);
+		_r$15 = fmt.Printf("MS: %q\n", new sliceType$3([ms])); /* */ $s = 6; case 6: if($c) { $c = false; _r$15 = _r$15.$blk(); } if (_r$15 && _r$15.$blk !== undefined) { break s; }
+		_r$15;
+		if (ms.$length < 6) {
+			return [ptrType$7.nil, errors.New("Invalid Matrix data")];
+		}
+		_r$16 = ParseFloat((0 >= ms.$length ? $throwRuntimeError("index out of range") : ms.$array[ms.$offset + 0])); /* */ $s = 7; case 7: if($c) { $c = false; _r$16 = _r$16.$blk(); } if (_r$16 && _r$16.$blk !== undefined) { break s; }
+		_r$17 = ParseFloat((1 >= ms.$length ? $throwRuntimeError("index out of range") : ms.$array[ms.$offset + 1])); /* */ $s = 8; case 8: if($c) { $c = false; _r$17 = _r$17.$blk(); } if (_r$17 && _r$17.$blk !== undefined) { break s; }
+		_r$18 = ParseFloat((2 >= ms.$length ? $throwRuntimeError("index out of range") : ms.$array[ms.$offset + 2])); /* */ $s = 9; case 9: if($c) { $c = false; _r$18 = _r$18.$blk(); } if (_r$18 && _r$18.$blk !== undefined) { break s; }
+		_r$19 = ParseFloat((3 >= ms.$length ? $throwRuntimeError("index out of range") : ms.$array[ms.$offset + 3])); /* */ $s = 10; case 10: if($c) { $c = false; _r$19 = _r$19.$blk(); } if (_r$19 && _r$19.$blk !== undefined) { break s; }
+		_r$20 = ParseFloat((4 >= ms.$length ? $throwRuntimeError("index out of range") : ms.$array[ms.$offset + 4])); /* */ $s = 11; case 11: if($c) { $c = false; _r$20 = _r$20.$blk(); } if (_r$20 && _r$20.$blk !== undefined) { break s; }
+		_r$21 = ParseFloat((5 >= ms.$length ? $throwRuntimeError("index out of range") : ms.$array[ms.$offset + 5])); /* */ $s = 12; case 12: if($c) { $c = false; _r$21 = _r$21.$blk(); } if (_r$21 && _r$21.$blk !== undefined) { break s; }
+		m[0] = new Matrix2D.ptr(_r$16, _r$17, _r$18, _r$19, _r$20, _r$21);
 		return [m[0], $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: ToMatrix2D }; } $f.$ptr = $ptr; $f._r$12 = _r$12; $f._r$13 = _r$13; $f._r$14 = _r$14; $f._r$15 = _r$15; $f._r$16 = _r$16; $f._r$17 = _r$17; $f._r$18 = _r$18; $f._r$19 = _r$19; $f._r$20 = _r$20; $f.data = data; $f.m = m; $f.ms = ms; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: ToMatrix2D }; } $f.$ptr = $ptr; $f._r$12 = _r$12; $f._r$13 = _r$13; $f._r$14 = _r$14; $f._r$15 = _r$15; $f._r$16 = _r$16; $f._r$17 = _r$17; $f._r$18 = _r$18; $f._r$19 = _r$19; $f._r$20 = _r$20; $f._r$21 = _r$21; $f.data = data; $f.m = m; $f.ms = ms; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.ToMatrix2D = ToMatrix2D;
 	Root = function() {
@@ -37891,7 +37920,7 @@ $packages["github.com/influx6/govfx"] = (function() {
 			id = _r$17;
 		/* } */ case 9:
 		$r = elem.SetAttribute("id", id); /* */ $s = 12; case 12: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		_r$18 = NewStyleSync(id, shadow); /* */ $s = 13; case 13: if($c) { $c = false; _r$18 = _r$18.$blk(); } if (_r$18 && _r$18.$blk !== undefined) { break s; }
+		_r$18 = NewStyleSync(id, elem, shadow); /* */ $s = 13; case 13: if($c) { $c = false; _r$18 = _r$18.$blk(); } if (_r$18 && _r$18.$blk !== undefined) { break s; }
 		em[0] = new Element.ptr(elem, id, ds.NewTruthMap(new ds.BoolStore(ds.NewBoolStore())), _r$18, new sync.RWMutex.ptr(new sync.Mutex.ptr(0, 0), 0, 0, 0, 0), css);
 		return em[0];
 		/* */ } return; } if ($f === undefined) { $f = { $blk: NewElement }; } $f.$ptr = $ptr; $f._arg = _arg; $f._r$12 = _r$12; $f._r$13 = _r$13; $f._r$14 = _r$14; $f._r$15 = _r$15; $f._r$16 = _r$16; $f._r$17 = _r$17; $f._r$18 = _r$18; $f._tuple = _tuple; $f.css = css; $f.eid = eid; $f.elem = elem; $f.em = em; $f.err = err; $f.id = id; $f.pseudo = pseudo; $f.shadow = shadow; $f.$s = $s; $f.$r = $r; return $f;
@@ -37996,8 +38025,8 @@ $packages["github.com/influx6/govfx"] = (function() {
 	};
 	Element.prototype.End = function() { return this.$val.End(); };
 	Element.ptr.prototype.Sync = function() {
-		var $ptr, _r$12, content, e, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r$12 = $f._r$12; content = $f.content; e = $f.e; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var $ptr, content, e, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; content = $f.content; e = $f.e; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		content = [content];
 		e = [e];
 		e[0] = this;
@@ -38014,9 +38043,9 @@ $packages["github.com/influx6/govfx"] = (function() {
 				item = ((_i < 0 || _i >= _ref.$length) ? $throwRuntimeError("index out of range") : _ref.$array[_ref.$offset + _i]);
 				valueContent = "";
 				if (val.Priority) {
-					valueContent = "\t%s:%s !important;\n";
+					valueContent = "%s:%s !important; ";
 				} else {
-					valueContent = "\t%s:%s;\n";
+					valueContent = "%s:%s; ";
 				}
 				_arg = content[0];
 				_r$12 = fmt.Sprintf(valueContent, new sliceType$3([new $String(key), new $String(item)])); /* */ $s = 3; case 3: if($c) { $c = false; _r$12 = _r$12.$blk(); } if (_r$12 && _r$12.$blk !== undefined) { break s; }
@@ -38027,63 +38056,41 @@ $packages["github.com/influx6/govfx"] = (function() {
 			/* } */ $s = 1; continue; case 2:
 			/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._arg = _arg; $f._arg$1 = _arg$1; $f._i = _i; $f._r$12 = _r$12; $f._r$13 = _r$13; $f._ref = _ref; $f._tuple = _tuple; $f.item = item; $f.key = key; $f.stop = stop; $f.val = val; $f.valueContent = valueContent; $f.$s = $s; $f.$r = $r; return $f;
 		}; })(content, e)); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		_r$12 = fmt.Sprintf("\n  #%s {\n%s\n  }\n", new sliceType$3([new $String(e[0].id), new $String(content[0].String())])); /* */ $s = 2; case 2: if($c) { $c = false; _r$12 = _r$12.$blk(); } if (_r$12 && _r$12.$blk !== undefined) { break s; }
-		$r = e[0].style.Write(_r$12); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: Element.ptr.prototype.Sync }; } $f.$ptr = $ptr; $f._r$12 = _r$12; $f.content = content; $f.e = e; $f.$s = $s; $f.$r = $r; return $f;
+		$r = e[0].style.Write(content[0].String()); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: Element.ptr.prototype.Sync }; } $f.$ptr = $ptr; $f.content = content; $f.e = e; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	Element.prototype.Sync = function() { return this.$val.Sync(); };
-	NewStyleSync = function(id, root) {
-		var $ptr, _arg, _r$12, _r$13, _r$14, id, root, sync$1, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _arg = $f._arg; _r$12 = $f._r$12; _r$13 = $f._r$13; _r$14 = $f._r$14; id = $f.id; root = $f.root; sync$1 = $f.sync$1; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+	NewStyleSync = function(id, elem, root) {
+		var $ptr, elem, id, root, sync$1, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; elem = $f.elem; id = $f.id; root = $f.root; sync$1 = $f.sync$1; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		sync$1 = [sync$1];
-		_r$12 = Document(); /* */ $s = 1; case 1: if($c) { $c = false; _r$12 = _r$12.$blk(); } if (_r$12 && _r$12.$blk !== undefined) { break s; }
-		_r$13 = _r$12.CreateElement("style"); /* */ $s = 2; case 2: if($c) { $c = false; _r$13 = _r$13.$blk(); } if (_r$13 && _r$13.$blk !== undefined) { break s; }
-		sync$1[0] = new StyleSync.ptr(id, _r$13, root);
-		_r$14 = fmt.Sprintf("%s-styles", new sliceType$3([new $String(id)])); /* */ $s = 3; case 3: if($c) { $c = false; _r$14 = _r$14.$blk(); } if (_r$14 && _r$14.$blk !== undefined) { break s; }
-		_arg = _r$14;
-		$r = sync$1[0].elem.SetAttribute("id", _arg); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = sync$1[0].Connect(); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		sync$1[0] = new StyleSync.ptr(id, elem, root);
+		$r = sync$1[0].Connect(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		return sync$1[0];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: NewStyleSync }; } $f.$ptr = $ptr; $f._arg = _arg; $f._r$12 = _r$12; $f._r$13 = _r$13; $f._r$14 = _r$14; $f.id = id; $f.root = root; $f.sync$1 = sync$1; $f.$s = $s; $f.$r = $r; return $f;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: NewStyleSync }; } $f.$ptr = $ptr; $f.elem = elem; $f.id = id; $f.root = root; $f.sync$1 = sync$1; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.NewStyleSync = NewStyleSync;
 	StyleSync.ptr.prototype.Disconnect = function() {
-		var $ptr, _r$12, _r$13, s, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r$12 = $f._r$12; _r$13 = $f._r$13; s = $f.s; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var $ptr, s, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; s = $f.s; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		s = this;
-		/* */ if ($interfaceIsEqual(s.root, $ifaceNil)) { $s = 1; continue; }
-		/* */ $s = 2; continue;
-		/* if ($interfaceIsEqual(s.root, $ifaceNil)) { */ case 1:
-			_r$12 = Document(); /* */ $s = 3; case 3: if($c) { $c = false; _r$12 = _r$12.$blk(); } if (_r$12 && _r$12.$blk !== undefined) { break s; }
-			_r$13 = _r$12.QuerySelector("head"); /* */ $s = 4; case 4: if($c) { $c = false; _r$13 = _r$13.$blk(); } if (_r$13 && _r$13.$blk !== undefined) { break s; }
-			$r = _r$13.RemoveChild(s.elem); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-			return;
-		/* } */ case 2:
-		$r = s.root.RemoveChild(s.elem); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: StyleSync.ptr.prototype.Disconnect }; } $f.$ptr = $ptr; $f._r$12 = _r$12; $f._r$13 = _r$13; $f.s = s; $f.$s = $s; $f.$r = $r; return $f;
+		$r = s.elem.RemoveAttribute("style"); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: StyleSync.ptr.prototype.Disconnect }; } $f.$ptr = $ptr; $f.s = s; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	StyleSync.prototype.Disconnect = function() { return this.$val.Disconnect(); };
 	StyleSync.ptr.prototype.Connect = function() {
-		var $ptr, _r$12, _r$13, s, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r$12 = $f._r$12; _r$13 = $f._r$13; s = $f.s; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var $ptr, s, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; s = $f.s; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		s = this;
-		/* */ if ($interfaceIsEqual(s.root, $ifaceNil)) { $s = 1; continue; }
-		/* */ $s = 2; continue;
-		/* if ($interfaceIsEqual(s.root, $ifaceNil)) { */ case 1:
-			_r$12 = Document(); /* */ $s = 3; case 3: if($c) { $c = false; _r$12 = _r$12.$blk(); } if (_r$12 && _r$12.$blk !== undefined) { break s; }
-			_r$13 = _r$12.QuerySelector("head"); /* */ $s = 4; case 4: if($c) { $c = false; _r$13 = _r$13.$blk(); } if (_r$13 && _r$13.$blk !== undefined) { break s; }
-			$r = _r$13.AppendChild(s.elem); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-			return;
-		/* } */ case 2:
-		$r = s.root.AppendChild(s.elem); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: StyleSync.ptr.prototype.Connect }; } $f.$ptr = $ptr; $f._r$12 = _r$12; $f._r$13 = _r$13; $f.s = s; $f.$s = $s; $f.$r = $r; return $f;
+		$r = s.elem.SetAttribute("style", ""); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: StyleSync.ptr.prototype.Connect }; } $f.$ptr = $ptr; $f.s = s; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	StyleSync.prototype.Connect = function() { return this.$val.Connect(); };
 	StyleSync.ptr.prototype.Write = function(styleContent) {
 		var $ptr, s, styleContent, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; s = $f.s; styleContent = $f.styleContent; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		s = this;
-		$r = s.elem.SetInnerHTML(styleContent); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = s.elem.SetAttribute("style", styleContent); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: StyleSync.ptr.prototype.Write }; } $f.$ptr = $ptr; $f.s = s; $f.styleContent = styleContent; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	StyleSync.prototype.Write = function(styleContent) { return this.$val.Write(styleContent); };
@@ -39010,7 +39017,7 @@ $packages["github.com/influx6/govfx"] = (function() {
 	return $pkg;
 })();
 $packages["github.com/influx6/govfx/animators"] = (function() {
-	var $pkg = {}, $init, fmt, utils, govfx, Width, Height, color, Color, BackgroundColor, ScaleY, ScaleX, SkewY, SkewX, TranslateY, TranslateX, sliceType, ptrType, ptrType$1, ptrType$2, ptrType$3, backgroundColorFormat, init;
+	var $pkg = {}, $init, fmt, utils, govfx, Width, Height, color, Color, BackgroundColor, ScaleY, ScaleX, SkewY, SkewX, TranslateY, TranslateX, sliceType, ptrType, ptrType$1, ptrType$2, ptrType$3, ptrType$4, ptrType$5, ptrType$6, ptrType$7, backgroundColorFormat, init;
 	fmt = $packages["fmt"];
 	utils = $packages["github.com/influx6/faux/utils"];
 	govfx = $packages["github.com/influx6/govfx"];
@@ -39137,6 +39144,10 @@ $packages["github.com/influx6/govfx/animators"] = (function() {
 	ptrType$1 = $ptrType(Height);
 	ptrType$2 = $ptrType(Color);
 	ptrType$3 = $ptrType(BackgroundColor);
+	ptrType$4 = $ptrType(ScaleY);
+	ptrType$5 = $ptrType(ScaleX);
+	ptrType$6 = $ptrType(SkewY);
+	ptrType$7 = $ptrType(SkewX);
 	Width.ptr.prototype.Init = function(stats, elems) {
 		var $ptr, _i, _r, _ref, _tuple, elem, elems, priority, stats, w, width, writers, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _i = $f._i; _r = $f._r; _ref = $f._ref; _tuple = $f._tuple; elem = $f.elem; elems = $f.elems; priority = $f.priority; stats = $f.stats; w = $f.w; width = $f.width; writers = $f.writers; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -39640,17 +39651,15 @@ $packages["github.com/influx6/govfx/animators"] = (function() {
 		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: init }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._r$8 = _r$8; $f._r$9 = _r$9; $f.x = x; $f.x$1 = x$1; $f.x$2 = x$2; $f.x$3 = x$3; $f.x$4 = x$4; $f.x$5 = x$5; $f.x$6 = x$6; $f.x$7 = x$7; $f.x$8 = x$8; $f.x$9 = x$9; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	ScaleY.ptr.prototype.Init = function(stats, elems) {
-		var $ptr, _i, _r, _r$1, _r$2, _ref, _tuple, _tuple$1, elem, elems, position, pr, priority, stats, t, transform, writers, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _i = $f._i; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _ref = $f._ref; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; elem = $f.elem; elems = $f.elems; position = $f.position; pr = $f.pr; priority = $f.priority; stats = $f.stats; t = $f.t; transform = $f.transform; writers = $f.writers; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var $ptr, _i, _r, _ref, _tuple, elem, elems, priority, stats, t, transform, writers, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _i = $f._i; _r = $f._r; _ref = $f._ref; _tuple = $f._tuple; elem = $f.elem; elems = $f.elems; priority = $f.priority; stats = $f.stats; t = $f.t; transform = $f.transform; writers = $f.writers; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		writers = [writers];
-		t = $clone(this, ScaleY);
+		t = this;
 		writers[0] = govfx.DeferWriters.nil;
 		_ref = elems;
 		_i = 0;
 		/* while (true) { */ case 1:
 			/* if (!(_i < _ref.$length)) { break; } */ if(!(_i < _ref.$length)) { $s = 2; continue; }
-			position = [position];
-			pr = [pr];
 			priority = [priority];
 			transform = [transform];
 			elem = ((_i < 0 || _i >= _ref.$length) ? $throwRuntimeError("index out of range") : _ref.$array[_ref.$offset + _i]);
@@ -39658,69 +39667,46 @@ $packages["github.com/influx6/govfx/animators"] = (function() {
 			_tuple = _r;
 			transform[0] = _tuple[0];
 			priority[0] = _tuple[1];
-			_r$1 = elem.Read("position", ""); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-			_tuple$1 = _r$1;
-			position[0] = _tuple$1[0];
-			pr[0] = _tuple$1[1];
-			_r$2 = utils.MatchAny(position[0], new sliceType([new $String("none"), new $String("")])); /* */ $s = 7; case 7: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-			/* */ if (_r$2) { $s = 5; continue; }
-			/* */ $s = 6; continue;
-			/* if (_r$2) { */ case 5:
-				position[0] = "relative";
-			/* } */ case 6:
-			$r = (function(position, pr, priority, transform, writers) { return function $b(e) {
-				var $ptr, _r$3, _r$4, _r$5, _r$6, _r$7, _tmp, _tmp$1, _tmp$2, _tmp$3, _tmp$4, _tmp$5, _tmp$6, _tmp$7, _tuple$2, _tuple$3, e, mx, mx$1, x, y, $s, $r;
-				/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _tmp = $f._tmp; _tmp$1 = $f._tmp$1; _tmp$2 = $f._tmp$2; _tmp$3 = $f._tmp$3; _tmp$4 = $f._tmp$4; _tmp$5 = $f._tmp$5; _tmp$6 = $f._tmp$6; _tmp$7 = $f._tmp$7; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; e = $f.e; mx = $f.mx; mx$1 = $f.mx$1; x = $f.x; y = $f.y; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+			$r = (function(priority, transform, writers) { return function $b(e) {
+				var $ptr, _r$1, _r$2, _r$3, _r$4, _r$5, _tuple$1, _tuple$2, e, mx, mx$1, y, $s, $r;
+				/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; e = $f.e; mx = $f.mx; mx$1 = $f.mx$1; y = $f.y; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 				e = [e];
-				_tmp = 0;
-				_tmp$1 = 0;
-				x = _tmp;
-				y = _tmp$1;
-				_r$3 = govfx.IsMatrix(transform[0]); /* */ $s = 5; case 5: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
-				/* */ if (_r$3) { $s = 1; continue; }
-				_r$4 = govfx.IsScale(transform[0]); /* */ $s = 6; case 6: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
-				/* */ if (_r$4) { $s = 2; continue; }
+				y = 0;
+				_r$1 = govfx.IsMatrix(transform[0]); /* */ $s = 5; case 5: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+				/* */ if (_r$1) { $s = 1; continue; }
+				_r$2 = govfx.IsScale(transform[0]); /* */ $s = 6; case 6: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+				/* */ if (_r$2) { $s = 2; continue; }
 				/* */ $s = 3; continue;
-				/* if (_r$3) { */ case 1:
-					_r$5 = govfx.ToMatrix2D(transform[0]); /* */ $s = 7; case 7: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
-					_tuple$2 = _r$5;
-					mx = _tuple$2[0];
-					_tmp$2 = mx.PositionX;
-					_tmp$3 = mx.PositionY;
-					x = _tmp$2;
-					y = _tmp$3;
+				/* if (_r$1) { */ case 1:
+					_r$3 = govfx.ToMatrix2D(transform[0]); /* */ $s = 7; case 7: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+					_tuple$1 = _r$3;
+					mx = _tuple$1[0];
+					y = mx.PositionY;
 					$s = 4; continue;
-				/* } else if (_r$4) { */ case 2:
-					_r$6 = govfx.ToScale(transform[0]); /* */ $s = 8; case 8: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
-					_tuple$3 = _r$6;
-					mx$1 = _tuple$3[0];
-					_tmp$4 = mx$1.X;
-					_tmp$5 = mx$1.Y;
-					x = _tmp$4;
-					y = _tmp$5;
+				/* } else if (_r$2) { */ case 2:
+					_r$4 = govfx.ToScale(transform[0]); /* */ $s = 8; case 8: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+					_tuple$2 = _r$4;
+					mx$1 = _tuple$2[0];
+					y = mx$1.Y;
 					$s = 4; continue;
 				/* } else { */ case 3:
-					_tmp$6 = 0;
-					_tmp$7 = 0;
-					x = _tmp$6;
-					y = _tmp$7;
+					y = 1;
 				/* } */ case 4:
-				_r$7 = fmt.Sprintf("scale(%.0fpx, %.0fpx)", new sliceType([new $Float64(x), new $Float64(y)])); /* */ $s = 9; case 9: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
-				transform[0] = _r$7;
-				writers[0] = $append(writers[0], govfx.NewWriter((function(e, position, pr, priority, transform, writers) { return function $b() {
+				_r$5 = fmt.Sprintf("scaleY(%.2f)", new sliceType([new $Float64(y)])); /* */ $s = 9; case 9: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
+				transform[0] = _r$5;
+				writers[0] = $append(writers[0], govfx.NewWriter((function(e, priority, transform, writers) { return function $b() {
 					var $ptr, $s, $r;
 					/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 					$r = e[0].Write("transform", transform[0], priority[0]); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-					$r = e[0].Write("position", position[0], pr[0]); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-					$r = e[0].Sync(); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+					$r = e[0].Sync(); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 					/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f.$s = $s; $f.$r = $r; return $f;
-				}; })(e, position, pr, priority, transform, writers)));
-				/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._tmp = _tmp; $f._tmp$1 = _tmp$1; $f._tmp$2 = _tmp$2; $f._tmp$3 = _tmp$3; $f._tmp$4 = _tmp$4; $f._tmp$5 = _tmp$5; $f._tmp$6 = _tmp$6; $f._tmp$7 = _tmp$7; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f.e = e; $f.mx = mx; $f.mx$1 = mx$1; $f.x = x; $f.y = y; $f.$s = $s; $f.$r = $r; return $f;
-			}; })(position, pr, priority, transform, writers)(elem); /* */ $s = 8; case 8: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+				}; })(e, priority, transform, writers)));
+				/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f.e = e; $f.mx = mx; $f.mx$1 = mx$1; $f.y = y; $f.$s = $s; $f.$r = $r; return $f;
+			}; })(priority, transform, writers)(elem); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 			_i++;
 		/* } */ $s = 1; continue; case 2:
 		return writers[0];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: ScaleY.ptr.prototype.Init }; } $f.$ptr = $ptr; $f._i = _i; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._ref = _ref; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f.elem = elem; $f.elems = elems; $f.position = position; $f.pr = pr; $f.priority = priority; $f.stats = stats; $f.t = t; $f.transform = transform; $f.writers = writers; $f.$s = $s; $f.$r = $r; return $f;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: ScaleY.ptr.prototype.Init }; } $f.$ptr = $ptr; $f._i = _i; $f._r = _r; $f._ref = _ref; $f._tuple = _tuple; $f.elem = elem; $f.elems = elems; $f.priority = priority; $f.stats = stats; $f.t = t; $f.transform = transform; $f.writers = writers; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	ScaleY.prototype.Init = function(stats, elems) { return this.$val.Init(stats, elems); };
 	ScaleY.ptr.prototype.Next = function(stats, elems) {
@@ -39730,7 +39716,7 @@ $packages["github.com/influx6/govfx/animators"] = (function() {
 		stats = [stats];
 		t = [t];
 		writers = [writers];
-		t[0] = $clone(this, ScaleY);
+		t[0] = this;
 		writers[0] = govfx.DeferWriters.nil;
 		_r = govfx.GetEasing(t[0].Easing); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		easing[0] = _r;
@@ -39746,13 +39732,10 @@ $packages["github.com/influx6/govfx/animators"] = (function() {
 			transform[0] = _tuple[0];
 			priority[0] = _tuple[1];
 			$r = (function(easing, priority, stats, t, transform, writers) { return function $b(e) {
-				var $ptr, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _tmp, _tmp$1, _tmp$2, _tmp$3, _tmp$4, _tmp$5, _tuple$1, _tuple$2, e, mx, mx$1, x, y, yd, yn, $s, $r;
-				/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _tmp = $f._tmp; _tmp$1 = $f._tmp$1; _tmp$2 = $f._tmp$2; _tmp$3 = $f._tmp$3; _tmp$4 = $f._tmp$4; _tmp$5 = $f._tmp$5; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; e = $f.e; mx = $f.mx; mx$1 = $f.mx$1; x = $f.x; y = $f.y; yd = $f.yd; yn = $f.yn; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+				var $ptr, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _tuple$1, _tuple$2, e, mx, mx$1, y, yd, yn, $s, $r;
+				/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; e = $f.e; mx = $f.mx; mx$1 = $f.mx$1; y = $f.y; yd = $f.yd; yn = $f.yn; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 				e = [e];
-				_tmp = 0;
-				_tmp$1 = 0;
-				x = _tmp;
-				y = _tmp$1;
+				y = 0;
 				_r$2 = govfx.IsMatrix(transform[0]); /* */ $s = 4; case 4: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
 				/* */ if (_r$2) { $s = 1; continue; }
 				_r$3 = govfx.IsScale(transform[0]); /* */ $s = 5; case 5: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
@@ -39762,24 +39745,18 @@ $packages["github.com/influx6/govfx/animators"] = (function() {
 					_r$4 = govfx.ToMatrix2D(transform[0]); /* */ $s = 6; case 6: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
 					_tuple$1 = _r$4;
 					mx = _tuple$1[0];
-					_tmp$2 = mx.ScaleX;
-					_tmp$3 = mx.ScaleY;
-					x = _tmp$2;
-					y = _tmp$3;
+					y = mx.ScaleY;
 					$s = 3; continue;
 				/* } else if (_r$3) { */ case 2:
 					_r$5 = govfx.ToScale(transform[0]); /* */ $s = 7; case 7: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
 					_tuple$2 = _r$5;
 					mx$1 = _tuple$2[0];
-					_tmp$4 = mx$1.X;
-					_tmp$5 = mx$1.Y;
-					x = _tmp$4;
-					y = _tmp$5;
+					y = mx$1.Y;
 				/* } */ case 3:
 				yd = t[0].Value - y;
 				_r$6 = easing[0].Ease(new govfx.EaseConfig.ptr(stats[0], yd, y)); /* */ $s = 8; case 8: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
 				yn = _r$6;
-				_r$7 = fmt.Sprintf("scale(%.0fpx, %.0fpx)", new sliceType([new $Float64(x), new $Float64(yn)])); /* */ $s = 9; case 9: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
+				_r$7 = fmt.Sprintf("scaleY(%.2f)", new sliceType([new $Float64(yn)])); /* */ $s = 9; case 9: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
 				transform[0] = _r$7;
 				writers[0] = $append(writers[0], govfx.NewWriter((function(e, easing, priority, stats, t, transform, writers) { return function $b() {
 					var $ptr, $s, $r;
@@ -39788,7 +39765,7 @@ $packages["github.com/influx6/govfx/animators"] = (function() {
 					$r = e[0].Sync(); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 					/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f.$s = $s; $f.$r = $r; return $f;
 				}; })(e, easing, priority, stats, t, transform, writers)));
-				/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._tmp = _tmp; $f._tmp$1 = _tmp$1; $f._tmp$2 = _tmp$2; $f._tmp$3 = _tmp$3; $f._tmp$4 = _tmp$4; $f._tmp$5 = _tmp$5; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f.e = e; $f.mx = mx; $f.mx$1 = mx$1; $f.x = x; $f.y = y; $f.yd = yd; $f.yn = yn; $f.$s = $s; $f.$r = $r; return $f;
+				/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f.e = e; $f.mx = mx; $f.mx$1 = mx$1; $f.y = y; $f.yd = yd; $f.yn = yn; $f.$s = $s; $f.$r = $r; return $f;
 			}; })(easing, priority, stats, t, transform, writers)(elem); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 			_i++;
 		/* } */ $s = 2; continue; case 3:
@@ -39797,17 +39774,15 @@ $packages["github.com/influx6/govfx/animators"] = (function() {
 	};
 	ScaleY.prototype.Next = function(stats, elems) { return this.$val.Next(stats, elems); };
 	ScaleX.ptr.prototype.Init = function(stats, elems) {
-		var $ptr, _i, _r, _r$1, _r$2, _ref, _tuple, _tuple$1, elem, elems, position, pr, priority, stats, t, transform, writers, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _i = $f._i; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _ref = $f._ref; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; elem = $f.elem; elems = $f.elems; position = $f.position; pr = $f.pr; priority = $f.priority; stats = $f.stats; t = $f.t; transform = $f.transform; writers = $f.writers; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var $ptr, _i, _r, _ref, _tuple, elem, elems, priority, stats, t, transform, writers, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _i = $f._i; _r = $f._r; _ref = $f._ref; _tuple = $f._tuple; elem = $f.elem; elems = $f.elems; priority = $f.priority; stats = $f.stats; t = $f.t; transform = $f.transform; writers = $f.writers; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		writers = [writers];
-		t = $clone(this, ScaleX);
+		t = this;
 		writers[0] = govfx.DeferWriters.nil;
 		_ref = elems;
 		_i = 0;
 		/* while (true) { */ case 1:
 			/* if (!(_i < _ref.$length)) { break; } */ if(!(_i < _ref.$length)) { $s = 2; continue; }
-			position = [position];
-			pr = [pr];
 			priority = [priority];
 			transform = [transform];
 			elem = ((_i < 0 || _i >= _ref.$length) ? $throwRuntimeError("index out of range") : _ref.$array[_ref.$offset + _i]);
@@ -39815,69 +39790,46 @@ $packages["github.com/influx6/govfx/animators"] = (function() {
 			_tuple = _r;
 			transform[0] = _tuple[0];
 			priority[0] = _tuple[1];
-			_r$1 = elem.Read("position", ""); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-			_tuple$1 = _r$1;
-			position[0] = _tuple$1[0];
-			pr[0] = _tuple$1[1];
-			_r$2 = utils.MatchAny(position[0], new sliceType([new $String("none"), new $String("")])); /* */ $s = 7; case 7: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-			/* */ if (_r$2) { $s = 5; continue; }
-			/* */ $s = 6; continue;
-			/* if (_r$2) { */ case 5:
-				position[0] = "relative";
-			/* } */ case 6:
-			$r = (function(position, pr, priority, transform, writers) { return function $b(e) {
-				var $ptr, _r$3, _r$4, _r$5, _r$6, _r$7, _tmp, _tmp$1, _tmp$2, _tmp$3, _tmp$4, _tmp$5, _tmp$6, _tmp$7, _tuple$2, _tuple$3, e, mx, mx$1, x, y, $s, $r;
-				/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _tmp = $f._tmp; _tmp$1 = $f._tmp$1; _tmp$2 = $f._tmp$2; _tmp$3 = $f._tmp$3; _tmp$4 = $f._tmp$4; _tmp$5 = $f._tmp$5; _tmp$6 = $f._tmp$6; _tmp$7 = $f._tmp$7; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; e = $f.e; mx = $f.mx; mx$1 = $f.mx$1; x = $f.x; y = $f.y; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+			$r = (function(priority, transform, writers) { return function $b(e) {
+				var $ptr, _r$1, _r$2, _r$3, _r$4, _r$5, _tuple$1, _tuple$2, e, mx, mx$1, x, $s, $r;
+				/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; e = $f.e; mx = $f.mx; mx$1 = $f.mx$1; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 				e = [e];
-				_tmp = 0;
-				_tmp$1 = 0;
-				x = _tmp;
-				y = _tmp$1;
-				_r$3 = govfx.IsMatrix(transform[0]); /* */ $s = 5; case 5: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
-				/* */ if (_r$3) { $s = 1; continue; }
-				_r$4 = govfx.IsScale(transform[0]); /* */ $s = 6; case 6: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
-				/* */ if (_r$4) { $s = 2; continue; }
+				x = 0;
+				_r$1 = govfx.IsMatrix(transform[0]); /* */ $s = 5; case 5: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+				/* */ if (_r$1) { $s = 1; continue; }
+				_r$2 = govfx.IsScale(transform[0]); /* */ $s = 6; case 6: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+				/* */ if (_r$2) { $s = 2; continue; }
 				/* */ $s = 3; continue;
-				/* if (_r$3) { */ case 1:
-					_r$5 = govfx.ToMatrix2D(transform[0]); /* */ $s = 7; case 7: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
-					_tuple$2 = _r$5;
-					mx = _tuple$2[0];
-					_tmp$2 = mx.PositionX;
-					_tmp$3 = mx.PositionY;
-					x = _tmp$2;
-					y = _tmp$3;
+				/* if (_r$1) { */ case 1:
+					_r$3 = govfx.ToMatrix2D(transform[0]); /* */ $s = 7; case 7: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+					_tuple$1 = _r$3;
+					mx = _tuple$1[0];
+					x = mx.PositionX;
 					$s = 4; continue;
-				/* } else if (_r$4) { */ case 2:
-					_r$6 = govfx.ToScale(transform[0]); /* */ $s = 8; case 8: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
-					_tuple$3 = _r$6;
-					mx$1 = _tuple$3[0];
-					_tmp$4 = mx$1.X;
-					_tmp$5 = mx$1.Y;
-					x = _tmp$4;
-					y = _tmp$5;
+				/* } else if (_r$2) { */ case 2:
+					_r$4 = govfx.ToScale(transform[0]); /* */ $s = 8; case 8: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+					_tuple$2 = _r$4;
+					mx$1 = _tuple$2[0];
+					x = mx$1.X;
 					$s = 4; continue;
 				/* } else { */ case 3:
-					_tmp$6 = 0;
-					_tmp$7 = 0;
-					x = _tmp$6;
-					y = _tmp$7;
+					x = 1;
 				/* } */ case 4:
-				_r$7 = fmt.Sprintf("scale(%.0fpx, %.0fpx)", new sliceType([new $Float64(x), new $Float64(y)])); /* */ $s = 9; case 9: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
-				transform[0] = _r$7;
-				writers[0] = $append(writers[0], govfx.NewWriter((function(e, position, pr, priority, transform, writers) { return function $b() {
+				_r$5 = fmt.Sprintf("scaleX(%.2f)", new sliceType([new $Float64(x)])); /* */ $s = 9; case 9: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
+				transform[0] = _r$5;
+				writers[0] = $append(writers[0], govfx.NewWriter((function(e, priority, transform, writers) { return function $b() {
 					var $ptr, $s, $r;
 					/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-					$r = e[0].Write("transform", transform[0], priority[0]); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-					$r = e[0].Write("position", position[0], pr[0]); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-					$r = e[0].Sync(); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+					$r = e[0].WriteMore("transform", transform[0], priority[0]); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+					$r = e[0].Sync(); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 					/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f.$s = $s; $f.$r = $r; return $f;
-				}; })(e, position, pr, priority, transform, writers)));
-				/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._tmp = _tmp; $f._tmp$1 = _tmp$1; $f._tmp$2 = _tmp$2; $f._tmp$3 = _tmp$3; $f._tmp$4 = _tmp$4; $f._tmp$5 = _tmp$5; $f._tmp$6 = _tmp$6; $f._tmp$7 = _tmp$7; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f.e = e; $f.mx = mx; $f.mx$1 = mx$1; $f.x = x; $f.y = y; $f.$s = $s; $f.$r = $r; return $f;
-			}; })(position, pr, priority, transform, writers)(elem); /* */ $s = 8; case 8: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+				}; })(e, priority, transform, writers)));
+				/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f.e = e; $f.mx = mx; $f.mx$1 = mx$1; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
+			}; })(priority, transform, writers)(elem); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 			_i++;
 		/* } */ $s = 1; continue; case 2:
 		return writers[0];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: ScaleX.ptr.prototype.Init }; } $f.$ptr = $ptr; $f._i = _i; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._ref = _ref; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f.elem = elem; $f.elems = elems; $f.position = position; $f.pr = pr; $f.priority = priority; $f.stats = stats; $f.t = t; $f.transform = transform; $f.writers = writers; $f.$s = $s; $f.$r = $r; return $f;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: ScaleX.ptr.prototype.Init }; } $f.$ptr = $ptr; $f._i = _i; $f._r = _r; $f._ref = _ref; $f._tuple = _tuple; $f.elem = elem; $f.elems = elems; $f.priority = priority; $f.stats = stats; $f.t = t; $f.transform = transform; $f.writers = writers; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	ScaleX.prototype.Init = function(stats, elems) { return this.$val.Init(stats, elems); };
 	ScaleX.ptr.prototype.Next = function(stats, elems) {
@@ -39887,7 +39839,7 @@ $packages["github.com/influx6/govfx/animators"] = (function() {
 		stats = [stats];
 		t = [t];
 		writers = [writers];
-		t[0] = $clone(this, ScaleX);
+		t[0] = this;
 		writers[0] = govfx.DeferWriters.nil;
 		_r = govfx.GetEasing(t[0].Easing); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		easing[0] = _r;
@@ -39903,13 +39855,10 @@ $packages["github.com/influx6/govfx/animators"] = (function() {
 			transform[0] = _tuple[0];
 			priority[0] = _tuple[1];
 			$r = (function(easing, priority, stats, t, transform, writers) { return function $b(e) {
-				var $ptr, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _tmp, _tmp$1, _tmp$2, _tmp$3, _tmp$4, _tmp$5, _tuple$1, _tuple$2, e, mx, mx$1, x, xd, xn, y, $s, $r;
-				/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _tmp = $f._tmp; _tmp$1 = $f._tmp$1; _tmp$2 = $f._tmp$2; _tmp$3 = $f._tmp$3; _tmp$4 = $f._tmp$4; _tmp$5 = $f._tmp$5; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; e = $f.e; mx = $f.mx; mx$1 = $f.mx$1; x = $f.x; xd = $f.xd; xn = $f.xn; y = $f.y; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+				var $ptr, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _tuple$1, _tuple$2, e, mx, mx$1, x, xd, xn, $s, $r;
+				/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; e = $f.e; mx = $f.mx; mx$1 = $f.mx$1; x = $f.x; xd = $f.xd; xn = $f.xn; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 				e = [e];
-				_tmp = 0;
-				_tmp$1 = 0;
-				x = _tmp;
-				y = _tmp$1;
+				x = 0;
 				_r$2 = govfx.IsMatrix(transform[0]); /* */ $s = 4; case 4: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
 				/* */ if (_r$2) { $s = 1; continue; }
 				_r$3 = govfx.IsScale(transform[0]); /* */ $s = 5; case 5: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
@@ -39919,33 +39868,27 @@ $packages["github.com/influx6/govfx/animators"] = (function() {
 					_r$4 = govfx.ToMatrix2D(transform[0]); /* */ $s = 6; case 6: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
 					_tuple$1 = _r$4;
 					mx = _tuple$1[0];
-					_tmp$2 = mx.ScaleX;
-					_tmp$3 = mx.ScaleY;
-					x = _tmp$2;
-					y = _tmp$3;
+					x = mx.ScaleX;
 					$s = 3; continue;
 				/* } else if (_r$3) { */ case 2:
 					_r$5 = govfx.ToScale(transform[0]); /* */ $s = 7; case 7: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
 					_tuple$2 = _r$5;
 					mx$1 = _tuple$2[0];
-					_tmp$4 = mx$1.X;
-					_tmp$5 = mx$1.Y;
-					x = _tmp$4;
-					y = _tmp$5;
+					x = mx$1.X;
 				/* } */ case 3:
 				xd = t[0].Value - x;
 				_r$6 = easing[0].Ease(new govfx.EaseConfig.ptr(stats[0], xd, x)); /* */ $s = 8; case 8: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
 				xn = _r$6;
-				_r$7 = fmt.Sprintf("scale(%.0fpx, %.0fpx)", new sliceType([new $Float64(xn), new $Float64(y)])); /* */ $s = 9; case 9: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
+				_r$7 = fmt.Sprintf("scaleX(%.2f)", new sliceType([new $Float64(xn)])); /* */ $s = 9; case 9: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
 				transform[0] = _r$7;
 				writers[0] = $append(writers[0], govfx.NewWriter((function(e, easing, priority, stats, t, transform, writers) { return function $b() {
 					var $ptr, $s, $r;
 					/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-					$r = e[0].Write("transform", transform[0], priority[0]); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+					$r = e[0].WriteMore("transform", transform[0], priority[0]); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 					$r = e[0].Sync(); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 					/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f.$s = $s; $f.$r = $r; return $f;
 				}; })(e, easing, priority, stats, t, transform, writers)));
-				/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._tmp = _tmp; $f._tmp$1 = _tmp$1; $f._tmp$2 = _tmp$2; $f._tmp$3 = _tmp$3; $f._tmp$4 = _tmp$4; $f._tmp$5 = _tmp$5; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f.e = e; $f.mx = mx; $f.mx$1 = mx$1; $f.x = x; $f.xd = xd; $f.xn = xn; $f.y = y; $f.$s = $s; $f.$r = $r; return $f;
+				/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f.e = e; $f.mx = mx; $f.mx$1 = mx$1; $f.x = x; $f.xd = xd; $f.xn = xn; $f.$s = $s; $f.$r = $r; return $f;
 			}; })(easing, priority, stats, t, transform, writers)(elem); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 			_i++;
 		/* } */ $s = 2; continue; case 3:
@@ -39957,7 +39900,7 @@ $packages["github.com/influx6/govfx/animators"] = (function() {
 		var $ptr, _i, _r, _r$1, _r$2, _ref, _tuple, _tuple$1, elem, elems, position, pr, priority, stats, t, transform, writers, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _i = $f._i; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _ref = $f._ref; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; elem = $f.elem; elems = $f.elems; position = $f.position; pr = $f.pr; priority = $f.priority; stats = $f.stats; t = $f.t; transform = $f.transform; writers = $f.writers; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		writers = [writers];
-		t = $clone(this, SkewY);
+		t = this;
 		writers[0] = govfx.DeferWriters.nil;
 		_ref = elems;
 		_i = 0;
@@ -40019,7 +39962,7 @@ $packages["github.com/influx6/govfx/animators"] = (function() {
 					x = _tmp$6;
 					y = _tmp$7;
 				/* } */ case 4:
-				_r$7 = fmt.Sprintf("skew(%.0fpx, %.0fpx)", new sliceType([new $Float64(x), new $Float64(y)])); /* */ $s = 9; case 9: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
+				_r$7 = fmt.Sprintf("skew(%.0fdeg, %.0fdeg)", new sliceType([new $Float64(x), new $Float64(y)])); /* */ $s = 9; case 9: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
 				transform[0] = _r$7;
 				writers[0] = $append(writers[0], govfx.NewWriter((function(e, position, pr, priority, transform, writers) { return function $b() {
 					var $ptr, $s, $r;
@@ -40044,7 +39987,7 @@ $packages["github.com/influx6/govfx/animators"] = (function() {
 		stats = [stats];
 		t = [t];
 		writers = [writers];
-		t[0] = $clone(this, SkewY);
+		t[0] = this;
 		writers[0] = govfx.DeferWriters.nil;
 		_r = govfx.GetEasing(t[0].Easing); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		easing[0] = _r;
@@ -40093,7 +40036,7 @@ $packages["github.com/influx6/govfx/animators"] = (function() {
 				yd = t[0].Value - y;
 				_r$6 = easing[0].Ease(new govfx.EaseConfig.ptr(stats[0], yd, y)); /* */ $s = 8; case 8: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
 				yn = _r$6;
-				_r$7 = fmt.Sprintf("skew(%.0fpx, %.0fpx)", new sliceType([new $Float64(x), new $Float64(yn)])); /* */ $s = 9; case 9: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
+				_r$7 = fmt.Sprintf("skew(%.0fdeg, %.0fdeg)", new sliceType([new $Float64(x), new $Float64(yn)])); /* */ $s = 9; case 9: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
 				transform[0] = _r$7;
 				writers[0] = $append(writers[0], govfx.NewWriter((function(e, easing, priority, stats, t, transform, writers) { return function $b() {
 					var $ptr, $s, $r;
@@ -40114,7 +40057,7 @@ $packages["github.com/influx6/govfx/animators"] = (function() {
 		var $ptr, _i, _r, _r$1, _r$2, _ref, _tuple, _tuple$1, elem, elems, position, pr, priority, stats, t, transform, writers, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _i = $f._i; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _ref = $f._ref; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; elem = $f.elem; elems = $f.elems; position = $f.position; pr = $f.pr; priority = $f.priority; stats = $f.stats; t = $f.t; transform = $f.transform; writers = $f.writers; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		writers = [writers];
-		t = $clone(this, SkewX);
+		t = this;
 		writers[0] = govfx.DeferWriters.nil;
 		_ref = elems;
 		_i = 0;
@@ -40140,13 +40083,10 @@ $packages["github.com/influx6/govfx/animators"] = (function() {
 				position[0] = "relative";
 			/* } */ case 6:
 			$r = (function(position, pr, priority, transform, writers) { return function $b(e) {
-				var $ptr, _r$3, _r$4, _r$5, _r$6, _r$7, _tmp, _tmp$1, _tmp$2, _tmp$3, _tmp$4, _tmp$5, _tmp$6, _tmp$7, _tuple$2, _tuple$3, e, mx, mx$1, x, y, $s, $r;
-				/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _tmp = $f._tmp; _tmp$1 = $f._tmp$1; _tmp$2 = $f._tmp$2; _tmp$3 = $f._tmp$3; _tmp$4 = $f._tmp$4; _tmp$5 = $f._tmp$5; _tmp$6 = $f._tmp$6; _tmp$7 = $f._tmp$7; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; e = $f.e; mx = $f.mx; mx$1 = $f.mx$1; x = $f.x; y = $f.y; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+				var $ptr, _r$3, _r$4, _r$5, _r$6, _r$7, _tuple$2, _tuple$3, e, mx, mx$1, x, $s, $r;
+				/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; e = $f.e; mx = $f.mx; mx$1 = $f.mx$1; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 				e = [e];
-				_tmp = 0;
-				_tmp$1 = 0;
-				x = _tmp;
-				y = _tmp$1;
+				x = 0;
 				_r$3 = govfx.IsMatrix(transform[0]); /* */ $s = 5; case 5: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
 				/* */ if (_r$3) { $s = 1; continue; }
 				_r$4 = govfx.IsSkew(transform[0]); /* */ $s = 6; case 6: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
@@ -40156,27 +40096,18 @@ $packages["github.com/influx6/govfx/animators"] = (function() {
 					_r$5 = govfx.ToMatrix2D(transform[0]); /* */ $s = 7; case 7: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
 					_tuple$2 = _r$5;
 					mx = _tuple$2[0];
-					_tmp$2 = mx.PositionX;
-					_tmp$3 = mx.PositionY;
-					x = _tmp$2;
-					y = _tmp$3;
+					x = mx.PositionX;
 					$s = 4; continue;
 				/* } else if (_r$4) { */ case 2:
 					_r$6 = govfx.ToSkew(transform[0]); /* */ $s = 8; case 8: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
 					_tuple$3 = _r$6;
 					mx$1 = _tuple$3[0];
-					_tmp$4 = mx$1.X;
-					_tmp$5 = mx$1.Y;
-					x = _tmp$4;
-					y = _tmp$5;
+					x = mx$1.X;
 					$s = 4; continue;
 				/* } else { */ case 3:
-					_tmp$6 = 0;
-					_tmp$7 = 0;
-					x = _tmp$6;
-					y = _tmp$7;
+					x = 0;
 				/* } */ case 4:
-				_r$7 = fmt.Sprintf("skew(%.0fpx, %.0fpx)", new sliceType([new $Float64(x), new $Float64(y)])); /* */ $s = 9; case 9: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
+				_r$7 = fmt.Sprintf("skewX(%.0fdeg)", new sliceType([new $Float64(x)])); /* */ $s = 9; case 9: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
 				transform[0] = _r$7;
 				writers[0] = $append(writers[0], govfx.NewWriter((function(e, position, pr, priority, transform, writers) { return function $b() {
 					var $ptr, $s, $r;
@@ -40186,7 +40117,7 @@ $packages["github.com/influx6/govfx/animators"] = (function() {
 					$r = e[0].Sync(); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 					/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f.$s = $s; $f.$r = $r; return $f;
 				}; })(e, position, pr, priority, transform, writers)));
-				/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._tmp = _tmp; $f._tmp$1 = _tmp$1; $f._tmp$2 = _tmp$2; $f._tmp$3 = _tmp$3; $f._tmp$4 = _tmp$4; $f._tmp$5 = _tmp$5; $f._tmp$6 = _tmp$6; $f._tmp$7 = _tmp$7; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f.e = e; $f.mx = mx; $f.mx$1 = mx$1; $f.x = x; $f.y = y; $f.$s = $s; $f.$r = $r; return $f;
+				/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f.e = e; $f.mx = mx; $f.mx$1 = mx$1; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
 			}; })(position, pr, priority, transform, writers)(elem); /* */ $s = 8; case 8: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 			_i++;
 		/* } */ $s = 1; continue; case 2:
@@ -40201,7 +40132,7 @@ $packages["github.com/influx6/govfx/animators"] = (function() {
 		stats = [stats];
 		t = [t];
 		writers = [writers];
-		t[0] = $clone(this, SkewX);
+		t[0] = this;
 		writers[0] = govfx.DeferWriters.nil;
 		_r = govfx.GetEasing(t[0].Easing); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		easing[0] = _r;
@@ -40217,13 +40148,10 @@ $packages["github.com/influx6/govfx/animators"] = (function() {
 			transform[0] = _tuple[0];
 			priority[0] = _tuple[1];
 			$r = (function(easing, priority, stats, t, transform, writers) { return function $b(e) {
-				var $ptr, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _tmp, _tmp$1, _tmp$2, _tmp$3, _tmp$4, _tmp$5, _tuple$1, _tuple$2, e, mx, mx$1, x, xd, xn, y, $s, $r;
-				/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _tmp = $f._tmp; _tmp$1 = $f._tmp$1; _tmp$2 = $f._tmp$2; _tmp$3 = $f._tmp$3; _tmp$4 = $f._tmp$4; _tmp$5 = $f._tmp$5; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; e = $f.e; mx = $f.mx; mx$1 = $f.mx$1; x = $f.x; xd = $f.xd; xn = $f.xn; y = $f.y; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+				var $ptr, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _tuple$1, _tuple$2, e, mx, mx$1, x, xd, xn, $s, $r;
+				/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; e = $f.e; mx = $f.mx; mx$1 = $f.mx$1; x = $f.x; xd = $f.xd; xn = $f.xn; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 				e = [e];
-				_tmp = 0;
-				_tmp$1 = 0;
-				x = _tmp;
-				y = _tmp$1;
+				x = 0;
 				_r$2 = govfx.IsMatrix(transform[0]); /* */ $s = 4; case 4: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
 				/* */ if (_r$2) { $s = 1; continue; }
 				_r$3 = govfx.IsSkew(transform[0]); /* */ $s = 5; case 5: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
@@ -40233,24 +40161,18 @@ $packages["github.com/influx6/govfx/animators"] = (function() {
 					_r$4 = govfx.ToMatrix2D(transform[0]); /* */ $s = 6; case 6: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
 					_tuple$1 = _r$4;
 					mx = _tuple$1[0];
-					_tmp$2 = mx.PositionX;
-					_tmp$3 = mx.PositionY;
-					x = _tmp$2;
-					y = _tmp$3;
+					x = mx.PositionX;
 					$s = 3; continue;
 				/* } else if (_r$3) { */ case 2:
 					_r$5 = govfx.ToSkew(transform[0]); /* */ $s = 7; case 7: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
 					_tuple$2 = _r$5;
 					mx$1 = _tuple$2[0];
-					_tmp$4 = mx$1.X;
-					_tmp$5 = mx$1.Y;
-					x = _tmp$4;
-					y = _tmp$5;
+					x = mx$1.X;
 				/* } */ case 3:
 				xd = t[0].Value - x;
 				_r$6 = easing[0].Ease(new govfx.EaseConfig.ptr(stats[0], xd, x)); /* */ $s = 8; case 8: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
 				xn = _r$6;
-				_r$7 = fmt.Sprintf("skew(%.0fpx, %.0fpx)", new sliceType([new $Float64(xn), new $Float64(y)])); /* */ $s = 9; case 9: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
+				_r$7 = fmt.Sprintf("skewX(%.0fdeg)", new sliceType([new $Float64(xn)])); /* */ $s = 9; case 9: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
 				transform[0] = _r$7;
 				writers[0] = $append(writers[0], govfx.NewWriter((function(e, easing, priority, stats, t, transform, writers) { return function $b() {
 					var $ptr, $s, $r;
@@ -40259,7 +40181,7 @@ $packages["github.com/influx6/govfx/animators"] = (function() {
 					$r = e[0].Sync(); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 					/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f.$s = $s; $f.$r = $r; return $f;
 				}; })(e, easing, priority, stats, t, transform, writers)));
-				/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._tmp = _tmp; $f._tmp$1 = _tmp$1; $f._tmp$2 = _tmp$2; $f._tmp$3 = _tmp$3; $f._tmp$4 = _tmp$4; $f._tmp$5 = _tmp$5; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f.e = e; $f.mx = mx; $f.mx$1 = mx$1; $f.x = x; $f.xd = xd; $f.xn = xn; $f.y = y; $f.$s = $s; $f.$r = $r; return $f;
+				/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f.e = e; $f.mx = mx; $f.mx$1 = mx$1; $f.x = x; $f.xd = xd; $f.xn = xn; $f.$s = $s; $f.$r = $r; return $f;
 			}; })(easing, priority, stats, t, transform, writers)(elem); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 			_i++;
 		/* } */ $s = 2; continue; case 3:
@@ -40586,10 +40508,10 @@ $packages["github.com/influx6/govfx/animators"] = (function() {
 	color.methods = [{prop: "String", name: "String", pkg: "", typ: $funcType([], [$String], false)}];
 	ptrType$2.methods = [{prop: "Init", name: "Init", pkg: "", typ: $funcType([govfx.Stats, govfx.Elementals], [govfx.DeferWriters], false)}, {prop: "Next", name: "Next", pkg: "", typ: $funcType([govfx.Stats, govfx.Elementals], [govfx.DeferWriters], false)}];
 	ptrType$3.methods = [{prop: "Init", name: "Init", pkg: "", typ: $funcType([govfx.Stats, govfx.Elementals], [govfx.DeferWriters], false)}, {prop: "Next", name: "Next", pkg: "", typ: $funcType([govfx.Stats, govfx.Elementals], [govfx.DeferWriters], false)}];
-	ScaleY.methods = [{prop: "Init", name: "Init", pkg: "", typ: $funcType([govfx.Stats, govfx.Elementals], [govfx.DeferWriters], false)}, {prop: "Next", name: "Next", pkg: "", typ: $funcType([govfx.Stats, govfx.Elementals], [govfx.DeferWriters], false)}];
-	ScaleX.methods = [{prop: "Init", name: "Init", pkg: "", typ: $funcType([govfx.Stats, govfx.Elementals], [govfx.DeferWriters], false)}, {prop: "Next", name: "Next", pkg: "", typ: $funcType([govfx.Stats, govfx.Elementals], [govfx.DeferWriters], false)}];
-	SkewY.methods = [{prop: "Init", name: "Init", pkg: "", typ: $funcType([govfx.Stats, govfx.Elementals], [govfx.DeferWriters], false)}, {prop: "Next", name: "Next", pkg: "", typ: $funcType([govfx.Stats, govfx.Elementals], [govfx.DeferWriters], false)}];
-	SkewX.methods = [{prop: "Init", name: "Init", pkg: "", typ: $funcType([govfx.Stats, govfx.Elementals], [govfx.DeferWriters], false)}, {prop: "Next", name: "Next", pkg: "", typ: $funcType([govfx.Stats, govfx.Elementals], [govfx.DeferWriters], false)}];
+	ptrType$4.methods = [{prop: "Init", name: "Init", pkg: "", typ: $funcType([govfx.Stats, govfx.Elementals], [govfx.DeferWriters], false)}, {prop: "Next", name: "Next", pkg: "", typ: $funcType([govfx.Stats, govfx.Elementals], [govfx.DeferWriters], false)}];
+	ptrType$5.methods = [{prop: "Init", name: "Init", pkg: "", typ: $funcType([govfx.Stats, govfx.Elementals], [govfx.DeferWriters], false)}, {prop: "Next", name: "Next", pkg: "", typ: $funcType([govfx.Stats, govfx.Elementals], [govfx.DeferWriters], false)}];
+	ptrType$6.methods = [{prop: "Init", name: "Init", pkg: "", typ: $funcType([govfx.Stats, govfx.Elementals], [govfx.DeferWriters], false)}, {prop: "Next", name: "Next", pkg: "", typ: $funcType([govfx.Stats, govfx.Elementals], [govfx.DeferWriters], false)}];
+	ptrType$7.methods = [{prop: "Init", name: "Init", pkg: "", typ: $funcType([govfx.Stats, govfx.Elementals], [govfx.DeferWriters], false)}, {prop: "Next", name: "Next", pkg: "", typ: $funcType([govfx.Stats, govfx.Elementals], [govfx.DeferWriters], false)}];
 	TranslateY.methods = [{prop: "Init", name: "Init", pkg: "", typ: $funcType([govfx.Stats, govfx.Elementals], [govfx.DeferWriters], false)}, {prop: "Next", name: "Next", pkg: "", typ: $funcType([govfx.Stats, govfx.Elementals], [govfx.DeferWriters], false)}];
 	TranslateX.methods = [{prop: "Init", name: "Init", pkg: "", typ: $funcType([govfx.Stats, govfx.Elementals], [govfx.DeferWriters], false)}, {prop: "Next", name: "Next", pkg: "", typ: $funcType([govfx.Stats, govfx.Elementals], [govfx.DeferWriters], false)}];
 	Width.init([{prop: "Value", name: "Value", pkg: "", typ: $Int, tag: "govfx:\"value\""}, {prop: "Easing", name: "Easing", pkg: "", typ: $String, tag: "govfx:\"easing\""}]);
@@ -40597,10 +40519,10 @@ $packages["github.com/influx6/govfx/animators"] = (function() {
 	color.init([{prop: "red", name: "red", pkg: "github.com/influx6/govfx/animators", typ: $Int, tag: ""}, {prop: "green", name: "green", pkg: "github.com/influx6/govfx/animators", typ: $Int, tag: ""}, {prop: "blue", name: "blue", pkg: "github.com/influx6/govfx/animators", typ: $Int, tag: ""}, {prop: "alpah", name: "alpah", pkg: "github.com/influx6/govfx/animators", typ: $Float64, tag: ""}]);
 	Color.init([{prop: "Color", name: "Color", pkg: "", typ: $String, tag: "govfx:\"color\""}, {prop: "Easing", name: "Easing", pkg: "", typ: $String, tag: "govfx:\"easing\""}, {prop: "color", name: "color", pkg: "github.com/influx6/govfx/animators", typ: color, tag: ""}]);
 	BackgroundColor.init([{prop: "Color", name: "Color", pkg: "", typ: $String, tag: "govfx:\"color\""}, {prop: "Easing", name: "Easing", pkg: "", typ: $String, tag: "govfx:\"easing\""}, {prop: "color", name: "color", pkg: "github.com/influx6/govfx/animators", typ: color, tag: ""}]);
-	ScaleY.init([{prop: "Value", name: "Value", pkg: "", typ: $Int, tag: "govfx:\"value\""}, {prop: "Easing", name: "Easing", pkg: "", typ: $String, tag: "govfx:\"easing\""}]);
-	ScaleX.init([{prop: "Value", name: "Value", pkg: "", typ: $Int, tag: "govfx:\"value\""}, {prop: "Easing", name: "Easing", pkg: "", typ: $String, tag: "govfx:\"easing\""}]);
-	SkewY.init([{prop: "Value", name: "Value", pkg: "", typ: $Int, tag: "govfx:\"value\""}, {prop: "Easing", name: "Easing", pkg: "", typ: $String, tag: "govfx:\"easing\""}]);
-	SkewX.init([{prop: "Value", name: "Value", pkg: "", typ: $Int, tag: "govfx:\"value\""}, {prop: "Easing", name: "Easing", pkg: "", typ: $String, tag: "govfx:\"easing\""}]);
+	ScaleY.init([{prop: "Value", name: "Value", pkg: "", typ: $Float64, tag: "govfx:\"value\""}, {prop: "Easing", name: "Easing", pkg: "", typ: $String, tag: "govfx:\"easing\""}]);
+	ScaleX.init([{prop: "Value", name: "Value", pkg: "", typ: $Float64, tag: "govfx:\"value\""}, {prop: "Easing", name: "Easing", pkg: "", typ: $String, tag: "govfx:\"easing\""}]);
+	SkewY.init([{prop: "Value", name: "Value", pkg: "", typ: $Float64, tag: "govfx:\"value\""}, {prop: "Easing", name: "Easing", pkg: "", typ: $String, tag: "govfx:\"easing\""}]);
+	SkewX.init([{prop: "Value", name: "Value", pkg: "", typ: $Float64, tag: "govfx:\"value\""}, {prop: "Easing", name: "Easing", pkg: "", typ: $String, tag: "govfx:\"easing\""}]);
 	TranslateY.init([{prop: "Value", name: "Value", pkg: "", typ: $Int, tag: "govfx:\"value\""}, {prop: "Easing", name: "Easing", pkg: "", typ: $String, tag: "govfx:\"easing\""}]);
 	TranslateX.init([{prop: "Value", name: "Value", pkg: "", typ: $Int, tag: "govfx:\"value\""}, {prop: "Easing", name: "Easing", pkg: "", typ: $String, tag: "govfx:\"easing\""}]);
 	$init = function() {
@@ -40626,11 +40548,11 @@ $packages["main"] = (function() {
 	main = function() {
 		var $ptr, _r, _r$1, _r$2, _r$3, x, x$1, x$2, x$3, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; x = $f.x; x$1 = $f.x$1; x$2 = $f.x$2; x$3 = $f.x$3; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		_r = govfx.QuerySelectorAll("#box1"); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_r$1 = new govfx.Animation.ptr(-1, true, new time.Duration(0, 3000000000), new time.Duration(0, 2000000000), (x = new sliceType([$makeMap($String.keyFor, [{ k: "animate", v: new $String("background-color") }, { k: "easing", v: new $String("ease-in-out") }, { k: "color", v: new $String("rgb(201, 30, 93)") }])]), $subslice(new govfx.Values(x.$array), x.$offset, x.$offset + x.$length))).B((x$1 = _r, $subslice(new sliceType$1(x$1.$array), x$1.$offset, x$1.$offset + x$1.$length))); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		_r = govfx.QuerySelectorAll(".boxy"); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_r$1 = new govfx.Animation.ptr(-1, true, new time.Duration(0, 3000000000), new time.Duration(0, 2000000000), (x = new sliceType([$makeMap($String.keyFor, [{ k: "animate", v: new $String("scale-x") }, { k: "easing", v: new $String("ease") }, { k: "value", v: new $Float64(0.5) }]), $makeMap($String.keyFor, [{ k: "animate", v: new $String("background-color") }, { k: "easing", v: new $String("ease-in-out") }, { k: "color", v: new $String("rgb(201, 30, 93)") }])]), $subslice(new govfx.Values(x.$array), x.$offset, x.$offset + x.$length))).B((x$1 = _r, $subslice(new sliceType$1(x$1.$array), x$1.$offset, x$1.$offset + x$1.$length))); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
 		$r = govfx.Animate(_r$1); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		_r$2 = govfx.QuerySelectorAll("#box2"); /* */ $s = 4; case 4: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-		_r$3 = new govfx.Animation.ptr(-1, true, new time.Duration(0, 3000000000), new time.Duration(0, 2000000000), (x$2 = new sliceType([$makeMap($String.keyFor, [{ k: "animate", v: new $String("background-color") }, { k: "easing", v: new $String("ease-in-out") }, { k: "color", v: new $String("rgb(222, 233, 241)") }])]), $subslice(new govfx.Values(x$2.$array), x$2.$offset, x$2.$offset + x$2.$length))).B((x$3 = _r$2, $subslice(new sliceType$1(x$3.$array), x$3.$offset, x$3.$offset + x$3.$length))); /* */ $s = 5; case 5: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+		_r$2 = govfx.QuerySelectorAll(".box"); /* */ $s = 4; case 4: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+		_r$3 = new govfx.Animation.ptr(-1, true, new time.Duration(0, 3000000000), new time.Duration(0, 2000000000), (x$2 = new sliceType([$makeMap($String.keyFor, [{ k: "animate", v: new $String("scale-x") }, { k: "easing", v: new $String("ease") }, { k: "value", v: new $Float64(0.5) }]), $makeMap($String.keyFor, [{ k: "animate", v: new $String("background-color") }, { k: "easing", v: new $String("ease-in-out") }, { k: "color", v: new $String("rgb(222, 233, 241)") }])]), $subslice(new govfx.Values(x$2.$array), x$2.$offset, x$2.$offset + x$2.$length))).B((x$3 = _r$2, $subslice(new sliceType$1(x$3.$array), x$3.$offset, x$3.$offset + x$3.$length))); /* */ $s = 5; case 5: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
 		$r = govfx.Animate(_r$3); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: main }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f.x = x; $f.x$1 = x$1; $f.x$2 = x$2; $f.x$3 = x$3; $f.$s = $s; $f.$r = $r; return $f;
 	};
