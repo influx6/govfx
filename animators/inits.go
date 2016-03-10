@@ -14,6 +14,9 @@ func init() {
 	govfx.RegisterSequence("scale-y", ScaleY{})
 	govfx.RegisterSequence("skew-x", SkewX{})
 	govfx.RegisterSequence("skew-y", SkewY{})
+	govfx.RegisterSequence("rotate", Rotate{})
+	govfx.RegisterSequence("rotate-x", RotateX{})
+	govfx.RegisterSequence("rotate-y", RotateY{})
 
 	govfx.RegisterSequence("color", Color{})
 	govfx.RegisterSequence("background-color", BackgroundColor{})

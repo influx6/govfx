@@ -3,7 +3,6 @@ package animators
 import (
 	"fmt"
 
-	"github.com/influx6/faux/utils"
 	"github.com/influx6/govfx"
 )
 
@@ -11,8 +10,8 @@ import (
 
 // RotateY defines a sequence for animating css Rotate y-axes properties.
 type RotateY struct {
-	Value  float64 `govfx:"value"`
-	Easing string  `govfx:"easing"`
+	Value  int    `govfx:"value"`
+	Easing string `govfx:"easing"`
 }
 
 // Init returns the initial writers for the sequence.
@@ -21,31 +20,25 @@ func (t *RotateY) Init(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWri
 
 	for _, elem := range elems {
 		transform, priority, _ := elem.Read("transform", "rotate")
-		position, pr, _ := elem.Read("position", "")
-
-		if utils.MatchAny(position, "none", "") {
-			position = "relative"
-		}
 
 		func(e govfx.Elemental) {
 
-			var x, y float64
+			var y float64
 
 			if govfx.IsMatrix(transform) {
 				mx, _ := govfx.ToMatrix2D(transform)
-				x, y = mx.PositionX, mx.PositionY
+				y = mx.RotationY
 			} else if govfx.IsRotation(transform) {
 				mx, _ := govfx.ToRotation(transform)
-				x, y = mx.X, mx.Y
+				y = mx.Angle
 			} else {
-				x, y = 0, 0
+				y = 0
 			}
 
-			transform = fmt.Sprintf("rotate(%.0fdeg, %.0fdeg)", x, y)
+			transform = fmt.Sprintf("rotateY(%.0fdeg)", y)
 
 			writers = append(writers, govfx.NewWriter(func() {
 				e.Write("transform", transform, priority)
-				e.Write("position", position, pr)
 				e.Sync()
 			}))
 		}(elem)
@@ -65,14 +58,14 @@ func (t *RotateY) Next(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWri
 
 		func(e govfx.Elemental) {
 
-			var x, y float64
+			var y float64
 
 			if govfx.IsMatrix(transform) {
 				mx, _ := govfx.ToMatrix2D(transform)
-				x, y = mx.PositionX, mx.PositionY
-			} else if govfx.IsRotate(transform) {
-				mx, _ := govfx.ToRotate(transform)
-				x, y = mx.X, mx.Y
+				y = mx.RotationY
+			} else if govfx.IsRotation(transform) {
+				mx, _ := govfx.ToRotation(transform)
+				y = mx.Angle
 			}
 
 			yd := float64(t.Value) - y
@@ -83,8 +76,9 @@ func (t *RotateY) Next(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWri
 				DeltaValue:   yd,
 			})
 
-			transform = fmt.Sprintf("rotate(%.0fdeg, %.0fdeg)", x, yn)
 			e.EraseMore("transform", "matrix", false)
+
+			transform = fmt.Sprintf("rotateY(%.0fdeg)", yn)
 
 			writers = append(writers, govfx.NewWriter(func() {
 				e.Write("transform", transform, priority)
@@ -100,8 +94,8 @@ func (t *RotateY) Next(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWri
 
 // RotateX defines a sequence for animating css Rotate x-axes properties.
 type RotateX struct {
-	Value  float64 `govfx:"value"`
-	Easing string  `govfx:"easing"`
+	Value  int    `govfx:"value"`
+	Easing string `govfx:"easing"`
 }
 
 // Init returns the initial writers for the sequence.
@@ -110,11 +104,6 @@ func (t *RotateX) Init(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWri
 
 	for _, elem := range elems {
 		transform, priority, _ := elem.Read("transform", "rotate")
-		position, pr, _ := elem.Read("position", "")
-
-		if utils.MatchAny(position, "none", "") {
-			position = "relative"
-		}
 
 		func(e govfx.Elemental) {
 
@@ -122,10 +111,10 @@ func (t *RotateX) Init(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWri
 
 			if govfx.IsMatrix(transform) {
 				mx, _ := govfx.ToMatrix2D(transform)
-				x = mx.PositionX
-			} else if govfx.IsRotate(transform) {
-				mx, _ := govfx.ToRotate(transform)
-				x = mx.X
+				x = mx.RotationX
+			} else if govfx.IsRotation(transform) {
+				mx, _ := govfx.ToRotation(transform)
+				x = mx.Angle
 			} else {
 				x = 0
 			}
@@ -134,7 +123,6 @@ func (t *RotateX) Init(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWri
 
 			writers = append(writers, govfx.NewWriter(func() {
 				e.Write("transform", transform, priority)
-				e.Write("position", position, pr)
 				e.Sync()
 			}))
 		}(elem)
@@ -158,10 +146,10 @@ func (t *RotateX) Next(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWri
 
 			if govfx.IsMatrix(transform) {
 				mx, _ := govfx.ToMatrix2D(transform)
-				x = mx.PositionX
-			} else if govfx.IsRotate(transform) {
-				mx, _ := govfx.ToRotate(transform)
-				x = mx.X
+				x = mx.RotationX
+			} else if govfx.IsRotation(transform) {
+				mx, _ := govfx.ToRotation(transform)
+				x = mx.Angle
 			}
 
 			xd := float64(t.Value) - x
@@ -172,8 +160,89 @@ func (t *RotateX) Next(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWri
 				DeltaValue:   xd,
 			})
 
-			transform = fmt.Sprintf("rotateX(%.0fdeg)", xn)
 			e.EraseMore("transform", "matrix", false)
+			transform = fmt.Sprintf("rotateX(%.0fdeg)", xn)
+
+			writers = append(writers, govfx.NewWriter(func() {
+				e.Write("transform", transform, priority)
+				e.Sync()
+			}))
+		}(elem)
+	}
+
+	return writers
+}
+
+//==============================================================================
+
+// Rotate defines a sequence for animating css Rotate x-axes properties.
+type Rotate struct {
+	Value  int    `govfx:"value"`
+	Easing string `govfx:"easing"`
+}
+
+// Init returns the initial writers for the sequence.
+func (t *Rotate) Init(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWriters {
+	var writers govfx.DeferWriters
+
+	for _, elem := range elems {
+		transform, priority, _ := elem.Read("transform", "rotate")
+
+		func(e govfx.Elemental) {
+
+			var r float64
+
+			if govfx.IsSimpleRotation(transform) {
+				mx, _ := govfx.ToRotation(transform)
+				r = mx.Angle
+			} else {
+				r = 0
+			}
+
+			transform = fmt.Sprintf("rotate(%.0fdeg)", r)
+
+			writers = append(writers, govfx.NewWriter(func() {
+				e.Write("transform", transform, priority)
+				e.Sync()
+			}))
+		}(elem)
+	}
+
+	return writers
+}
+
+// Next returns the writers for the next sequence.
+func (t *Rotate) Next(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWriters {
+	var writers govfx.DeferWriters
+
+	easing := govfx.GetEasing(t.Easing)
+
+	for _, elem := range elems {
+		transform, priority, _ := elem.Read("transform", "rotate")
+
+		func(e govfx.Elemental) {
+
+			var r float64
+
+			if govfx.IsSimpleRotation(transform) {
+				mx, _ := govfx.ToRotation(transform)
+				r = mx.Angle
+			} else {
+				r = 0
+			}
+
+			rd := float64(t.Value) - r
+
+			rn := easing.Ease(govfx.EaseConfig{
+				Stat:         stats,
+				CurrentValue: r,
+				DeltaValue:   rd,
+			})
+
+			e.EraseMore("transform", "matrix", false)
+
+			transform = fmt.Sprintf("rotate(%.0fdeg)", rn)
+
 			writers = append(writers, govfx.NewWriter(func() {
 				e.Write("transform", transform, priority)
 				e.Sync()

@@ -363,8 +363,16 @@ func doubleString(c string) string {
 
 //==============================================================================
 
+// simpleRotationMatch defines a matcher for the formation rotate(90deg).
+var simpleRotationMatch = regexp.MustCompile("rotate\\(([\\d]+)deg\\)")
+
+// IsSimpleRotation checks wether the giving string is a css rotation directive.
+func IsSimpleRotation(data string) bool {
+	return simpleRotationMatch.MatchString(data)
+}
+
 // rotationMatch defines a matcher for the formation rotate(90deg).
-var rotationMatch = regexp.MustCompile("rotate\\(([\\d]+)deg\\)")
+var rotationMatch = regexp.MustCompile("[rotate|rotateX|rotateY|rotateZ]\\(([\\d]+)deg\\)")
 
 // Rotation defines the concrete representation of the css3 skew
 // transform property.
@@ -386,9 +394,8 @@ func ToRotation(data string) (*Rotation, error) {
 
 	ts := strings.Split(rotationMatch.FindStringSubmatch(data)[1], ",")
 
-	t := Rotation{
-		Angle: ParseFloat(ts[0]),
-	}
+	var t Rotation
+	t.Angle = ParseFloat(ts[0])
 
 	return &t, nil
 }
@@ -396,7 +403,7 @@ func ToRotation(data string) (*Rotation, error) {
 //==============================================================================
 
 // skewMatch defines a matcher for the format eg skew(90px,40px).
-var skewMatch = regexp.MustCompile("skew\\(([\\d,\\s]+)\\)")
+var skewMatch = regexp.MustCompile("[skew|skewX|skewY]\\(([\\d,\\s]+)\\)")
 
 // Skew defines the concrete representation of the css3 skew
 // transform property.
@@ -419,9 +426,15 @@ func ToSkew(data string) (*Skew, error) {
 
 	ts := strings.Split(skewMatch.FindStringSubmatch(data)[1], ",")
 
-	t := Skew{
-		X: ParseFloat(ts[0]),
-		Y: ParseFloat(ts[1]),
+	var t Skew
+
+	if strings.HasSuffix(data, "Y") {
+		t.Y = ParseFloat(ts[0])
+	} else if strings.Contains(data, "X") {
+		t.X = ParseFloat(ts[0])
+	} else {
+		t.X = ParseFloat(ts[0])
+		t.Y = ParseFloat(ts[1])
 	}
 
 	return &t, nil
@@ -429,7 +442,7 @@ func ToSkew(data string) (*Skew, error) {
 
 //==============================================================================
 
-var scaleMatch = regexp.MustCompile("translate\\(([\\d,\\s]+)\\)")
+var scaleMatch = regexp.MustCompile("[translate|translateX|translateY]\\(([\\d,\\s]+)\\)")
 
 // Scale defines the concrete representation of the css3 scale
 // transform property.
@@ -452,9 +465,15 @@ func ToScale(data string) (*Scale, error) {
 
 	ts := strings.Split(scaleMatch.FindStringSubmatch(data)[1], ",")
 
-	t := Scale{
-		X: ParseFloat(ts[0]),
-		Y: ParseFloat(ts[1]),
+	var t Scale
+
+	if strings.HasSuffix(data, "Y") {
+		t.Y = ParseFloat(ts[0])
+	} else if strings.Contains(data, "X") {
+		t.X = ParseFloat(ts[0])
+	} else {
+		t.X = ParseFloat(ts[0])
+		t.Y = ParseFloat(ts[1])
 	}
 
 	return &t, nil
@@ -485,9 +504,15 @@ func ToTranslation(data string) (*Translation, error) {
 
 	ts := strings.Split(tranlateMatch.FindStringSubmatch(data)[1], ",")
 
-	t := Translation{
-		X: ParseFloat(ts[0]),
-		Y: ParseFloat(ts[1]),
+	var t Translation
+
+	if strings.HasSuffix(data, "Y") {
+		t.Y = ParseFloat(ts[0])
+	} else if strings.Contains(data, "X") {
+		t.X = ParseFloat(ts[0])
+	} else {
+		t.X = ParseFloat(ts[0])
+		t.Y = ParseFloat(ts[1])
 	}
 
 	return &t, nil
@@ -520,6 +545,9 @@ type Matrix2D struct {
 	RotationY float64
 	PositionX float64
 	PositionY float64
+	PositionZ float64
+	ScaleZ    float64
+	RotationZ float64
 }
 
 // ToMatrix2D returns a matrix from the provided data (eg matrix(0,1,0,1,3,4))
