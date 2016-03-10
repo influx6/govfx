@@ -481,6 +481,35 @@ func ToScale(data string) (*Scale, error) {
 
 //==============================================================================
 
+var perspectiveMatch = regexp.MustCompile("perspective\\(([\\d,\\s]+)\\)")
+
+// IsPerspective checks wether the giving string is a css perspective directive.
+func IsPerspective(data string) bool {
+	return perspectiveMatch.MatchString(data)
+}
+
+// Perspective provides a structure for storing current perspective data.
+type Perspective struct {
+	Range float64
+}
+
+// ToPerspective returns the translation from the giving string else returns
+// an error if it failed.
+func ToPerspective(data string) (*Perspective, error) {
+	if !IsPerspective(data) {
+		return nil, errors.New("Invalid Data")
+	}
+
+	ts := strings.Split(perspectiveMatch.FindStringSubmatch(data)[1], ",")
+
+	var t Perspective
+	t.Range = ParseFloat(ts[0])
+
+	return &t, nil
+}
+
+//==============================================================================
+
 var tranlateMatch = regexp.MustCompile("translate\\(([\\d,\\s]+)\\)")
 
 // Translation defines the concrete representation of the css3 translation
@@ -537,8 +566,8 @@ func IsMatrix(data string) bool {
 	return true
 }
 
-// Matrix2D defines a transformation matrix generated from a transform directive.
-type Matrix2D struct {
+// Matrix defines a transformation matrix generated from a transform directive.
+type Matrix struct {
 	ScaleX    float64
 	RotationX float64
 	ScaleY    float64
@@ -552,7 +581,7 @@ type Matrix2D struct {
 
 // ToMatrix2D returns a matrix from the provided data (eg matrix(0,1,0,1,3,4))
 // else returns an error.
-func ToMatrix2D(data string) (*Matrix2D, error) {
+func ToMatrix2D(data string) (*Matrix, error) {
 	if !IsMatrix(data) {
 		return nil, errors.New("Invalid Matrix data")
 	}
@@ -563,7 +592,7 @@ func ToMatrix2D(data string) (*Matrix2D, error) {
 		return nil, errors.New("Invalid Matrix data")
 	}
 
-	m := Matrix2D{
+	m := Matrix{
 		ScaleX:    ParseFloat(ms[0]),
 		RotationX: ParseFloat(ms[1]),
 		ScaleY:    ParseFloat(ms[2]),
