@@ -1,5 +1,7 @@
 package govfx
 
+import "fmt"
+
 //==============================================================================
 
 // Spline provides a implmenetation of the Keyspline which uses bezier curves
@@ -23,11 +25,15 @@ func NewSpline(x, y, x2, y2 float64) *Spline {
 func (s *Spline) Ease(c EaseConfig) float64 {
 	mc := (c.CurrentValue + c.DeltaValue*s.X(c.Stat.DeltaIteration()))
 
-	if c.Stat.Delta() <= 0 {
-		return mc
+	da := c.Stat.Delta() / 1000
+	if da < 1 {
+		fmt.Printf("da:Delta: %.2f", da)
+		return mc * da
 	}
 
-	return mc * c.Stat.Delta()
+	fmt.Printf("Delta: %.2f", da)
+
+	return mc
 }
 
 // X returns the provided x value for a giving time between 0 and 1.
