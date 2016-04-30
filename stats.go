@@ -1,6 +1,7 @@
 package govfx
 
 import (
+	"sync"
 	"sync/atomic"
 	"time"
 )
@@ -55,6 +56,11 @@ type StatConfig struct {
 type Stat struct {
 	config           StatConfig
 	delay            time.Duration
+	lastDu           time.Duration
+	elapsed          float64
+	start            time.Time
+	last             time.Time
+	lastIteration    int64
 	totalIteration   int64
 	currentIteration int64
 	reversed         int64
@@ -62,6 +68,7 @@ type Stat struct {
 	completedReverse int64
 	delta            float64
 	done             bool
+	once             sync.Once
 }
 
 // NewStat returns a new Stats instance which provide information concering
@@ -94,7 +101,34 @@ func (s *Stat) Delta() float64 {
 
 // Next calls the appropriate iteration step for the stat.
 func (s *Stat) Next(m float64) {
+	// TODO: Need to find a good way of calculating elpased time.
+	// s.once.Do(func() {
+	// 	s.last = time.Now().Add(s.config.Duration + s.config.Delay)
+	// 	// s.last = s
+	// })
+	//
+	// ms := time.Now()
+	// s.lastDu = (ms.Sub(s.last))
+	// s.elapsed = s.lastDu.Seconds() / s.config.Duration.Seconds()
+	//
+	// fmt.Printf("==========================================\n")
+	// fmt.Printf("Now: %s\n", ms)
+	// fmt.Printf("LastDuration: %s\n", s.lastDu)
+	// fmt.Printf("ElapseDuration: %.3f\n", s.elapsed)
+	//
+	// if s.elapsed > 1 {
+	// 	s.elapsed = 1
+	// }
+	//
+	// fmt.Printf("F:ElapseDuration: %.3f\n", s.elapsed)
+	// fmt.Printf("==========================================\n")
+	//
+	// s.last = ms
+	// s.last = time.Now().Add(s.config.Duration + s.config.Delay)
+	// s.last = s.start
+
 	if !s.CompletedFirstTransition() {
+
 		s.NextIteration(m)
 		return
 	}

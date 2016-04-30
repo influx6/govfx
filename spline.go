@@ -1,6 +1,15 @@
 package govfx
 
-import "fmt"
+//==============================================================================
+
+// PropertyCurves provides a interface for easing values using curves data
+// that provide values at different time areas. Thet allow us to provided
+// animation behaviours for objects using curve data. Similar to animation
+// curves in animation tools.
+type PropertyCurves interface {
+	X(time float64) float64
+	Y(time float64) float64
+}
 
 //==============================================================================
 
@@ -24,15 +33,6 @@ func NewSpline(x, y, x2, y2 float64) *Spline {
 // to provide easing behaviours.
 func (s *Spline) Ease(c EaseConfig) float64 {
 	mc := (c.CurrentValue + c.DeltaValue*s.X(c.Stat.DeltaIteration()))
-
-	da := c.Stat.Delta() / 1000
-	if da < 1 {
-		fmt.Printf("da:Delta: %.2f", da)
-		return mc * da
-	}
-
-	fmt.Printf("Delta: %.2f", da)
-
 	return mc
 }
 
@@ -73,42 +73,42 @@ func (s *Spline) GetTimeForX(aX float64) float64 {
 	return aGuessT
 }
 
-// // Y returns the provided x value for a giving time between 0 and 1.
-// func (s *Spline) Y(t float64) float64 {
-// 	if s.optimize {
-// 		return t
-// 	}
-//
-// 	if s.x1 == s.y1 && s.x2 == s.y2 {
-// 		s.optimize = true
-// 		return t
-// 	}
-//
-// 	return CalculateBezier(s.GetTimeForX(t), s.x1, s.x2)
-// }
-//
-// // GetTimeForY returns the giving time value between 0 and 1 for the provided
-// // x coordinate for a bezier curve.
-// func (s *Spline) GetTimeForY(aY float64) float64 {
-// 	// Newton raphson iteration
-// 	aGuessT := aY
-//
-// 	for i := 0; i < 4; i++ {
-//
-// 		currentSlope := GetSlope(aGuessT, s.y1, s.y2)
-//
-// 		if currentSlope == 0.0 {
-// 			return aGuessT
-// 		}
-//
-// 		currentX := CalculateBezier(aGuessT, s.y1, s.y1) - aY
-//
-// 		aGuessT -= currentX / currentSlope
-//
-// 	}
-//
-// 	return aGuessT
-// }
+// Y returns the provided x value for a giving time between 0 and 1.
+func (s *Spline) Y(t float64) float64 {
+	if s.optimize {
+		return t
+	}
+
+	if s.x1 == s.y1 && s.x2 == s.y2 {
+		s.optimize = true
+		return t
+	}
+
+	return CalculateBezier(s.GetTimeForX(t), s.x1, s.x2)
+}
+
+// GetTimeForY returns the giving time value between 0 and 1 for the provided
+// y coordinate for a bezier curve.
+func (s *Spline) GetTimeForY(aY float64) float64 {
+	// Newton raphson iteration
+	aGuessT := aY
+
+	for i := 0; i < 4; i++ {
+
+		currentSlope := GetSlope(aGuessT, s.y1, s.y2)
+
+		if currentSlope == 0.0 {
+			return aGuessT
+		}
+
+		currentX := CalculateBezier(aGuessT, s.y1, s.y1) - aY
+
+		aGuessT -= currentX / currentSlope
+
+	}
+
+	return aGuessT
+}
 
 //==============================================================================
 

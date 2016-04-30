@@ -302,15 +302,15 @@ func HexToRGB(hex string) (red, green, blue int) {
 	// We are dealing with a 3 string hex.
 	if len(hex) < 6 {
 		parts := strings.Split(hex, "")
-		red = parseIntBase16(doubleString(parts[0]))
-		green = parseIntBase16(doubleString(parts[1]))
-		blue = parseIntBase16(doubleString(parts[2]))
+		red = ParseIntBase16(doubleString(parts[0]))
+		green = ParseIntBase16(doubleString(parts[1]))
+		blue = ParseIntBase16(doubleString(parts[2]))
 		return
 	}
 
-	red = parseIntBase16(hex[0:2])
-	green = parseIntBase16(hex[2:4])
-	blue = parseIntBase16(hex[4:6])
+	red = ParseIntBase16(hex[0:2])
+	green = ParseIntBase16(hex[2:4])
+	blue = ParseIntBase16(hex[4:6])
 
 	return
 }

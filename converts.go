@@ -23,7 +23,7 @@ func ParseInt(fl string) int {
 }
 
 // ParseIntBase16 parses a string into a int using base16.
-func parseIntBase16(fl string) int {
+func ParseIntBase16(fl string) int {
 	fll, _ := strconv.ParseInt(fl, 16, 64)
 	return int(fll)
 }
