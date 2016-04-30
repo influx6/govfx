@@ -119,7 +119,6 @@ type EasingProviders interface {
 // EaseConfig provides a easing configuration to help simplify easing
 // calculations. This is provided to unify the
 type EaseConfig struct {
-	Stat         Stats
 	DeltaValue   float64
 	CurrentValue float64
 }

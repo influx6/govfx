@@ -27,10 +27,10 @@ func (d DeferWriters) Write() {
 // WriterCache provides a interface type for writer cache structures, which catch
 // animation produced writers per sequence iteration state.
 type WriterCache interface {
-	Store(Frame, int, ...DeferWriter)
-	Writers(Frame, int) DeferWriters
-	ClearIteration(Frame, int)
-	Clear(Frame)
+	Store(*Frame, int, ...DeferWriter)
+	Writers(*Frame, int) DeferWriters
+	ClearIteration(*Frame, int)
+	Clear(*Frame)
 }
 
 //==============================================================================
@@ -71,7 +71,6 @@ func (d *dWriter) Write() {
 // sequence writers. This helps to control the pace of which frames release
 // writers for the next sequence.
 type frameController interface {
-	Frame
 	BeginWriting()
 	DoneWriting()
 }
@@ -88,9 +87,7 @@ type delayedWriter struct {
 
 // Write calls time.After to perform the necessary delay of operation.
 func (d *delayedWriter) Write() {
-	if !d.f.Stats().IsFirstDone() {
-		<-time.After(d.ms)
-	}
+	<-time.After(d.ms)
 }
 
 //==============================================================================

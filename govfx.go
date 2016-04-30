@@ -8,8 +8,8 @@ import "honnef.co/go/js/dom"
 // sequence where each Animation within the lists begins after the ending of
 // the previous animation, it allows a simple way of stacking multiple sequences
 // easily.
-func X(a ...Animation) Frame {
-	var initial, current Frame
+func X(a ...Animation) *Frame {
+	var initial, current *Frame
 
 	for _, ani := range a {
 
@@ -35,7 +35,7 @@ func X(a ...Animation) Frame {
 
 // QuerySequence uses a selector to retrieve the desired elements needed
 // to be animated, returning the frame for the animation sequence.
-func QuerySequence(selector string, stat Stats, s ...Sequence) Frame {
+func QuerySequence(selector string, stat Stat, s ...Sequence) *Frame {
 	return ElementalSequence(TransformElements(QuerySelectorAll(selector)), stat, s...)
 }
 
@@ -44,7 +44,7 @@ func QuerySequence(selector string, stat Stats, s ...Sequence) Frame {
 // DOMSequence returns a new Frame transforming the lists of
 // accordingly dom.Elements into its desired elementals for the animation
 // sequence.
-func DOMSequence(elems []dom.Element, stat Stats, s ...Sequence) Frame {
+func DOMSequence(elems []dom.Element, stat Stat, s ...Sequence) *Frame {
 	return ElementalSequence(TransformElements(elems), stat, s...)
 }
 
@@ -52,8 +52,8 @@ func DOMSequence(elems []dom.Element, stat Stats, s ...Sequence) Frame {
 
 // ElementalSequence returns a new frame using the selected Elementals for
 // the animation sequence.
-func ElementalSequence(elems Elementals, stat Stats, s ...Sequence) Frame {
-	ani := NewAnimationSequence(stat, s...)
+func ElementalSequence(elems Elementals, stat Stat, s ...Sequence) *Frame {
+	ani := NewFrame(stat, s)
 	ani.Use(elems)
 	return ani
 }
