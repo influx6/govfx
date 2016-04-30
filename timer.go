@@ -1,7 +1,6 @@
 package govfx
 
 import (
-	"fmt"
 	"sync/atomic"
 	"time"
 )
@@ -9,11 +8,24 @@ import (
 //==============================================================================
 
 // TimeBehaviour defines an interface for timeable structures which want to
-// both render and update, it allows Timer to effectively call the appropriate
+// both render and update, it allows timer to effectively call the appropriate
 // method for each step.
 type TimeBehaviour interface {
 	Render(dt float64)
 	Update(dt float64, totalRun float64)
+}
+
+// Timer defines a interface for definining a timer.
+type Timer interface {
+	Update()
+}
+
+// NewTimer returns a new timer struct which calculates the delta and elapse time
+// each calls of run.
+func NewTimer(b TimeBehaviour, duration time.Duration, delay time.Duration) Timer {
+	tm := timer{behaviour: b, duration: duration, delay: delay}
+	tm.totalDuration = duration + delay
+	return &tm
 }
 
 //==============================================================================
@@ -24,9 +36,9 @@ var oneSixth = 1 / 60
 // defaultDelta defines a fixed timestep for each frame.
 var defaultDelta = 0.01
 
-// Timer defines a internal clock which calculates appropriate
+// timer defines a internal clock which calculates appropriate
 // elapsed time for animations.
-type Timer struct {
+type timer struct {
 	behaviour     TimeBehaviour
 	delay         time.Duration
 	duration      time.Duration
@@ -43,34 +55,9 @@ type Timer struct {
 	reverse       int64
 }
 
-// NewTimer returns a new Timer struct which calculates the delta and elapse time
-// each calls of run.
-func NewTimer(b TimeBehaviour, duration time.Duration, delay time.Duration) *Timer {
-	tm := Timer{behaviour: b, duration: duration, delay: delay}
-	tm.totalDuration = duration + delay
-	return &tm
-}
-
-// InActiveArea returns true/false if the giving timer has entered within the
-// active time range i.e after the giving delay.
-func (t *Timer) InActiveArea() bool {
-	return true
-}
-
-// Elapse returns the current elapse time before the
-// next update.
-func (t *Timer) Elapse() time.Time {
-	return t.elapsed
-}
-
-// Delta returns the current delta value before the next update.
-func (t *Timer) Delta() time.Duration {
-	return t.delta
-}
-
 // Update updates the timers internal clocks, calculating the necessary durations
 // and delta values
-func (t *Timer) Update() {
+func (t *timer) Update() {
 	if !t.hasBegun() {
 		t.init()
 	}
@@ -82,8 +69,6 @@ func (t *Timer) Update() {
 	t.progressTime = t.progressTime.Add(t.delta)
 	t.accumulator += t.delta.Seconds()
 
-	fmt.Printf("Delta: %s Accumulator: %.4f\n", t.delta, t.accumulator)
-
 	for ; t.accumulator > defaultDelta; t.accumulator -= defaultDelta {
 		t.behaviour.Update(defaultDelta, t.totalDelta)
 		t.totalDelta += defaultDelta
@@ -92,7 +77,7 @@ func (t *Timer) Update() {
 	t.behaviour.Render(t.delta.Seconds())
 }
 
-func (t *Timer) init() {
+func (t *timer) init() {
 	t.start = time.Now()
 	t.elapsed = t.start
 	t.progressTime = t.start
@@ -108,7 +93,7 @@ func (t *Timer) init() {
 }
 
 // hasBegun returns true/false if the clock has begun running.
-func (t *Timer) hasBegun() bool {
+func (t *timer) hasBegun() bool {
 	return atomic.LoadInt64(&t.winding) > 0
 }
 
