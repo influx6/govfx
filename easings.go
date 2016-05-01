@@ -107,20 +107,13 @@ func GetEasing(easing string) Easing {
 
 // Easing defines a interface that returns a new value for the provided values.
 type Easing interface {
-	Ease(esc EaseConfig) float64
+	Ease(float64) float64
 }
 
 // EasingProviders provides a interface type to expose easing function providers.
 type EasingProviders interface {
 	Get(string) Easing
 	Add(string, Easing)
-}
-
-// EaseConfig provides a easing configuration to help simplify easing
-// calculations. This is provided to unify the
-type EaseConfig struct {
-	DeltaValue   float64
-	CurrentValue float64
 }
 
 //==============================================================================

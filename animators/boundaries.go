@@ -16,52 +16,38 @@ type Width struct {
 }
 
 // Init returns the initial writers for the sequence.
-func (w *Width) Init(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWriters {
+func (w *Width) Init(delta float64, elem govfx.Elemental) govfx.DeferWriters {
 	var writers govfx.DeferWriters
 
-	for _, elem := range elems {
-		width, priority, _ := elem.ReadInt("width", "")
+	width, priority, _ := elem.ReadInt("width", "")
 
-		(func(e govfx.Elemental) {
-			writers = append(writers, govfx.NewWriter(func() {
-				val := fmt.Sprintf("%d%s", width, "px")
-				e.Write("width", val, priority)
-				e.Sync()
-			}))
-		})(elem)
-	}
-
-	return writers
+	return govfx.NewWriter(func() {
+		val := fmt.Sprintf("%d%s", width, "px")
+		elem.Write("width", val, priority)
+		elem.Sync()
+	})
 }
 
 // Next returns the writers for the current sequence iteration.
-func (w *Width) Next(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWriters {
-	var writers govfx.DeferWriters
+func (w *Width) Next(delta float64, e govfx.Elemental) govfx.DeferWriters {
 
 	easing := govfx.GetEasing(w.Easing)
 
-	for _, elem := range elems {
-		(func(e govfx.Elemental) {
-			width, priority, _ := elem.ReadInt("width", "")
+	width, priority, _ := elem.ReadInt("width", "")
 
-			change := w.Value - width
+	change := w.Value - width
 
-			newWidth := int(easing.Ease(govfx.EaseConfig{
-				Stat:         stats,
-				CurrentValue: float64(width),
-				DeltaValue:   float64(change),
-			}))
+	newWidth := int(easing.Ease(govfx.EaseConfig{
+		Stat:         stats,
+		CurrentValue: float64(width),
+		DeltaValue:   float64(change),
+	}))
 
-			writers = append(writers, govfx.NewWriter(func() {
-				val := fmt.Sprintf("%d%s", newWidth, "px")
-				e.Write("width", val, priority)
-				e.Sync()
-			}))
-		}(elem))
-
-	}
-
-	return writers
+	return govfx.NewWriter(func() {
+		val := fmt.Sprintf("%d%s", newWidth, "px")
+		e.Write("width", val, priority)
+		e.Sync()
+	})
 }
 
 //==============================================================================
@@ -73,50 +59,38 @@ type Height struct {
 }
 
 // Init returns the initial writers for the sequence.
-func (h *Height) Init(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWriters {
-	var writers govfx.DeferWriters
+func (h *Height) Init(stats govfx.Stats, elem govfx.Elemental) govfx.DeferWriters {
 
-	for _, elem := range elems {
-		(func(e govfx.Elemental) {
-			height, priority, _ := elem.ReadInt("height", "")
-			writers = append(writers, govfx.NewWriter(func() {
-				val := fmt.Sprintf("%d%s", height, "px")
-				e.Write("height", val, priority)
-				e.Sync()
-			}))
-		}(elem))
-	}
+	height, priority, _ := elem.ReadInt("height", "")
+	return govfx.NewWriter(func() {
+		val := fmt.Sprintf("%d%s", height, "px")
+		e.Write("height", val, priority)
+		e.Sync()
+	})
 
-	return writers
 }
 
 // Next returns the writers for the current sequence iteration.
-func (h *Height) Next(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWriters {
-	var writers govfx.DeferWriters
+func (h *Height) Next(stats govfx.Stats, e govfx.Elemental) govfx.DeferWriters {
 
 	easing := govfx.GetEasing(h.Easing)
 
-	for _, elem := range elems {
-		(func(e govfx.Elemental) {
-			height, priority, _ := e.ReadInt("height", "")
+	height, priority, _ := e.ReadInt("height", "")
 
-			change := h.Value - height
+	change := h.Value - height
 
-			newHeight := int(easing.Ease(govfx.EaseConfig{
-				Stat:         stats,
-				CurrentValue: float64(height),
-				DeltaValue:   float64(change),
-			}))
+	newHeight := int(easing.Ease(govfx.EaseConfig{
+		Stat:         stats,
+		CurrentValue: float64(height),
+		DeltaValue:   float64(change),
+	}))
 
-			writers = append(writers, govfx.NewWriter(func() {
-				val := fmt.Sprintf("%d%s", newHeight, "px")
-				e.Write("height", val, priority)
-				e.Sync()
-			}))
-		}(elem))
-	}
+	return govfx.NewWriter(func() {
+		val := fmt.Sprintf("%d%s", newHeight, "px")
+		e.Write("height", val, priority)
+		e.Sync()
+	})
 
-	return writers
 }
 
 //==============================================================================

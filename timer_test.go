@@ -10,19 +10,19 @@ import (
 
 type mob struct{}
 
-func (mob) Update(dt, totalRun float64) {
-	fmt.Printf("Update: Delta:%.2f Run:%.2f\n", dt, totalRun)
+func (mob) Render(dt float64, cu int) {
+	fmt.Printf("...")
 }
 
-func (mob) Render(dt float64) {
-	fmt.Printf("Render: %.2f \n", dt)
+func (mob) Update(dt float64, cu, total int) {
+	fmt.Printf("||")
 }
 
 // TestTimer validates the behaviour of the Timer API.
 func TestTimer(t *testing.T) {
 	var m mob
 
-	mt := govfx.NewTimer(&m, 3*time.Second, 0)
+	mt := govfx.NewTimer(&m, 4*time.Second, 1*time.Second)
 
 	for i := 50; i > 0; i-- {
 		mt.Update()

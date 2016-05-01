@@ -1,19 +1,56 @@
 package govfx
 
 import (
+	"fmt"
 	"sync/atomic"
 	"time"
 )
-
-//==============================================================================
 
 // TimeBehaviour defines an interface for timeable structures which want to
 // both render and update, it allows timer to effectively call the appropriate
 // method for each step.
 type TimeBehaviour interface {
-	Render(dt float64)
-	Update(dt float64, totalRun float64)
+	Render(dt float64, current int)
+	Update(dt float64, current, total int)
 }
+
+//==============================================================================
+
+// TimelineBehaviour defines an interface for creating a timeline management
+// system.
+type TimelineBehaviour interface {
+	TimeBehaviour
+	Reset()
+}
+
+// Timeline defines a struct to manage the behaviour of a animation frame.
+type Timeline struct {
+	stat Stat
+	tb   TimelineBehaviour
+}
+
+// NewTimeline returns a new timeline to manage the lifetime of a animation.
+func NewTimeline(t TimelineBehaviour, stat Stat) *Timeline {
+	tm := Timeline{stat: stat, tb: t}
+	return &tm
+}
+
+// Render implements the TimeBehaviour interface Render() function.
+func (t *Timeline) Render(delta float64, current int) {}
+
+// Update implements the TimeBehaviour interface Update() function.
+func (t *Timeline) Update(delta float64, current, total int) {}
+
+// Sync implements the core operation function for the timeline manager.
+func (t *Timeline) Sync() {}
+
+//==============================================================================
+
+// oneSixth defines the minimum delta value for a frame.
+var oneSixth = 1 / 60
+
+// defaultDelta defines a fixed timestep for each frame.
+var defaultDelta = 0.01
 
 // Timer defines a interface for definining a timer.
 type Timer interface {
@@ -27,14 +64,6 @@ func NewTimer(b TimeBehaviour, duration time.Duration, delay time.Duration) Time
 	tm.totalDuration = duration + delay
 	return &tm
 }
-
-//==============================================================================
-
-// oneSixth defines the minimum delta value for a frame.
-var oneSixth = 1 / 60
-
-// defaultDelta defines a fixed timestep for each frame.
-var defaultDelta = 0.01
 
 // timer defines a internal clock which calculates appropriate
 // elapsed time for animations.
@@ -65,20 +94,33 @@ func (t *timer) Update() {
 	now := time.Now()
 
 	t.delta = now.Sub(t.elapsed)
-	t.elapsed = now
 	t.progressTime = t.progressTime.Add(t.delta)
+
+	// If we are still awaiting delay the just add the progress time and
+	// return as we are still awaiting delay.
+	if now.Sub(t.begin) < 0 {
+		return
+	}
+
+	totalRun := now.Add(t.delay).Sub(t.start)
+	currentRun := totalRun / t.totalDuration
+
+	fmt.Printf("Run: total %.4f current %s\n", now.Sub(t.begin).Seconds(), currentRun)
+
+	t.elapsed = now
 	t.accumulator += t.delta.Seconds()
 
 	for ; t.accumulator > defaultDelta; t.accumulator -= defaultDelta {
-		t.behaviour.Update(defaultDelta, t.totalDelta)
+		t.behaviour.Update(defaultDelta, 0, 0)
 		t.totalDelta += defaultDelta
 	}
 
-	t.behaviour.Render(t.delta.Seconds())
+	t.behaviour.Render(t.delta.Seconds(), 0)
 }
 
 func (t *timer) init() {
 	t.start = time.Now()
+	t.begin = t.start.Add(t.delay)
 	t.elapsed = t.start
 	t.progressTime = t.start
 

@@ -17,11 +17,11 @@ import (
 func Animate(frame *Frame) {
 
 	// create the timer for which the frame will be animated.
-	timer := NewTimer(frame, frame.Stat.Duration, frame.Stat.Delay)
+	frameTimeline := NewTimeline(frame, frame.Stat)
 
 	// Return this frame subscription ender, initialized and run its writers.
 	stopCache.Add(frame, engine.Loop(func(delta float64) {
-		timer.Update()
+		frameTimeline.Sync()
 	}, 0))
 }
 
@@ -51,7 +51,6 @@ var stopCache *loopCache
 // looper using this.
 func Init(gear loop.EngineGear) {
 	stopCache = newLoopCache()
-	wcache = NewDeferWriterCache()
 	easingProviders = NewEasingRegister()
 	animationProviders = NewAnimatorsRegister()
 	engine = loop.New(gear)

@@ -26,8 +26,8 @@ type StoppableSequence interface {
 // Sequence when calling their next method, all sequences must return a
 // DeferWriter.
 type Sequence interface {
-	Init(float64,int,Elementals) DeferWriters
-	Next(float64,int, Elementals) DeferWriters
+	Init(float64, Elemental) DeferWriter
+	Next(float64, Elemental) DeferWriter
 }
 
 // SequenceList defines a lists of animatable sequence.
