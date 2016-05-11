@@ -12,33 +12,6 @@ import (
 // tick.
 var AnimationStepsPerSec int64 = 60
 
-// FramePhase defines a animation phase type.
-type FramePhase int
-
-// const contains sets of Frame phase that identify the current frame animation
-// phase.
-const (
-	NOPHASE FramePhase = iota
-	STARTPHASE
-	OPTIMISEPHASE
-)
-
-// Listeners defines an interface that provides callback hooks for animations.
-type Listeners interface {
-	OnEnd(func(Frame))
-	OnBegin(func(Frame))
-	OnProgress(func(Frame))
-	ResetListeners()
-}
-
-//==============================================================================
-
-// WriteLink defines a linked chain of writers that stacks the previous link
-// to create a run chain of DeferWriters
-type WriteLink struct {
-	Writers []DeferWriters
-}
-
 //==============================================================================
 
 // Stat provides a configuration for building a Stats object for animators.
@@ -47,119 +20,196 @@ type Stat struct {
 	Delay    time.Duration
 	Loop     int
 	Reverse  bool
-	Optimize bool
 }
 
-// Frame defines a sequence producer interface.
-type Frame struct {
+// SeqBev defines a sequence producer interface.
+type SeqBev struct {
 	Stat
-	seqs   SequenceList
-	inited int64
-	elems  Elementals
-	bl     sync.RWMutex
+
+	once *sync.Once
+	seqs SequenceList
+
 	blocks []WriteLink
+
+	ended       Listener
+	progressing Listener
+	begins      Listener
+
+	bl    sync.RWMutex
+	elems Elementals
+
+	flymode  int64
+	flyIndex int
 }
 
-// NewFrame returns a new instance of a Frame.
-func NewFrame(stat Stat, seqs SequenceList) *Frame {
-	f := Frame{Stat: stat, seqs: seqs}
+// NewSeqBev returns a new instance of a SeqBev.
+func NewSeqBev(stat Stat, seqs []Sequence) *SeqBev {
+	var one sync.Once
+
+	f := SeqBev{
+		Stat:        stat,
+		seqs:        seqs,
+		once:        &one,
+		ended:       &listener{},
+		begins:      &listener{},
+		progressing: &listener{},
+	}
+
+	f.ended.Add(func(_ float64) {
+		atomic.StoreInt64(&f.flymode, 1)
+	})
+
 	return &f
 }
 
 // Use sets the giving elementals to be used for animation by the frame.
-func (f *Frame) Use(elems Elementals) {
+func (f *SeqBev) Use(elems Elementals) {
 	f.bl.Lock()
 	defer f.bl.Unlock()
 
 	f.elems = elems
-	f.blocks = make([]WriteLink, len(f.elems))
-}
-
-// Then stacks the next frame to be called by this frame when it ends or after
-// its first complete run if its a infinite looped frame.
-func (f *Frame) Then(fr *Frame) {
-
 }
 
 // Reset is called by the timer to tell the frame its animation period as finished.
-func (f *Frame) Reset() {
+func (f *SeqBev) Reset() {
+	var one sync.Once
+	f.once = &one
+	// atomic.StoreInt64(&f.flymode, 0)
 }
 
 //==============================================================================
 
+// WriteLink defines a linked chain of writers that stacks the previous link
+// to create a run chain of DeferWriters
+type WriteLink struct {
+	nexts []DeferWriters
+	inits DeferWriters
+
+	elem    Elemental
+	lastRun int
+}
+
+// Fire calls the current set of DeferWriters to write out their
+// details and calls the element to sync.
+func (wl *WriteLink) Fire() {
+	if len(wl.nexts) == 0 {
+		return
+	}
+
+	if wl.lastRun >= len(wl.nexts) {
+		wl.lastRun = -1
+	}
+
+	if wl.lastRun < 0 {
+		wl.inits.Write()
+		wl.elem.Sync()
+		wl.lastRun++
+		return
+	}
+
+	dl := wl.nexts[wl.lastRun]
+	dl.Write()
+
+	wl.lastRun++
+
+	wl.elem.Sync()
+}
+
 // Render renders the current frame feeding the delta value if needed to its
 // internals.
-func (f *Frame) Render(delta float64, current int) {
+func (f *SeqBev) Render(delta float64) {
 	f.bl.RLock()
 	defer f.bl.RUnlock()
 
-	// Loop through all the blocks and lunch their internal writers.
-	for _, wl := range f.blocks {
-		block := lastBlock(wl.Writers)
-		block.Write()
+	if atomic.LoadInt64(&f.flymode) > 0 {
+		for _, blocks := range f.blocks {
+			blocks.Fire()
+		}
 	}
 
-}
+	if delta != 0 {
 
-func lastBlock(m []DeferWriters) DeferWriters {
-	size := len(m)
-
-	if size > 0 {
-		return m[size-1]
 	}
 
-	return nil
-}
+	for ind, elem := range f.elems {
+		wl := f.blocks[ind]
 
-func lastWriter(m []DeferWriter) DeferWriter {
-	size := len(m)
-	if size > 0 {
-		return m[size-1]
+		var ws DeferWriters
+
+		for _, seq := range f.seqs {
+			//TODO: Does this really make sense, do we want to take the
+			// interpolation value as just another update sequence?
+			seq.Update(delta)
+			ws = append(ws, seq.Write(elem))
+		}
+
+		wl.nexts = append(wl.nexts, ws)
+		wl.Fire()
 	}
 
-	return nil
 }
 
 //==============================================================================
 
 // Update generates the next frame sequence to be rendered and stacks them for
 // rendering for the system.
-func (f *Frame) Update(delta float64, current, total int) {
+func (f *SeqBev) Update(delta, total float64) {
+	if atomic.LoadInt64(&f.flymode) > 0 {
+		return
+	}
 
 	// If we are just starting with our frame call then initialize initiial state
 	// of the frames by calling the .Init() for sequences and record for each
 	// element.
-	if atomic.LoadInt64(&f.inited) < 0 {
-		var ws DeferWriters
+	f.once.Do(func() {
+		for _, elem := range f.elems {
+			var ws DeferWriters
 
-		for ind, elem := range f.elems {
 			for _, seq := range f.seqs {
-				ws = append(ws, seq.Init(delta, elem))
+				ws = append(ws, seq.Init(elem))
 			}
 
-			wl := f.blocks[ind]
-			wl.Writers = append(wl.Writers, ws)
+			wl := WriteLink{
+				elem:  elem,
+				inits: ws,
+			}
+
+			f.blocks = append(f.blocks, wl)
 		}
+	})
 
-		atomic.StoreInt64(&f.inited, 1)
-		// TODO: Should we return here or let the initialization be part of the
-		// first startup.
-		// return
+	for _, seq := range f.seqs {
+		seq.Update(delta)
 	}
+}
 
-	// Call the .Next() method call for the sequences for each element to have
-	// them begin intializing their update cycle.
-	var ws DeferWriters
+//==============================================================================
 
-	for ind, elem := range f.elems {
-		for _, seq := range f.seqs {
-			ws = append(ws, seq.Next(delta, elem))
-		}
+// Listener defines an interface that provides callback hooks.
+type Listener interface {
+	Add(fn func(float64))
+	Emit(float64)
+}
 
-		wl := f.blocks[ind]
-		wl.Writers = append(wl.Writers, ws)
+type listener struct {
+	rl sync.RWMutex
+	fx []func(float64)
+}
+
+// Emit fires the functions with the provided value.
+func (l *listener) Emit(d float64) {
+	l.rl.RLock()
+	defer l.rl.RUnlock()
+	for _, fx := range l.fx {
+		fx(d)
 	}
+}
 
+// Add adds the function into the lists added.
+func (l *listener) Add(fx func(float64)) {
+	l.rl.Lock()
+	defer l.rl.Unlock()
+	l.fx = append(l.fx, fx)
 }
 
 //==============================================================================

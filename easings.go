@@ -5,6 +5,12 @@ import (
 	"sync"
 )
 
+// DefaultEasing defines the default easing key when a invalid easing name is
+// given or no easing name is giving.
+const DefaultEasing = "ease-in"
+
+var easingProviders = NewEasingRegister()
+
 //==============================================================================
 
 // CSS3Easings defines the different easing functions within the css3 specs
@@ -72,13 +78,6 @@ var EasingValues = map[string][]float64{
 }
 
 //==============================================================================
-
-// DefaultEasing defines the default easing key when a invalid easing name is
-// given or no easing name is giving.
-const DefaultEasing = "ease-in"
-
-// easingProviders defines a global registery for easing functions.
-var easingProviders EasingProviders
 
 // RegisterEasing adds a easing provider into the registery with the specified
 // name, we allow replacing a easing provider for a keyed name, if you so wish.

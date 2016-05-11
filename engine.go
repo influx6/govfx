@@ -14,45 +14,44 @@ import (
 // Animate uses writer batching to reduce layout trashing. Hence  each frame
 // assigned for each animation call, will have all their writes batched
 // into one call.
-func Animate(frame *Frame) {
+func Animate(stat Stat, b Values, elems Elementals) *Timeline {
+	clock := NewTimer(nil, ModeTimer{
+		Delay:             stat.Delay,
+		MaxMSPerUpdate:    0.01,
+		MaxDeltaPerUpdate: 1.5,
+	})
+
+	seqs := GenerateSequence(b)
+
+	frame := NewSeqBev(stat, seqs)
+	frame.Use(elems)
 
 	// create the timer for which the frame will be animated.
-	frameTimeline := NewTimeline(frame, frame.Stat)
-
-	// Return this frame subscription ender, initialized and run its writers.
-	stopCache.Add(frame, engine.Loop(func(delta float64) {
-		frameTimeline.Sync()
-	}, 0))
+	return NewTimeline(clock, frame, stat)
 }
 
-// Stop stops the frame within the animation step, removing its registered
-// loopere.
-func Stop(frame *Frame) {
-	looper := stopCache.Get(frame)
-	if looper != nil {
-		stopCache.Delete(frame)
-		looper.End()
-	}
+// AnimateWith provides a function which lets you provide a custom clock by
+// which the timeline will be managed instead of using the default set
+// by govfx.
+func AnimateWith(clock Timeable, stat Stat, b Values, elems Elementals) *Timeline {
+	seqs := GenerateSequence(b)
+
+	frame := NewSeqBev(stat, seqs)
+	frame.Use(elems)
+
+	// create the timer for which the frame will be animated.
+	return NewTimeline(clock, frame, stat)
 }
 
 //==============================================================================
 
-// engine is the global gameloop engine used in managing animations within the
-// global loop.
 var engine loop.GameEngine
-
-// stopCache contains all loop.Loopers that pertain to any frame, to allow
-// stopping any frame immediately
-var stopCache *loopCache
 
 // Init initializes the animation system with the necessary loop engine,
 // desired to be used in running the animation. This is runned by default
 // by the runtime using init() functions, but you can reset the animation
 // looper using this.
 func Init(gear loop.EngineGear) {
-	stopCache = newLoopCache()
-	easingProviders = NewEasingRegister()
-	animationProviders = NewAnimatorsRegister()
 	engine = loop.New(gear)
 }
 
