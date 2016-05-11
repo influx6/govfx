@@ -21,12 +21,15 @@ type Width struct {
 // All calculations are handled here, it recieves the delta value to
 // allow
 func (w *Width) Update(delta float64) {
+	// easing := govfx.GetEasing(t.Easing)
+	// mux := easing.Ease(delta)
+	w.newValue += int(delta * float64(w.newValue))
 }
 
 // Init returns the initial writers for the sequence.
 func (w *Width) Init(elem govfx.Elemental) govfx.DeferWriter {
 	width, priority, _ := elem.ReadInt("width", "")
-	w.initialValue = width
+	w.newValue = width
 
 	return govfx.NewWriter(func() {
 		val := fmt.Sprintf("%d%s", width, "px")
@@ -57,6 +60,7 @@ type Height struct {
 // All calculations are handled here, it recieves the delta value to
 // allow
 func (h *Height) Update(delta float64) {
+	h.newValue += int(delta * float64(h.newValue))
 }
 
 // Init returns the initial writers for the sequence.
