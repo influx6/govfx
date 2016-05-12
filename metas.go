@@ -31,6 +31,16 @@ type Animators interface {
 	Add(string, Animator, Value)
 }
 
+//==============================================================================
+
+var animationProviders = NewAnimatorsRegister()
+
+// RegisterAnimator adds a sequence into the lists with a giving name, this can
+// be retrieved later to build a animations lists from.
+func RegisterAnimator(name string, ani Animator, defaults Value) {
+	animationProviders.Add(name, ani, defaults)
+}
+
 // animatorsRegister defines a animators registery that stores different animators
 // types keyed by name.
 type animatorsRegister struct {

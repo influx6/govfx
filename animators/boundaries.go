@@ -21,9 +21,7 @@ type Width struct {
 // All calculations are handled here, it recieves the delta value to
 // allow
 func (w *Width) Update(delta float64) {
-	// easing := govfx.GetEasing(t.Easing)
-	// mux := easing.Ease(delta)
-	w.newValue += int(delta * float64(w.newValue))
+	w.newValue += int(delta * 5)
 }
 
 // Init returns the initial writers for the sequence.
@@ -37,8 +35,8 @@ func (w *Width) Init(elem govfx.Elemental) govfx.DeferWriter {
 	})
 }
 
-// Next returns the writers for the current sequence iteration.
-func (w *Width) Next(e govfx.Elemental) govfx.DeferWriter {
+// Write returns the writers for the current sequence iteration.
+func (w *Width) Write(e govfx.Elemental) govfx.DeferWriter {
 	m := w.newValue
 	return govfx.NewWriter(func() {
 		val := fmt.Sprintf("%d%s", m, "px")
@@ -56,13 +54,6 @@ type Height struct {
 	newValue     int
 }
 
-// Update contains the update operations for the width property.
-// All calculations are handled here, it recieves the delta value to
-// allow
-func (h *Height) Update(delta float64) {
-	h.newValue += int(delta * float64(h.newValue))
-}
-
 // Init returns the initial writers for the sequence.
 func (h *Height) Init(elem govfx.Elemental) govfx.DeferWriter {
 	height, priority, _ := elem.ReadInt("height", "")
@@ -74,8 +65,15 @@ func (h *Height) Init(elem govfx.Elemental) govfx.DeferWriter {
 	})
 }
 
-// Next returns the writers for the current sequence iteration.
-func (h *Height) Next(e govfx.Elemental) govfx.DeferWriter {
+// Update contains the update operations for the width property.
+// All calculations are handled here, it recieves the delta value to
+// allow
+func (h *Height) Update(delta float64) {
+	h.newValue += int(delta * 5)
+}
+
+// Write returns the writers for the current sequence iteration.
+func (h *Height) Write(e govfx.Elemental) govfx.DeferWriter {
 	newHeight := h.newValue
 	return govfx.NewWriter(func() {
 		val := fmt.Sprintf("%d%s", newHeight, "px")

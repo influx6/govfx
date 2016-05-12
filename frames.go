@@ -127,9 +127,9 @@ func (f *SeqBev) Render(delta float64) {
 		}
 	}
 
-	if delta != 0 {
-
-	}
+	// if delta != 0 {
+	//
+	// }
 
 	for ind, elem := range f.elems {
 		wl := f.blocks[ind]
@@ -137,6 +137,15 @@ func (f *SeqBev) Render(delta float64) {
 		var ws DeferWriters
 
 		for _, seq := range f.seqs {
+
+			// If we can blend using a blending sequence then call the blend
+			// function else let the Update function handle it has normal.
+			if bs, ok := seq.(BlendingSequence); ok {
+				bs.Blend(delta)
+				ws = append(ws, seq.Write(elem))
+				continue
+			}
+
 			//TODO: Does this really make sense, do we want to take the
 			// interpolation value as just another update sequence?
 			seq.Update(delta)

@@ -36536,7 +36536,7 @@ $packages["github.com/influx6/govfx"] = (function() {
 	timer = $pkg.timer = $newType(0, $kindStruct, "govfx.timer", "timer", "github.com/influx6/govfx", function(ml_, behaviour_, mode_, start_, initial_, end_, previous_, progress_, elapsed_, accumulator_, totaldelta_, prevState_, curState_, delta_, lastDelta_, totalDelta_, run_, stop_, skipTick_) {
 		this.$val = this;
 		if (arguments.length === 0) {
-			this.ml = new sync.Mutex.ptr(0, 0);
+			this.ml = new sync.RWMutex.ptr(new sync.Mutex.ptr(0, 0), 0, 0, 0, 0);
 			this.behaviour = $ifaceNil;
 			this.mode = new ModeTimer.ptr(new time.Duration(0, 0), 0, 0);
 			this.start = new time.Time.ptr(new $Int64(0, 0), 0, ptrType$11.nil);
@@ -37810,7 +37810,7 @@ $packages["github.com/influx6/govfx"] = (function() {
 	NewTimer = function(b$1, mod) {
 		var $ptr, b$1, mod, tm;
 		mod = $clone(mod, ModeTimer);
-		tm = new timer.ptr(new sync.Mutex.ptr(0, 0), b$1, $clone(mod, ModeTimer), new time.Time.ptr(new $Int64(0, 0), 0, ptrType$11.nil), new time.Time.ptr(new $Int64(0, 0), 0, ptrType$11.nil), new time.Time.ptr(new $Int64(0, 0), 0, ptrType$11.nil), new time.Time.ptr(new $Int64(0, 0), 0, ptrType$11.nil), new time.Time.ptr(new $Int64(0, 0), 0, ptrType$11.nil), 0, 0, 0, 0, 0, new time.Duration(0, 0), new time.Duration(0, 0), new time.Duration(0, 0), new $Int64(0, 0), new $Int64(0, 0), 0);
+		tm = new timer.ptr(new sync.RWMutex.ptr(new sync.Mutex.ptr(0, 0), 0, 0, 0, 0), b$1, $clone(mod, ModeTimer), new time.Time.ptr(new $Int64(0, 0), 0, ptrType$11.nil), new time.Time.ptr(new $Int64(0, 0), 0, ptrType$11.nil), new time.Time.ptr(new $Int64(0, 0), 0, ptrType$11.nil), new time.Time.ptr(new $Int64(0, 0), 0, ptrType$11.nil), new time.Time.ptr(new $Int64(0, 0), 0, ptrType$11.nil), 0, 0, 0, 0, 0, new time.Duration(0, 0), new time.Duration(0, 0), new time.Duration(0, 0), new $Int64(0, 0), new $Int64(0, 0), 0);
 		return tm;
 	};
 	$pkg.NewTimer = NewTimer;
@@ -37828,8 +37828,8 @@ $packages["github.com/influx6/govfx"] = (function() {
 		var $ptr, dt, interpolate, now, t, x, $s, $deferred, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; dt = $f.dt; interpolate = $f.interpolate; now = $f.now; t = $f.t; x = $f.x; $s = $f.$s; $deferred = $f.$deferred; $r = $f.$r; } var $err = null; try { s: while (true) { switch ($s) { case 0: $deferred = []; $deferred.index = $curGoroutine.deferStack.length; $curGoroutine.deferStack.push($deferred);
 		t = this;
-		$r = t.ml.Lock(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$deferred.push([$methodVal(t.ml, "Unlock"), []]);
+		$r = t.ml.RLock(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$deferred.push([$methodVal(t.ml, "RUnlock"), []]);
 		if ($interfaceIsEqual(t.behaviour, $ifaceNil)) {
 			return;
 		}
@@ -37882,8 +37882,8 @@ $packages["github.com/influx6/govfx"] = (function() {
 		time.Time.copy(t.progress, t.start);
 		time.Time.copy(t.initial, t.start.Add(t.mode.Delay));
 		atomic.StoreInt64((t.$ptr_run || (t.$ptr_run = new ptrType$10(function() { return this.$target.run; }, function($v) { this.$target.run = $v; }, t))), new $Int64(0, 1));
-		$r = t.ml.Lock(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$deferred.push([$methodVal(t.ml, "Unlock"), []]);
+		$r = t.ml.RLock(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$deferred.push([$methodVal(t.ml, "RUnlock"), []]);
 		/* */ if (!($interfaceIsEqual(t.behaviour, $ifaceNil))) { $s = 2; continue; }
 		/* */ $s = 3; continue;
 		/* if (!($interfaceIsEqual(t.behaviour, $ifaceNil))) { */ case 2:
@@ -37980,7 +37980,7 @@ $packages["github.com/influx6/govfx"] = (function() {
 	Timer.init([{prop: "Stop", name: "Stop", pkg: "", typ: $funcType([], [], false)}, {prop: "Update", name: "Update", pkg: "", typ: $funcType([], [], false)}]);
 	Timeable.init([{prop: "Stop", name: "Stop", pkg: "", typ: $funcType([], [], false)}, {prop: "Update", name: "Update", pkg: "", typ: $funcType([], [], false)}, {prop: "Use", name: "Use", pkg: "", typ: $funcType([TimeBehaviour], [], false)}]);
 	ModeTimer.init([{prop: "Delay", name: "Delay", pkg: "", typ: time.Duration, tag: ""}, {prop: "MaxMSPerUpdate", name: "MaxMSPerUpdate", pkg: "", typ: $Float64, tag: ""}, {prop: "MaxDeltaPerUpdate", name: "MaxDeltaPerUpdate", pkg: "", typ: $Float64, tag: ""}]);
-	timer.init([{prop: "ml", name: "ml", pkg: "github.com/influx6/govfx", typ: sync.Mutex, tag: ""}, {prop: "behaviour", name: "behaviour", pkg: "github.com/influx6/govfx", typ: TimeBehaviour, tag: ""}, {prop: "mode", name: "mode", pkg: "github.com/influx6/govfx", typ: ModeTimer, tag: ""}, {prop: "start", name: "start", pkg: "github.com/influx6/govfx", typ: time.Time, tag: ""}, {prop: "initial", name: "initial", pkg: "github.com/influx6/govfx", typ: time.Time, tag: ""}, {prop: "end", name: "end", pkg: "github.com/influx6/govfx", typ: time.Time, tag: ""}, {prop: "previous", name: "previous", pkg: "github.com/influx6/govfx", typ: time.Time, tag: ""}, {prop: "progress", name: "progress", pkg: "github.com/influx6/govfx", typ: time.Time, tag: ""}, {prop: "elapsed", name: "elapsed", pkg: "github.com/influx6/govfx", typ: $Float64, tag: ""}, {prop: "accumulator", name: "accumulator", pkg: "github.com/influx6/govfx", typ: $Float64, tag: ""}, {prop: "totaldelta", name: "totaldelta", pkg: "github.com/influx6/govfx", typ: $Float64, tag: ""}, {prop: "prevState", name: "prevState", pkg: "github.com/influx6/govfx", typ: $Float64, tag: ""}, {prop: "curState", name: "curState", pkg: "github.com/influx6/govfx", typ: $Float64, tag: ""}, {prop: "delta", name: "delta", pkg: "github.com/influx6/govfx", typ: time.Duration, tag: ""}, {prop: "lastDelta", name: "lastDelta", pkg: "github.com/influx6/govfx", typ: time.Duration, tag: ""}, {prop: "totalDelta", name: "totalDelta", pkg: "github.com/influx6/govfx", typ: time.Duration, tag: ""}, {prop: "run", name: "run", pkg: "github.com/influx6/govfx", typ: $Int64, tag: ""}, {prop: "stop", name: "stop", pkg: "github.com/influx6/govfx", typ: $Int64, tag: ""}, {prop: "skipTick", name: "skipTick", pkg: "github.com/influx6/govfx", typ: $Float64, tag: ""}]);
+	timer.init([{prop: "ml", name: "ml", pkg: "github.com/influx6/govfx", typ: sync.RWMutex, tag: ""}, {prop: "behaviour", name: "behaviour", pkg: "github.com/influx6/govfx", typ: TimeBehaviour, tag: ""}, {prop: "mode", name: "mode", pkg: "github.com/influx6/govfx", typ: ModeTimer, tag: ""}, {prop: "start", name: "start", pkg: "github.com/influx6/govfx", typ: time.Time, tag: ""}, {prop: "initial", name: "initial", pkg: "github.com/influx6/govfx", typ: time.Time, tag: ""}, {prop: "end", name: "end", pkg: "github.com/influx6/govfx", typ: time.Time, tag: ""}, {prop: "previous", name: "previous", pkg: "github.com/influx6/govfx", typ: time.Time, tag: ""}, {prop: "progress", name: "progress", pkg: "github.com/influx6/govfx", typ: time.Time, tag: ""}, {prop: "elapsed", name: "elapsed", pkg: "github.com/influx6/govfx", typ: $Float64, tag: ""}, {prop: "accumulator", name: "accumulator", pkg: "github.com/influx6/govfx", typ: $Float64, tag: ""}, {prop: "totaldelta", name: "totaldelta", pkg: "github.com/influx6/govfx", typ: $Float64, tag: ""}, {prop: "prevState", name: "prevState", pkg: "github.com/influx6/govfx", typ: $Float64, tag: ""}, {prop: "curState", name: "curState", pkg: "github.com/influx6/govfx", typ: $Float64, tag: ""}, {prop: "delta", name: "delta", pkg: "github.com/influx6/govfx", typ: time.Duration, tag: ""}, {prop: "lastDelta", name: "lastDelta", pkg: "github.com/influx6/govfx", typ: time.Duration, tag: ""}, {prop: "totalDelta", name: "totalDelta", pkg: "github.com/influx6/govfx", typ: time.Duration, tag: ""}, {prop: "run", name: "run", pkg: "github.com/influx6/govfx", typ: $Int64, tag: ""}, {prop: "stop", name: "stop", pkg: "github.com/influx6/govfx", typ: $Int64, tag: ""}, {prop: "skipTick", name: "skipTick", pkg: "github.com/influx6/govfx", typ: $Float64, tag: ""}]);
 	DeferWriter.init([{prop: "Write", name: "Write", pkg: "", typ: $funcType([], [], false)}]);
 	DeferWriters.init(DeferWriter);
 	dWriter.init([{prop: "fx", name: "fx", pkg: "github.com/influx6/govfx", typ: funcType, tag: ""}]);
@@ -38090,6 +38090,7 @@ $packages["github.com/influx6/govfx/animators"] = (function() {
 	Width.ptr.prototype.Update = function(delta) {
 		var $ptr, delta, w;
 		w = this;
+		w.newValue = w.newValue + ((delta * 5 >> 0)) >> 0;
 	};
 	Width.prototype.Update = function(delta) { return this.$val.Update(delta); };
 	Width.ptr.prototype.Init = function(elem) {
@@ -38103,7 +38104,7 @@ $packages["github.com/influx6/govfx/animators"] = (function() {
 		_tuple = _r;
 		width[0] = _tuple[0];
 		priority[0] = _tuple[1];
-		w.initialValue = width[0];
+		w.newValue = width[0];
 		return govfx.NewWriter((function(elem, priority, width) { return function $b() {
 			var $ptr, _r$1, val, $s, $r;
 			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r$1 = $f._r$1; val = $f.val; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -38115,7 +38116,7 @@ $packages["github.com/influx6/govfx/animators"] = (function() {
 		/* */ } return; } if ($f === undefined) { $f = { $blk: Width.ptr.prototype.Init }; } $f.$ptr = $ptr; $f._r = _r; $f._tuple = _tuple; $f.elem = elem; $f.priority = priority; $f.w = w; $f.width = width; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	Width.prototype.Init = function(elem) { return this.$val.Init(elem); };
-	Width.ptr.prototype.Next = function(e) {
+	Width.ptr.prototype.Write = function(e) {
 		var $ptr, e, m, w;
 		w = this;
 		m = w.newValue;
@@ -38128,10 +38129,11 @@ $packages["github.com/influx6/govfx/animators"] = (function() {
 			/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._r = _r; $f.val = val; $f.$s = $s; $f.$r = $r; return $f;
 		}));
 	};
-	Width.prototype.Next = function(e) { return this.$val.Next(e); };
+	Width.prototype.Write = function(e) { return this.$val.Write(e); };
 	Height.ptr.prototype.Update = function(delta) {
 		var $ptr, delta, h;
 		h = this;
+		h.newValue = h.newValue + ((delta * 5 >> 0)) >> 0;
 	};
 	Height.prototype.Update = function(delta) { return this.$val.Update(delta); };
 	Height.ptr.prototype.Init = function(elem) {
@@ -38157,7 +38159,7 @@ $packages["github.com/influx6/govfx/animators"] = (function() {
 		/* */ } return; } if ($f === undefined) { $f = { $blk: Height.ptr.prototype.Init }; } $f.$ptr = $ptr; $f._r = _r; $f._tuple = _tuple; $f.elem = elem; $f.h = h; $f.height = height; $f.priority = priority; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	Height.prototype.Init = function(elem) { return this.$val.Init(elem); };
-	Height.ptr.prototype.Next = function(e) {
+	Height.ptr.prototype.Write = function(e) {
 		var $ptr, e, h, newHeight;
 		h = this;
 		newHeight = h.newValue;
@@ -38170,7 +38172,7 @@ $packages["github.com/influx6/govfx/animators"] = (function() {
 			/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._r = _r; $f.val = val; $f.$s = $s; $f.$r = $r; return $f;
 		}));
 	};
-	Height.prototype.Next = function(e) { return this.$val.Next(e); };
+	Height.prototype.Write = function(e) { return this.$val.Write(e); };
 	init = function() {
 		var $ptr, _r, _r$1, x, x$1, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _r$1 = $f._r$1; x = $f.x; x$1 = $f.x$1; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -38180,8 +38182,8 @@ $packages["github.com/influx6/govfx/animators"] = (function() {
 		_r$1;
 		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: init }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f.x = x; $f.x$1 = x$1; $f.$s = $s; $f.$r = $r; return $f;
 	};
-	ptrType.methods = [{prop: "Update", name: "Update", pkg: "", typ: $funcType([$Float64], [], false)}, {prop: "Init", name: "Init", pkg: "", typ: $funcType([govfx.Elemental], [govfx.DeferWriter], false)}, {prop: "Next", name: "Next", pkg: "", typ: $funcType([govfx.Elemental], [govfx.DeferWriter], false)}];
-	ptrType$1.methods = [{prop: "Update", name: "Update", pkg: "", typ: $funcType([$Float64], [], false)}, {prop: "Init", name: "Init", pkg: "", typ: $funcType([govfx.Elemental], [govfx.DeferWriter], false)}, {prop: "Next", name: "Next", pkg: "", typ: $funcType([govfx.Elemental], [govfx.DeferWriter], false)}];
+	ptrType.methods = [{prop: "Update", name: "Update", pkg: "", typ: $funcType([$Float64], [], false)}, {prop: "Init", name: "Init", pkg: "", typ: $funcType([govfx.Elemental], [govfx.DeferWriter], false)}, {prop: "Write", name: "Write", pkg: "", typ: $funcType([govfx.Elemental], [govfx.DeferWriter], false)}];
+	ptrType$1.methods = [{prop: "Update", name: "Update", pkg: "", typ: $funcType([$Float64], [], false)}, {prop: "Init", name: "Init", pkg: "", typ: $funcType([govfx.Elemental], [govfx.DeferWriter], false)}, {prop: "Write", name: "Write", pkg: "", typ: $funcType([govfx.Elemental], [govfx.DeferWriter], false)}];
 	Width.init([{prop: "Value", name: "Value", pkg: "", typ: $Int, tag: "govfx:\"value\""}, {prop: "Easing", name: "Easing", pkg: "", typ: $String, tag: "govfx:\"easing\""}, {prop: "initialValue", name: "initialValue", pkg: "github.com/influx6/govfx/animators", typ: $Int, tag: ""}, {prop: "newValue", name: "newValue", pkg: "github.com/influx6/govfx/animators", typ: $Int, tag: ""}]);
 	Height.init([{prop: "Value", name: "Value", pkg: "", typ: $Int, tag: "govfx:\"value\""}, {prop: "Easing", name: "Easing", pkg: "", typ: $String, tag: "govfx:\"easing\""}, {prop: "initialValue", name: "initialValue", pkg: "github.com/influx6/govfx/animators", typ: $Int, tag: ""}, {prop: "newValue", name: "newValue", pkg: "github.com/influx6/govfx/animators", typ: $Int, tag: ""}]);
 	$init = function() {

@@ -172,7 +172,7 @@ func NewTimer(b TimeBehaviour, mod ModeTimer) Timeable {
 // timer defines a internal clock which calculates appropriate
 // elapsed time for animations.
 type timer struct {
-	ml        sync.Mutex
+	ml        sync.RWMutex
 	behaviour TimeBehaviour
 	mode      ModeTimer
 
@@ -209,8 +209,8 @@ func (t *timer) Use(d TimeBehaviour) {
 // Update updates the timers internal clocks, calculating the necessary durations
 // and delta values
 func (t *timer) Update() {
-	t.ml.Lock()
-	defer t.ml.Unlock()
+	t.ml.RLock()
+	defer t.ml.RUnlock()
 
 	if t.behaviour == nil {
 		return
@@ -272,8 +272,8 @@ func (t *timer) init() {
 	t.initial = t.start.Add(t.mode.Delay)
 	atomic.StoreInt64(&t.run, 1)
 
-	t.ml.Lock()
-	defer t.ml.Unlock()
+	t.ml.RLock()
+	defer t.ml.RUnlock()
 	if t.behaviour != nil {
 		if so, ok := t.behaviour.(StartableBehaviour); ok {
 			so.Begin(t.start)

@@ -9,26 +9,7 @@ import (
 	"github.com/influx6/faux/reflection"
 )
 
-var animationProviders = NewAnimatorsRegister()
-
-// RegisterAnimator adds a sequence into the lists with a giving name, this can
-// be retrieved later to build a animations lists from.
-func RegisterAnimator(name string, ani Animator, defaults Value) {
-	animationProviders.Add(name, ani, defaults)
-}
-
 //==============================================================================
-
-// DelaySequence returns a new sequence type that checks if a sequence is allowed
-// to be runnable during a sequence iteration.
-type DelaySequence interface {
-	Continue() bool
-}
-
-// StoppableSequence defines a interface for sequences that can be stopped.
-type StoppableSequence interface {
-	Stop()
-}
 
 // Sequence defines a series of animation step which will be runned
 // through by calling its .Next() method continousely until the
@@ -39,6 +20,17 @@ type Sequence interface {
 	Update(float64)
 	Init(Elemental) DeferWriter
 	Write(Elemental) DeferWriter
+}
+
+// BlendingSequence defines a sequence with a Blend() function which
+// allows the timeline to deliver the blender factor to instead of using
+// the update method, because we are using a more refined timing mechanism
+// during render time the blending factor helps to ensure the properties
+// are rendered at the accurate positions without affecting the updated
+// value.
+type BlendingSequence interface {
+	Sequence
+	Blend(float64)
 }
 
 // SequenceList defines a lists of animatable sequence.
