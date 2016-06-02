@@ -1,6 +1,7 @@
 package govfx
 
 import (
+	"fmt"
 	"sync"
 	"sync/atomic"
 	"time"
@@ -116,7 +117,9 @@ func (t *Timeline) Update(delta float64, progress float64) {
 	atomic.StoreInt64(&t.beating, 1)
 	t.progress = t.progress.Add(time.Duration(progress) * time.Second)
 
+	fmt.Println("Will stop: ", time.Since(t.progress))
 	if t.timeline < time.Since(t.progress) {
+		fmt.Println("Stopping")
 		t.timer.Stop()
 		stop(t.timer)
 

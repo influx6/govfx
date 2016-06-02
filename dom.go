@@ -52,7 +52,7 @@ func QuerySelectorAll(selector string) Elementals {
 
 // QuerySelector returns the elemental that maches the selector else returns
 // nil.
-func QuerySelector(selector string) Elemental {
+func QuerySelector(selector string) *Element {
 	node := Document().QuerySelector(selector)
 	if node == nil {
 		return nil
@@ -70,7 +70,7 @@ func TransformElements(elem interface{}) Elementals {
 	case Elementals:
 		return elem.(Elementals)
 	case Element:
-		return Elementals{elem.(Elemental)}
+		return Elementals{elem.(*Element)}
 	case dom.Element:
 		return Elementals{NewElement(elem.(dom.Element), "")}
 	case []dom.Element:
@@ -201,6 +201,8 @@ func Position(elem dom.Element) (float64, float64) {
 	var parentTop, parentLeft float64
 	var marginTop, marginLeft float64
 	var pBorderTop, pBorderLeft float64
+	var pBorderTopObject *js.Object
+	var pBorderLeftObject *js.Object
 
 	nodeNameObject, err := GetProp(parent, "nodeName")
 	if err == nil && !rootName.MatchString(strings.ToLower(nodeNameObject.String())) {
@@ -210,12 +212,12 @@ func Position(elem dom.Element) (float64, float64) {
 
 	if parent.Get("style") != nil {
 
-		pBorderTopObject, err := GetProp(parent, "style.borderTopWidth")
+		pBorderTopObject, err = GetProp(parent, "style.borderTopWidth")
 		if err == nil {
 			pBorderTop = ParseFloat(pBorderTopObject.String())
 		}
 
-		pBorderLeftObject, err := GetProp(parent, "style.borderLeftWidth")
+		pBorderLeftObject, err = GetProp(parent, "style.borderLeftWidth")
 		if err == nil {
 			pBorderLeft = ParseFloat(pBorderLeftObject.String())
 		}

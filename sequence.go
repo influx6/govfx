@@ -4,8 +4,6 @@ import (
 	"errors"
 	"fmt"
 
-	"honnef.co/go/js/dom"
-
 	"github.com/influx6/faux/reflection"
 )
 
@@ -17,9 +15,14 @@ import (
 // Sequence when calling their next method, all sequences must return a
 // DeferWriter.
 type Sequence interface {
+	CSSElem
 	Update(float64)
-	Init(Elemental) DeferWriter
-	Write(Elemental) DeferWriter
+}
+
+// ResetableSequence defines a set of sequence types that can be reset to
+// default value.
+type ResetableSequence interface {
+	Reset()
 }
 
 // BlendingSequence defines a sequence with a Blend() function which
@@ -35,33 +38,6 @@ type BlendingSequence interface {
 
 // SequenceList defines a lists of animatable sequence.
 type SequenceList []Sequence
-
-//==============================================================================
-
-// QuerySequence uses a selector to retrieve the desired elements needed
-// to be animated, returning the frame for the animation sequence.
-func QuerySequence(selector string, stat Stat, s ...Sequence) *SeqBev {
-	return ElementalSequence(TransformElements(QuerySelectorAll(selector)), stat, s...)
-}
-
-//==============================================================================
-
-// DOMSequence returns a new SeqBev transforming the lists of
-// accordingly dom.Elements into its desired elementals for the animation
-// sequence.
-func DOMSequence(elems []dom.Element, stat Stat, s ...Sequence) *SeqBev {
-	return ElementalSequence(TransformElements(elems), stat, s...)
-}
-
-//==============================================================================
-
-// ElementalSequence returns a new frame using the selected Elementals for
-// the animation sequence.
-func ElementalSequence(elems Elementals, stat Stat, s ...Sequence) *SeqBev {
-	ani := NewSeqBev(stat, s)
-	ani.Use(elems)
-	return ani
-}
 
 //==============================================================================
 

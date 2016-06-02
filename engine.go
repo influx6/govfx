@@ -15,31 +15,19 @@ import (
 // assigned for each animation call, will have all their writes batched
 // into one call.
 func Animate(stat Stat, b Values, elems Elementals) *Timeline {
-	clock := NewTimer(nil, ModeTimer{
+	frame := NewSeqBev(elems, stat, b)
+	return NewTimeline(NewTimer(nil, ModeTimer{
 		Delay:             stat.Delay,
 		MaxMSPerUpdate:    0.01,
 		MaxDeltaPerUpdate: 1.5,
-	})
-
-	seqs := GenerateSequence(b)
-
-	frame := NewSeqBev(stat, seqs)
-	frame.Use(elems)
-
-	// create the timer for which the frame will be animated.
-	return NewTimeline(clock, frame, stat)
+	}), frame, stat)
 }
 
 // AnimateWith provides a function which lets you provide a custom clock by
 // which the timeline will be managed instead of using the default set
 // by govfx.
 func AnimateWith(clock Timeable, stat Stat, b Values, elems Elementals) *Timeline {
-	seqs := GenerateSequence(b)
-
-	frame := NewSeqBev(stat, seqs)
-	frame.Use(elems)
-
-	// create the timer for which the frame will be animated.
+	frame := NewSeqBev(elems, stat, b)
 	return NewTimeline(clock, frame, stat)
 }
 
