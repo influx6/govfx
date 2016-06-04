@@ -19,7 +19,7 @@ func Animate(stat Stat, b Values, elems Elementals) *Timeline {
 	return NewTimeline(NewTimer(nil, ModeTimer{
 		Delay:             stat.Delay,
 		MaxMSPerUpdate:    0.01,
-		MaxDeltaPerUpdate: 1.5,
+		MaxDeltaPerUpdate: 2.5,
 	}), frame, stat)
 }
 

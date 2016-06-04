@@ -1,19 +1,12 @@
 package govfx
 
 import (
-	"fmt"
 	"sync"
 	"sync/atomic"
 	"time"
 )
 
-// TimeBehaviour defines an interface for timeable structures which want to
-// both render and update, it allows timer to effectively call the appropriate
-// method for each step.
-type TimeBehaviour interface {
-	Render(interpolate float64)
-	Update(delta, progress float64)
-}
+//==============================================================================
 
 // StartableBehaviour defines an interface for calling a start function
 // by a timer.
@@ -23,12 +16,11 @@ type StartableBehaviour interface {
 
 //==============================================================================
 
-// TimelineBehaviour defines an interface for creating a timeline management
-// system.
+// TimelineBehaviour defines a interface for callable structures from a timeline
+// provider.
 type TimelineBehaviour interface {
-	TimeBehaviour
-	// Completed()
-	Reset()
+	Render(interpolate float64)
+	Update(delta, progress float64, timeline float64)
 }
 
 // Timeline defines a struct to manage the behaviour of a animation frame.
@@ -37,9 +29,10 @@ type Timeline struct {
 	timer Timeable
 	tb    TimelineBehaviour
 
-	start    time.Time
-	end      time.Time
-	progress time.Time
+	start time.Time
+	end   time.Time
+
+	progress float64
 
 	beating int64
 	paused  int64
@@ -87,7 +80,6 @@ func (t *Timeline) Start() {
 // update and render cycles.
 func (t *Timeline) Begin(begin time.Time) {
 	t.start = begin
-	t.progress = begin.Add(t.stat.Delay)
 	t.timeline = t.stat.Duration + t.stat.Delay
 	t.end = t.start.Add(t.timeline)
 
@@ -103,8 +95,9 @@ func (t *Timeline) Render(delta float64) {
 	}
 
 	t.tb.Render(delta)
+
 	if fb, ok := t.tb.(*SeqBev); ok {
-		fb.progressing.Emit(time.Since(t.progress).Seconds())
+		fb.progressing.Emit(t.progress)
 	}
 }
 
@@ -115,13 +108,10 @@ func (t *Timeline) Update(delta float64, progress float64) {
 	}
 
 	atomic.StoreInt64(&t.beating, 1)
-	t.progress = t.progress.Add(time.Duration(progress) * time.Second)
 
-	fmt.Println("Will stop: ", time.Since(t.progress))
-	if t.timeline < time.Since(t.progress) {
-		fmt.Println("Stopping")
-		t.timer.Stop()
-		stop(t.timer)
+	t.progress = progress
+
+	if t.timeline.Seconds() < progress {
 
 		t.endOnce.Do(func() {
 			if fb, ok := t.tb.(*SeqBev); ok {
@@ -129,13 +119,28 @@ func (t *Timeline) Update(delta float64, progress float64) {
 			}
 		})
 
+		if t.stat.Loop < 0 || t.stat.Loop > 0 {
+			// if
+
+		}
+
+		t.timer.Stop()
+		stop(t.timer)
 		return
 	}
 
-	t.tb.Update(delta, progress)
+	t.tb.Update(delta, progress, progress/t.timeline.Seconds())
 }
 
 //==============================================================================
+
+// TimeBehaviour defines an interface for timeable structures which want to
+// both render and update, it allows timer to effectively call the appropriate
+// method for each step.
+type TimeBehaviour interface {
+	Render(interpolate float64)
+	Update(delta, progress float64)
+}
 
 // Timer defines a interface for definining a timer.
 type Timer interface {
@@ -250,14 +255,12 @@ func (t *timer) Update() {
 	t.accumulator += dt
 
 	for t.accumulator >= t.mode.MaxMSPerUpdate {
-		// t.prevState = t.curState
 		t.behaviour.Update(t.mode.MaxMSPerUpdate, t.totaldelta)
 		t.totaldelta += t.mode.MaxMSPerUpdate
 		t.accumulator -= t.mode.MaxMSPerUpdate
 	}
 
 	interpolate := t.accumulator / t.mode.MaxMSPerUpdate
-	// t.curState = t.curState*interpolate + t.prevState*(1.0-interpolate)
 
 	t.behaviour.Render(interpolate)
 }

@@ -51,10 +51,17 @@ func (e *Element) Add(css ...Sequence) {
 	e.props = append(e.props, css...)
 }
 
+// Init calls the Init() methods on all items in its property list.
+func (e *Element) Init() {
+	for _, elem := range e.props {
+		elem.Init(e)
+	}
+}
+
 // Reset resets the resetable sequences within the elements prop list.
 func (e *Element) Reset() {
 	for _, elem := range e.props {
-		if bem, ok := elem.(ResetableSequence); ok {
+		if bem, ok := elem.(Resetable); ok {
 			bem.Reset()
 		}
 	}
@@ -63,16 +70,16 @@ func (e *Element) Reset() {
 // Blend calls the internal Blend functions of the sequence list.
 func (e *Element) Blend(d float64) {
 	for _, prop := range e.props {
-		if bem, ok := prop.(BlendingSequence); ok {
+		if bem, ok := prop.(Blending); ok {
 			bem.Blend(d)
 		}
 	}
 }
 
 // Update calls the internal Update functions of the sequence list.
-func (e *Element) Update(d float64) {
+func (e *Element) Update(d float64, timeline float64) {
 	for _, prop := range e.props {
-		prop.Update(d)
+		prop.Update(d, timeline)
 	}
 }
 

@@ -32,9 +32,22 @@ type Block struct {
 	Buf  *bytes.Buffer
 }
 
+// Do writes the giving buffer into the style attribute of the element.
+func (b *Block) Do() {
+	b.Elem.SetAttribute("style", b.Buf.String())
+}
+
 // BlockMoment represents a full moment or rendering of the state of a element
 // in time.
 type BlockMoment []Block
+
+// Run calls all the Do() methods of its internal blocks.
+func (b BlockMoment) Run() {
+	for _, block := range b {
+		// TODO: should we Go-routine this, to ensure elements update asynchronousely?
+		block.Do()
+	}
+}
 
 // SeqBev defines a sequence producer interface.
 type SeqBev struct {
@@ -87,8 +100,11 @@ func NewSeqBev(elems Elementals, stat Stat, ideas Values) *SeqBev {
 	})
 
 	for _, elem := range elems {
-		seqs := GenerateSequence(CloneWith(ideas, "elem", elem))
-		elem.Add(seqs...)
+		// Add the sequence into the element tree.
+		elem.Add(GenerateSequence(ideas)...)
+
+		// Init the properties with the element.
+		elem.Init()
 	}
 
 	return &f
@@ -105,34 +121,39 @@ func (f *SeqBev) Reset() {
 // Render renders the current frame feeding the delta value if needed to its
 // internals.
 func (f *SeqBev) Render(delta float64) {
-	// f.bl.RLock()
-	// defer f.bl.RUnlock()
+	flymod := int(atomic.LoadInt64(&f.flymode))
 
 	ind := atomic.LoadInt64(&f.flyIndex)
-	{
 
-		if int(ind) >= len(f.blocks) {
-			f.blocks = append(f.blocks, []Block{})
-		}
-
-		block := f.blocks[ind]
-
-		for _, elem := range f.elems {
-			elem.Blend(delta)
-
-			var buf bytes.Buffer
-			elem.CSS(&buf)
-
-			block = append(block, Block{
-				Elem: elem,
-				Buf:  &buf,
-			})
-
-			elem.SetAttribute("style", buf.String())
-		}
-
-		f.blocks[ind] = block
+	if int(ind) >= len(f.blocks) {
+		f.blocks = append(f.blocks, []Block{})
 	}
+
+	blocks := f.blocks[ind]
+
+	if flymod > 0 {
+		blocks.Run()
+		atomic.AddInt64(&f.flyIndex, 1)
+		return
+	}
+
+	// Build the blocks list for this current index.
+	for _, elem := range f.elems {
+		elem.Blend(delta)
+
+		var buf bytes.Buffer
+		elem.CSS(&buf)
+
+		block := Block{
+			Elem: elem,
+			Buf:  &buf,
+		}
+
+		blocks = append(blocks, block)
+		block.Do()
+	}
+
+	f.blocks[ind] = blocks
 	atomic.AddInt64(&f.flyIndex, 1)
 }
 
@@ -140,13 +161,13 @@ func (f *SeqBev) Render(delta float64) {
 
 // Update generates the next frame sequence to be rendered and stacks them for
 // rendering for the system.
-func (f *SeqBev) Update(delta, total float64) {
+func (f *SeqBev) Update(delta, total float64, timeline float64) {
 	if atomic.LoadInt64(&f.flymode) > 0 {
 		return
 	}
 
 	for _, elem := range f.elems {
-		elem.Update(delta)
+		elem.Update(delta, timeline)
 	}
 }
 

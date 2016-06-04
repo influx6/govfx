@@ -9,6 +9,24 @@ import (
 
 //==============================================================================
 
+// Initable defines a type that can be inited when using.
+type Initable interface {
+	Init()
+}
+
+// Resetable defines a type that can be reset to default value.
+type Resetable interface {
+	Reset()
+}
+
+// Blending defines a type with a Blend() function which allows its values to be
+// augmented with a blending factor which allows a interpolation of its values.
+type Blending interface {
+	Blend(float64)
+}
+
+//==============================================================================
+
 // Sequence defines a series of animation step which will be runned
 // through by calling its .Next() method continousely until the
 // sequence is done(if its not a repetitive sequence).
@@ -16,24 +34,8 @@ import (
 // DeferWriter.
 type Sequence interface {
 	CSSElem
-	Update(float64)
-}
-
-// ResetableSequence defines a set of sequence types that can be reset to
-// default value.
-type ResetableSequence interface {
-	Reset()
-}
-
-// BlendingSequence defines a sequence with a Blend() function which
-// allows the timeline to deliver the blender factor to instead of using
-// the update method, because we are using a more refined timing mechanism
-// during render time the blending factor helps to ensure the properties
-// are rendered at the accurate positions without affecting the updated
-// value.
-type BlendingSequence interface {
-	Sequence
-	Blend(float64)
+	Init(*Element)
+	Update(delta float64, timeline float64)
 }
 
 // SequenceList defines a lists of animatable sequence.
