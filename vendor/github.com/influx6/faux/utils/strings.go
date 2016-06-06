@@ -1,8 +1,11 @@
 package utils
 
 import (
+	"fmt"
+	"math/rand"
 	"regexp"
 	"strconv"
+	"time"
 )
 
 // StringMatcher defines a function type to match a giving string against.
@@ -115,4 +118,26 @@ func MatchAll(target string, possibilities ...interface{}) bool {
 	}
 
 	return state
+}
+
+// UUID returns a new uuid compatible string, it provides a makeshift UUID
+// generator.
+func UUID() (uuid string) {
+	for i := 0; i < 32; i++ {
+		rand.Seed(time.Now().UnixNano() + int64(i))
+		random := rand.Intn(16)
+		switch i {
+		case 8, 12, 16, 20:
+			uuid += "-"
+		}
+		switch i {
+		case 12:
+			uuid += fmt.Sprintf("%x", 4)
+		case 16:
+			uuid += fmt.Sprintf("%x", random&3|8)
+		default:
+			uuid += fmt.Sprintf("%x", random)
+		}
+	}
+	return
 }

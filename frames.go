@@ -1,396 +1,277 @@
 package govfx
 
 import (
+	"bytes"
 	"sync"
 	"sync/atomic"
+	"time"
 
-	"github.com/influx6/faux/fque"
-	"github.com/influx6/faux/loop"
+	"honnef.co/go/js/dom"
 )
 
 //==============================================================================
 
-// FramePhase defines a animation phase type.
-type FramePhase int
+// AnimationStepsPerSec defines the total steps taking per second of each clock
+// tick.
+var AnimationStepsPerSec int64 = 60
 
-// const contains sets of Frame phase that identify the current frame animation
-// phase.
-const (
-	NOPHASE FramePhase = iota
-	STARTPHASE
-	OPTIMISEPHASE
-)
+//==============================================================================
 
-// Cycles defines an interface that reports the current cycle run of a animation.
-type Cycles interface {
-	LastCycles() int
-	Cycles() int
-	Phase() FramePhase
+// Stat provides a configuration for building a Stats object for animators.
+type Stat struct {
+	Duration time.Duration
+	Delay    time.Duration
+	Loop     int
+	Reverse  bool
+	Begin    Listener
+	End      Listener
+	Progress Listener
 }
 
-// Listeners defines an interface that provides callback hooks for animations.
-type Listeners interface {
-	OnEnd(func(Frame)) loop.Looper
-	OnBegin(func(Frame)) loop.Looper
-	OnProgress(func(Frame)) loop.Looper
-	ResetListeners()
+// Block represents a single state instance for rendering at a specific moment
+// in time.
+type Block struct {
+	Elem *Element
+	Buf  *bytes.Buffer
 }
 
-// WriterMaker defines an interface that define animators providing DeferWriters
-// as optimization providers.
-type WriterMaker interface {
-	Init(float64) DeferWriters
-	Sequence(float64) DeferWriters
+// Do writes the giving buffer into the style attribute of the element.
+func (b *Block) Do() {
+	b.Elem.SetAttribute("style", b.Buf.String())
 }
 
-// Frame defines the interface for a animation sequence generator,
-// it defines the sequence of a organized step for animation.
-type Frame interface {
-	Cycles
-	Listeners
-	WriterMaker
+// BlockMoment represents a full moment or rendering of the state of a element
+// in time.
+type BlockMoment []Block
 
-	End()
-	Sync()
-	Reset()
-
-	Stats() Stats
-	Inited() bool
-	IsOver() bool
-
-	Use(Elementals)
-	Then(Frame) Frame
+// Run calls all the Do() methods of its internal blocks.
+func (b BlockMoment) Run() {
+	for _, block := range b {
+		// TODO: should we Go-routine this, to ensure elements update asynchronousely?
+		block.Do()
+	}
 }
 
-// AnimationSequence defines a set of sequences that operate on the behaviour of
-// a dom element or lists of dom.elements. Once an animation sequence is done,
-// it is removed from the gameloop and its stats are reset to allow re-use.
-type AnimationSequence struct {
-	sequences      SequenceList
-	stoppers       []StoppableSequence
-	stat           Stats
-	inited         int64
-	done           int64
-	completedFrame int64
-	iniWriters     DeferWriters
-	elementals     Elementals
-	totalCycles    int64
-	lastCycle      int64
-	writesOn       int64
-	progress       fque.Qu
-	begin          fque.Qu
-	ended          fque.Qu
-	fl             sync.RWMutex
-	frames         []Frame
+// SeqBev defines a sequence producer interface.
+type SeqBev struct {
+	Stat
+
+	blocks    []BlockMoment
+	reversing bool
+	reversed  bool
+
+	elems Elementals
+	ideas Values
+
+	flymode  int64
+	flyIndex int64
 }
 
-// NewAnimationSequence returns a new instance that implements a Frame, which
-// builds the concrete structure for a animation sequence
-func NewAnimationSequence(stat Stats, s ...Sequence) *AnimationSequence {
-	as := AnimationSequence{
-		sequences: s,
-		stat:      stat,
-		progress:  fque.New(),
-		begin:     fque.New(),
-		ended:     fque.New(),
+// QuerySequence uses a selector to retrieve the desired elements needed
+// to be animated, returning the frame for the animation sequence.
+func QuerySequence(selector string, stat Stat, vs Values) *SeqBev {
+	return ElementalSequence(TransformElements(QuerySelectorAll(selector)), stat, vs)
+}
+
+// DOMSequence returns a new SeqBev transforming the lists of
+// accordingly dom.Elements into its desired elementals for the animation
+// sequence.
+func DOMSequence(elems []dom.Element, stat Stat, vs Values) *SeqBev {
+	return ElementalSequence(TransformElements(elems), stat, vs)
+}
+
+// ElementalSequence returns a new frame using the selected Elementals for
+// the animation sequence.
+func ElementalSequence(elems Elementals, stat Stat, id Values) *SeqBev {
+	ani := NewSeqBev(elems, stat, id)
+	return ani
+}
+
+// NewSeqBev returns a new instance of a SeqBev.
+func NewSeqBev(elems Elementals, stat Stat, ideas Values) *SeqBev {
+	f := SeqBev{
+		Stat:  stat,
+		elems: elems,
 	}
 
-	return &as
-}
+	for _, elem := range elems {
+		// Add the sequence into the element tree.
+		elem.Add(GenerateSequence(ideas)...)
 
-// Then stacks the next frame to be scheduled once the current frame is finished.
-// If this current frame is an infinite loop then the next Frame is runned when
-// a full cycle is completed. It returns this frame being stacked on as the
-// returned value to allow stacking without loosing the frame.
-func (f *AnimationSequence) Then(fr Frame) Frame {
-	f.fl.Lock()
-	defer f.fl.Unlock()
-
-	f.frames = append(f.frames, fr)
-	return f
-}
-
-// IsOver returns true/false if the animation is done.
-func (f *AnimationSequence) IsOver() bool {
-	if f.Stats().Loop() {
-		if f.Cycles() < f.Stats().TotalLoops() {
-			return false
-		}
+		// Init the properties with the element.
+		elem.Init()
 	}
 
-	return atomic.LoadInt64(&f.done) > 0
+	return &f
 }
 
-// OnProgress provides a callback hook to listen to progress of the animation,
-// this is fired through out the duration of the animation.
-func (f *AnimationSequence) OnProgress(fx func(Frame)) loop.Looper {
-	return f.progress.Q(func() {
-		fx(f)
-	})
+// Completed signifies the completion of the sequence.
+func (f *SeqBev) Completed(cycle int) {
+	atomic.StoreInt64(&f.flymode, 1)
 }
 
-// OnBegin callbacks are fired once, at the beginning of an animation, even if
-// the animation runs in a loop, it still will not be fired more than once.
-func (f *AnimationSequence) OnBegin(fx func(Frame)) loop.Looper {
-	return f.begin.Q(func() {
-		fx(f)
-	})
-}
+// Done returns true/false if the sequence has completed a full run.
+// Where a full run is a completed cycle + reveres run.
+func (f *SeqBev) Done() bool {
+	flymod := int(atomic.LoadInt64(&f.flymode))
 
-// OnEnd callbacks are fired once, at the end of an animation, if the animation
-// the animation runs in a loop, it still will not be fired more than once at
-// the end of the total loop count.
-func (f *AnimationSequence) OnEnd(fx func(Frame)) loop.Looper {
-	return f.ended.Q(func() {
-		fx(f)
-	})
-}
-
-// ResetListeners provides a reset specific for resetting the listener lists
-// for the animation frame.
-func (f *AnimationSequence) ResetListeners() {
-	f.begin.Flush()
-	f.progress.Flush()
-	f.ended.Flush()
-}
-
-// Use allows setting the internal elementals which the frame will use to
-// perform its animations.
-func (f *AnimationSequence) Use(e Elementals) {
-	f.elementals = e
-}
-
-// Reset resets the frame sequence to default state.
-func (f *AnimationSequence) Reset() {
-	f.stat = f.stat.Clone()
-	atomic.StoreInt64(&f.done, 0)
-	atomic.StoreInt64(&f.inited, 0)
-	atomic.StoreInt64(&f.totalCycles, 0)
-	atomic.StoreInt64(&f.lastCycle, 0)
-	atomic.StoreInt64(&f.completedFrame, 0)
-	atomic.StoreInt64(&f.writesOn, 0)
-}
-
-// End allows forcing a stop to an animation frame.
-func (f *AnimationSequence) End() {
-	atomic.StoreInt64(&f.done, 1)
-}
-
-// Inited returns true/false if the frame has begun.
-func (f *AnimationSequence) Inited() bool {
-	return atomic.LoadInt64(&f.inited) > 0
-}
-
-// LastCycles returns the previous cycles count for this sequence frame.
-func (f *AnimationSequence) LastCycles() int {
-	return int(atomic.LoadInt64(&f.lastCycle))
-}
-
-// Cycles return the total completed cycles(forward+reverse) transition for
-// this animation sequence.
-func (f *AnimationSequence) Cycles() int {
-	return int(atomic.LoadInt64(&f.totalCycles))
-}
-
-// BeginWriting sets the frame current executing writers as started, which
-// allows the frame to ignore any request for next frame when its writers
-// have not completed their steps yet.
-func (f *AnimationSequence) BeginWriting() {
-	atomic.StoreInt64(&f.writesOn, 1)
-}
-
-// DoneWriting sets the frame current executing writers as completed, which
-// allows the frame issue its next writers sequence.
-func (f *AnimationSequence) DoneWriting() {
-	atomic.StoreInt64(&f.writesOn, 0)
-}
-
-// Continue returns true/false if the frame is ready to issue the next
-// sequence writers.
-func (f *AnimationSequence) Continue() bool {
-	return atomic.LoadInt64(&f.writesOn) == 0
-}
-
-// Sync allows the frame to check and perform any update to its operation.
-// It also handles the situation of sheduling any next Frame that has been
-// added to this frame as a next call sequence, passing its current lists of
-// Elementals.
-func (f *AnimationSequence) Sync() {
-	if f.Stats().IsFirstDone() {
-
-		// Set the completedFrame to one to indicate the frame has completed a full
-		// first set animation(transition) of its sequences.
-		atomic.StoreInt64(&f.completedFrame, 1)
-
+	if atomic.LoadInt64(&f.flyIndex) <= 0 {
+		f.reversed = true
 	}
 
-	if f.Stats().IsDone() {
-
-		if f.Stats().Loop() {
-
-			// If this is an infinite loop, schedule our next frames into the
-			// animation runner.
-			if f.infiniteLoop() {
-				f.fl.RLock()
-
-				for _, fr := range f.frames {
-					fr.Use(f.elementals)
-					Animate(fr)
-				}
-
-				f.fl.RUnlock()
-			}
-
-			if f.Cycles() < f.Stats().TotalLoops() || f.infiniteLoop() {
-
-				// Incremement the total cycle count and store the last.
-				tc := atomic.LoadInt64(&f.totalCycles)
-				{
-
-					// Store the last totalCycles for reference.
-					atomic.StoreInt64(&f.lastCycle, tc)
-
-				}
-				atomic.AddInt64(&f.totalCycles, 1)
-
-				f.stat = f.stat.Clone()
-				return
-			}
-		}
-
-		f.End()
-		f.ended.Run()
-
-		f.fl.RLock()
-
-		for _, fr := range f.frames {
-			fr.Use(f.elementals)
-			Animate(fr)
-		}
-
-		f.fl.RUnlock()
-
-		// Iterate the stoppable sequence lists and stop any.
-		for _, sq := range f.stoppers {
-			sq.Stop()
-		}
-
-		// TODO: do we need to flush this? Could the user want to re-use a frame?
-		// f.begin.Flush()
-		// f.progress.Flush()
-		// f.ended.Flush()
-
-		return
+	if flymod < 1 {
+		return false
 	}
 
-	f.progress.Run()
-}
-
-// Phase defines the frame phase, to allow optimization options by the gameloop.
-func (f *AnimationSequence) Phase() FramePhase {
-	if atomic.LoadInt64(&f.completedFrame) > 0 {
-		return OPTIMISEPHASE
-	}
-
-	return STARTPHASE
-}
-
-// Stats return the frame internal stats.
-func (f *AnimationSequence) Stats() Stats {
-	return f.stat
-}
-
-// Init calls the initialization writers for each sequence, returning their
-// respective initialization writers if any to be runned on the first loop.
-func (f *AnimationSequence) Init(ms float64) DeferWriters {
-	if atomic.LoadInt64(&f.inited) > 0 {
-		return f.iniWriters
-	}
-
-	var writers DeferWriters
-
-	// Add the BeginWriting writer to set p execution reconciliation policy.
-	writers = append(writers, &frameBeginWriter{f: f})
-
-	if f.Stats().Delay() > 0 {
-		writers = append(writers, &delayedWriter{
-			ms: f.Stats().Delay(),
-			f:  f,
-		})
-	}
-
-	// Collect all writers from each sequence within the frame.
-	for _, seq := range f.sequences {
-		if ssq, ok := seq.(StoppableSequence); ok {
-			f.stoppers = append(f.stoppers, ssq)
-		}
-
-		writers = append(writers, seq.Init(f.Stats(), f.elementals))
-	}
-
-	// Add the DoneWriting writer to setup execution reconciliation ending policy.
-	writers = append(writers, &frameEndWriter{f: f})
-
-	// If we are allowed to optimize, store the writers for this sequence step.
-	if f.Stats().Optimized() && f.Phase() < OPTIMISEPHASE {
-		GetWriterCache().Store(f, f.Stats().CurrentIteration(), writers)
-	}
-
-	atomic.StoreInt64(&f.inited, 1)
-	f.iniWriters = append(f.iniWriters, writers...)
-
-	f.begin.Run()
-	f.Stats().Next(ms)
-	return writers
-}
-
-// Sequence builds the lists of writers from each sequence item within
-// the frame sequence lists.
-func (f *AnimationSequence) Sequence(ms float64) DeferWriters {
-	// fmt.Printf("Frame continue: inited %d %t\n", f.inited, f.Continue())
-	// If we are not allowed to continue then return nil writers
-	if !f.Continue() {
-		return nil
-	}
-
-	var writers DeferWriters
-
-	if f.Stats().Optimized() {
-
-		if f.Phase() > STARTPHASE {
-			ct := f.Stats().CurrentIteration()
-			writers = GetWriterCache().Writers(f, ct)
-			f.Stats().Next(ms)
-			return writers
-		}
-	}
-
-	// Add the BeginWriting writer to setup execution reconciliation policy.
-	writers = append(writers, &frameBeginWriter{f: f})
-
-	// Collect all writers from each sequence within the frame.
-	for _, seq := range f.sequences {
-		writers = append(writers, seq.Next(f.Stats(), f.elementals))
-	}
-
-	// Add the DoneWriting writer to setup execution reconciliation ending policy.
-	writers = append(writers, &frameEndWriter{f: f})
-
-	// If we are allowed to optimize, store the writers for this sequence step.
-	if f.Stats().Optimized() && f.Phase() < OPTIMISEPHASE {
-		GetWriterCache().Store(f, f.Stats().CurrentIteration(), writers)
-	}
-
-	f.Stats().Next(ms)
-	return writers
-}
-
-// infiniteLoop returns true/false if the animation sequence loop is infinite.
-// That is set to -1 or less than 0 value.
-func (f *AnimationSequence) infiniteLoop() bool {
-	if f.Stats().TotalLoops() > 0 {
+	if f.Stat.Reverse && !f.reversed {
 		return false
 	}
 
 	return true
 }
+
+// Reset is called by the timer to tell the frame its animation period as finished.
+func (f *SeqBev) Reset() {
+	f.reversed = false
+	f.reversing = false
+	atomic.StoreInt64(&f.flyIndex, 0)
+}
+
+// RenderReverse reverses the rendering of the sequence by calling the
+// index in reverese.
+func (f *SeqBev) RenderReverse(delta float64) {
+	ind := int(atomic.LoadInt64(&f.flyIndex))
+	total := len(f.blocks)
+
+	if ind >= total {
+		ind = total - 1
+	}
+
+	blocks := f.blocks[ind]
+
+	blocks.Run()
+	atomic.AddInt64(&f.flyIndex, -1)
+}
+
+// Render renders the current frame feeding the delta value if needed to its
+// internals.
+func (f *SeqBev) Render(delta float64) {
+	flymod := int(atomic.LoadInt64(&f.flymode))
+
+	ind := atomic.LoadInt64(&f.flyIndex)
+
+	if int(ind) >= len(f.blocks) {
+		f.blocks = append(f.blocks, []Block{})
+	}
+
+	blocks := f.blocks[ind]
+
+	if flymod > 0 {
+		blocks.Run()
+		atomic.AddInt64(&f.flyIndex, 1)
+		return
+	}
+
+	// Build the blocks list for this current index.
+	for _, elem := range f.elems {
+		elem.Blend(delta)
+
+		var buf bytes.Buffer
+		elem.CSS(&buf)
+
+		block := Block{
+			Elem: elem,
+			Buf:  &buf,
+		}
+
+		blocks = append(blocks, block)
+		block.Do()
+	}
+
+	f.blocks[ind] = blocks
+	atomic.AddInt64(&f.flyIndex, 1)
+}
+
+//==============================================================================
+
+// EmitBegin emits the begin signal to the listener supplied in the stat.
+func (f *SeqBev) EmitBegin(delta float64) {
+	if f.Stat.Begin != nil {
+		f.Stat.Begin.Emit(delta)
+	}
+}
+
+// EmitProgress emits the progress signal to the listener supplied in the stat.
+func (f *SeqBev) EmitProgress(delta float64) {
+	if f.Stat.Progress != nil {
+		f.Stat.Progress.Emit(delta)
+	}
+}
+
+// EmitEnd emits the ending signal to the listener supplied in the stat.
+func (f *SeqBev) EmitEnd(delta float64) {
+	if f.Stat.End != nil {
+		f.Stat.End.Emit(delta)
+	}
+}
+
+//==============================================================================
+
+// Update generates the next frame sequence to be rendered and stacks them for
+// rendering for the system.
+func (f *SeqBev) Update(delta, total float64, timeline float64) {
+	if atomic.LoadInt64(&f.flymode) > 0 {
+		return
+	}
+
+	for _, elem := range f.elems {
+		elem.Update(delta, timeline)
+	}
+}
+
+// UpdateReverse calls a reverse procedure on the sequence being runned.
+func (f *SeqBev) UpdateReverse(delta float64) {
+}
+
+//==============================================================================
+
+// Listener defines an interface that provides callback hooks.
+type Listener interface {
+	Add(fn func(float64))
+	Emit(float64)
+}
+
+// NewListener returns a new instance of a structure that matches the Listener
+// interface.
+func NewListener(cbs ...func(float64)) Listener {
+	var lm listener
+
+	for _, item := range cbs {
+		lm.Add(item)
+	}
+
+	return &lm
+}
+
+type listener struct {
+	rl sync.RWMutex
+	fx []func(float64)
+}
+
+// Emit fires the functions with the provided value.
+func (l *listener) Emit(d float64) {
+	l.rl.RLock()
+	defer l.rl.RUnlock()
+	for _, fx := range l.fx {
+		fx(d)
+	}
+}
+
+// Add adds the function into the lists added.
+func (l *listener) Add(fx func(float64)) {
+	l.rl.Lock()
+	defer l.rl.Unlock()
+	l.fx = append(l.fx, fx)
+}
+
+//==============================================================================

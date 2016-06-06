@@ -2,6 +2,7 @@ package animators
 
 import (
 	"fmt"
+	"io"
 
 	"github.com/influx6/govfx"
 )
@@ -11,112 +12,118 @@ import (
 // Width provides animation sequencing for width properties, it uses flat integers
 // values and pixels.
 type Width struct {
-	Value  int    `govfx:"value"`
+	Target int    `govfx:"value"`
 	Easing string `govfx:"easing"`
+
+	current float64
+	accum   float64
+
+	easer govfx.Easing
+	elem  *govfx.Element
+
+	ended bool
 }
 
-// Init returns the initial writers for the sequence.
-func (w *Width) Init(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWriters {
-	var writers govfx.DeferWriters
+// Init initializes the width property with the provided element for animation.
+func (w *Width) Init(elem *govfx.Element) {
+	w.elem = elem
+	w.easer = govfx.GetEasing(w.Easing)
 
-	for _, elem := range elems {
-		width, priority, _ := elem.ReadInt("width", "")
-
-		(func(e govfx.Elemental) {
-			writers = append(writers, govfx.NewWriter(func() {
-				val := fmt.Sprintf("%d%s", width, "px")
-				e.Write("width", val, priority)
-				e.Sync()
-			}))
-		})(elem)
+	if ws, _, ok := elem.ReadInt("width", ""); ok {
+		w.current = float64(ws)
 	}
-
-	return writers
 }
 
-// Next returns the writers for the current sequence iteration.
-func (w *Width) Next(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWriters {
-	var writers govfx.DeferWriters
+// Update contains the update operations for the width property.
+// All calculations are handled here, it recieves the delta value to
+// allow
+func (w *Width) Update(delta float64, timeline float64) {
+	cu := int(w.current)
 
-	easing := govfx.GetEasing(w.Easing)
+	easer := 1.0
 
-	for _, elem := range elems {
-		(func(e govfx.Elemental) {
-			width, priority, _ := elem.ReadInt("width", "")
-
-			change := w.Value - width
-
-			newWidth := int(easing.Ease(govfx.EaseConfig{
-				Stat:         stats,
-				CurrentValue: float64(width),
-				DeltaValue:   float64(change),
-			}))
-
-			writers = append(writers, govfx.NewWriter(func() {
-				val := fmt.Sprintf("%d%s", newWidth, "px")
-				e.Write("width", val, priority)
-				e.Sync()
-			}))
-		}(elem))
-
+	if w.easer != nil {
+		easer = w.easer.Ease(timeline)
 	}
 
-	return writers
+	if cu < w.Target {
+		w.current += (w.current * delta * easer) + 5
+	} else {
+		w.current = float64(w.Target)
+		w.ended = true
+	}
+}
+
+// Blend takes the last value to which allows us to correct the
+// rendered position of our update.
+func (w *Width) Blend(delta float64) {
+	if !w.ended {
+		w.current += delta
+	}
+}
+
+// CSS writes the css output to the supplied writer
+func (w *Width) CSS(wc io.Writer) {
+	wc.Write([]byte(fmt.Sprintf("width: %d%s", int(w.current), "px")))
 }
 
 //==============================================================================
 
 // Height provides animation sequencing for Height properties.
 type Height struct {
-	Value  int    `govfx:"value"`
+	Target int    `govfx:"value"`
 	Easing string `govfx:"easing"`
+
+	current float64
+	accum   float64
+
+	easer govfx.Easing
+	elem  *govfx.Element
+
+	ended bool
 }
 
-// Init returns the initial writers for the sequence.
-func (h *Height) Init(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWriters {
-	var writers govfx.DeferWriters
+// Init initializes the width property with the provided element for animation.
+func (h *Height) Init(elem *govfx.Element) {
+	h.elem = elem
+	h.easer = govfx.GetEasing(h.Easing)
 
-	for _, elem := range elems {
-		(func(e govfx.Elemental) {
-			height, priority, _ := elem.ReadInt("height", "")
-			writers = append(writers, govfx.NewWriter(func() {
-				val := fmt.Sprintf("%d%s", height, "px")
-				e.Write("height", val, priority)
-				e.Sync()
-			}))
-		}(elem))
+	if ws, _, ok := elem.ReadInt("width", ""); ok {
+		h.current = float64(ws)
 	}
-
-	return writers
 }
 
-// Next returns the writers for the current sequence iteration.
-func (h *Height) Next(stats govfx.Stats, elems govfx.Elementals) govfx.DeferWriters {
-	var writers govfx.DeferWriters
+// Update contains the update operations for the width property.
+// All calculations are handled here, it recieves the delta value to
+// allow
+func (h *Height) Update(delta float64, timeline float64) {
+	cu := int(h.current)
 
-	easing := govfx.GetEasing(h.Easing)
+	easer := 1.0
 
-	for _, elem := range elems {
-		(func(e govfx.Elemental) {
-			height, priority, _ := e.ReadInt("height", "")
-
-			change := h.Value - height
-
-			newHeight := int(easing.Ease(govfx.EaseConfig{
-				Stat:         stats,
-				CurrentValue: float64(height),
-				DeltaValue:   float64(change),
-			}))
-
-			writers = append(writers, govfx.NewWriter(func() {
-				val := fmt.Sprintf("%d%s", newHeight, "px")
-				e.Write("height", val, priority)
-				e.Sync()
-			}))
-		}(elem))
+	if h.easer != nil {
+		easer = h.easer.Ease(timeline)
 	}
 
-	return writers
+	if cu < h.Target {
+		h.current += (h.current * delta * easer) + 5
+	} else {
+		h.current = float64(h.Target)
+		h.ended = true
+	}
+}
+
+// Blend takes the last value to which allows us to correct the
+// rendered position of our update.
+func (h *Height) Blend(delta float64) {
+	if !h.ended {
+		h.current += delta
+	}
+}
+
+// CSS writes the css output to the supplied writer
+func (h *Height) CSS(wc io.Writer) {
+	wc.Write([]byte(fmt.Sprintf("height: %d%s", int(h.current), "px")))
 }
 
 //==============================================================================

@@ -5,6 +5,12 @@ import (
 	"sync"
 )
 
+// DefaultEasing defines the default easing key when a invalid easing name is
+// given or no easing name is giving.
+const DefaultEasing = "ease-in"
+
+var easingProviders = NewEasingRegister()
+
 //==============================================================================
 
 // CSS3Easings defines the different easing functions within the css3 specs
@@ -73,13 +79,6 @@ var EasingValues = map[string][]float64{
 
 //==============================================================================
 
-// DefaultEasing defines the default easing key when a invalid easing name is
-// given or no easing name is giving.
-const DefaultEasing = "ease-in"
-
-// easingProviders defines a global registery for easing functions.
-var easingProviders EasingProviders
-
 // RegisterEasing adds a easing provider into the registery with the specified
 // name, we allow replacing a easing provider for a keyed name, if you so wish.
 func RegisterEasing(name string, easing Easing) {
@@ -107,21 +106,13 @@ func GetEasing(easing string) Easing {
 
 // Easing defines a interface that returns a new value for the provided values.
 type Easing interface {
-	Ease(esc EaseConfig) float64
+	Ease(float64) float64
 }
 
 // EasingProviders provides a interface type to expose easing function providers.
 type EasingProviders interface {
 	Get(string) Easing
 	Add(string, Easing)
-}
-
-// EaseConfig provides a easing configuration to help simplify easing
-// calculations. This is provided to unify the
-type EaseConfig struct {
-	Stat         Stats
-	DeltaValue   float64
-	CurrentValue float64
 }
 
 //==============================================================================

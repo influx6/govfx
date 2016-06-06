@@ -9,17 +9,6 @@ import (
 
 //==============================================================================
 
-// animationProviders defines a global registery for animator functions.
-var animationProviders Animators
-
-// RegisterAnimator adds a sequence into the lists with a giving name, this can
-// be retrieved later to build a animations lists from.
-func RegisterAnimator(name string, ani Animator, defaults Value) {
-	animationProviders.Add(name, ani, defaults)
-}
-
-//==============================================================================
-
 // Value represents a map of properties to be merge into animators.
 type Value map[string]interface{}
 
@@ -40,6 +29,16 @@ type Animator func(defaults, new Value) Sequence
 type Animators interface {
 	Get(string) (Animator, Value)
 	Add(string, Animator, Value)
+}
+
+//==============================================================================
+
+var animationProviders = NewAnimatorsRegister()
+
+// RegisterAnimator adds a sequence into the lists with a giving name, this can
+// be retrieved later to build a animations lists from.
+func RegisterAnimator(name string, ani Animator, defaults Value) {
+	animationProviders.Add(name, ani, defaults)
 }
 
 // animatorsRegister defines a animators registery that stores different animators

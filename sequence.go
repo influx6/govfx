@@ -9,16 +9,23 @@ import (
 
 //==============================================================================
 
-// DelaySequence returns a new sequence type that checks if a sequence is allowed
-// to be runnable during a sequence iteration.
-type DelaySequence interface {
-	Continue() bool
+// Initable defines a type that can be inited when using.
+type Initable interface {
+	Init()
 }
 
-// StoppableSequence defines a interface for sequences that can be stopped.
-type StoppableSequence interface {
-	Stop()
+// Resetable defines a type that can be reset to default value.
+type Resetable interface {
+	Reset()
 }
+
+// Blending defines a type with a Blend() function which allows its values to be
+// augmented with a blending factor which allows a interpolation of its values.
+type Blending interface {
+	Blend(float64)
+}
+
+//==============================================================================
 
 // Sequence defines a series of animation step which will be runned
 // through by calling its .Next() method continousely until the
@@ -26,12 +33,36 @@ type StoppableSequence interface {
 // Sequence when calling their next method, all sequences must return a
 // DeferWriter.
 type Sequence interface {
-	Init(Stats, Elementals) DeferWriters
-	Next(Stats, Elementals) DeferWriters
+	CSSElem
+	Init(*Element)
+	Update(delta float64, timeline float64)
 }
 
 // SequenceList defines a lists of animatable sequence.
 type SequenceList []Sequence
+
+//==============================================================================
+
+// AnimateAttributeName defines the property used to identify the Animator
+// referred to by a Animate item.
+const AnimateAttributeName = "animate"
+
+// GenerateSequence takes a map of animation properties and builds a sequence list
+// from this map.
+func GenerateSequence(vals Values) []Sequence {
+	var seqs []Sequence
+
+	for _, prop := range vals {
+		seq, err := NewSequence(prop[AnimateAttributeName].(string), prop)
+		if err != nil {
+			panic(err)
+		}
+
+		seqs = append(seqs, seq)
+	}
+
+	return seqs
+}
 
 //==============================================================================
 

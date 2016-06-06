@@ -53,6 +53,34 @@ func MatchProp(o *js.Object, prop string, val string) bool {
 }
 
 //==============================================================================
+
+// CloneValue clones a value map returning the cloned version.
+func CloneValue(m Value) Value {
+	n := make(Value)
+
+	for key, val := range m {
+		n[key] = val
+	}
+
+	return n
+}
+
+// CloneWith clones the set of valus and adds the key and value to
+// the element.
+func CloneWith(m Values, key string, newVal interface{}) Values {
+	var mn Values
+
+	for _, val := range m {
+		cm := CloneValue(val)
+		cm[key] = newVal
+		mn = append(mn, cm)
+	}
+
+	return mn
+}
+
+//==============================================================================
+
 // expandable defines a regexp for matching period delimited strings.
 var expandable = regexp.MustCompile("([\\w\\d_-]+\\.[\\w\\d_-]+)+")
 

@@ -130,98 +130,6 @@ func GetComputedStyleMap(elem dom.Element, ps string) (ComputedStyleMap, error) 
 	return styleMap, nil
 }
 
-// Add adjusts the stylemap with a new property.
-func (c ComputedStyleMap) Add(name string, value string, priority bool) {
-	if !c.Has(name) {
-		c[name] = &ComputedStyle{
-			Name:       name,
-			VendorName: name,
-			Value:      value,
-			Values:     []string{value},
-			Priority:   priority,
-		}
-		return
-	}
-
-	m := c[name]
-	m.Value = value
-	m.Priority = priority
-	m.Values = []string{value}
-}
-
-// propName defines a regexp to pull the name of a css property setter.
-var propName = regexp.MustCompile("([\\w\\-0-9]+)\\(?\\)?")
-
-// RemoveMore adjusts the stylemap removing a property's subvalue that matches a
-// the giving value provided.
-func (c ComputedStyleMap) RemoveMore(name string, value string, priority bool) {
-	if !c.Has(name) {
-		return
-	}
-
-	m := c[name]
-
-	prop := propName.FindStringSubmatch(value)[1]
-
-	// We must first check if we have a property with the name in list then
-	// replace it else append it into list.
-	for ind, val := range m.Values {
-
-		valName := propName.FindStringSubmatch(val)[1]
-		if valName != prop {
-			continue
-		}
-
-		m.Values[ind] = value
-		m.Values = append(m.Values[:ind], m.Values[ind+1:]...)
-	}
-}
-
-// AddMore adjusts the stylemap for a exisiting property adding the new value
-// into the values lists else adds as just a new value if it does not exists.
-func (c ComputedStyleMap) AddMore(name string, value string, priority bool) {
-	if !c.Has(name) {
-		c[name] = &ComputedStyle{
-			Name:       name,
-			VendorName: name,
-			Value:      value,
-			Values:     []string{value},
-			Priority:   priority,
-		}
-		return
-	}
-
-	m := c[name]
-
-	if len(m.Values) == 1 && m.Values[0] == "none" {
-		m.Values[0] = value
-		return
-	}
-
-	var found bool
-
-	prop := propName.FindStringSubmatch(value)[1]
-
-	// We must first check if we have a property with the name in list then
-	// replace it else append it into list.
-	for ind, val := range m.Values {
-
-		valName := propName.FindStringSubmatch(val)[1]
-
-		if valName != prop {
-			continue
-		}
-
-		m.Values[ind] = value
-		found = true
-	}
-
-	// If not found, then append
-	if !found {
-		m.Values = append(m.Values, value)
-	}
-}
-
 // Has returns true/false if the property exists.
 func (c ComputedStyleMap) Has(name string) bool {
 	_, ok := c[name]
@@ -302,15 +210,15 @@ func HexToRGB(hex string) (red, green, blue int) {
 	// We are dealing with a 3 string hex.
 	if len(hex) < 6 {
 		parts := strings.Split(hex, "")
-		red = parseIntBase16(doubleString(parts[0]))
-		green = parseIntBase16(doubleString(parts[1]))
-		blue = parseIntBase16(doubleString(parts[2]))
+		red = ParseIntBase16(doubleString(parts[0]))
+		green = ParseIntBase16(doubleString(parts[1]))
+		blue = ParseIntBase16(doubleString(parts[2]))
 		return
 	}
 
-	red = parseIntBase16(hex[0:2])
-	green = parseIntBase16(hex[2:4])
-	blue = parseIntBase16(hex[4:6])
+	red = ParseIntBase16(hex[0:2])
+	green = ParseIntBase16(hex[2:4])
+	blue = ParseIntBase16(hex[4:6])
 
 	return
 }
