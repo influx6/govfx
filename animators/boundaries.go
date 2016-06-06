@@ -12,17 +12,24 @@ import (
 // Width provides animation sequencing for width properties, it uses flat integers
 // values and pixels.
 type Width struct {
+	Target int    `govfx:"value"`
+	Easing string `govfx:"easing"`
+
 	current float64
 	accum   float64
-	elem    *govfx.Element
-	Target  int    `govfx:"value"`
-	Easing  string `govfx:"easing"`
+
+	easer govfx.Easing
+	elem  *govfx.Element
+
+	ended bool
 }
 
 // Init initializes the width property with the provided element for animation.
 func (w *Width) Init(elem *govfx.Element) {
 	w.elem = elem
-	if ws, ok, _ := elem.ReadInt("width", ""); ok {
+	w.easer = govfx.GetEasing(w.Easing)
+
+	if ws, _, ok := elem.ReadInt("width", ""); ok {
 		w.current = float64(ws)
 	}
 }
@@ -30,14 +37,29 @@ func (w *Width) Init(elem *govfx.Element) {
 // Update contains the update operations for the width property.
 // All calculations are handled here, it recieves the delta value to
 // allow
-func (w *Width) Update(delta float64) {
-	w.current += (w.current * delta) + 5
+func (w *Width) Update(delta float64, timeline float64) {
+	cu := int(w.current)
+
+	easer := 1.0
+
+	if w.easer != nil {
+		easer = w.easer.Ease(timeline)
+	}
+
+	if cu < w.Target {
+		w.current += (w.current * delta * easer) + 5
+	} else {
+		w.current = float64(w.Target)
+		w.ended = true
+	}
 }
 
 // Blend takes the last value to which allows us to correct the
 // rendered position of our update.
 func (w *Width) Blend(delta float64) {
-	w.current += delta
+	if !w.ended {
+		w.current += delta
+	}
 }
 
 // CSS writes the css output to the supplied writer
@@ -49,16 +71,24 @@ func (w *Width) CSS(wc io.Writer) {
 
 // Height provides animation sequencing for Height properties.
 type Height struct {
+	Target int    `govfx:"value"`
+	Easing string `govfx:"easing"`
+
 	current float64
-	elem    *govfx.Element
-	Target  int    `govfx:"value"`
-	Easing  string `govfx:"easing"`
+	accum   float64
+
+	easer govfx.Easing
+	elem  *govfx.Element
+
+	ended bool
 }
 
 // Init initializes the width property with the provided element for animation.
 func (h *Height) Init(elem *govfx.Element) {
 	h.elem = elem
-	if ws, ok, _ := elem.ReadInt("height", ""); ok {
+	h.easer = govfx.GetEasing(h.Easing)
+
+	if ws, _, ok := elem.ReadInt("width", ""); ok {
 		h.current = float64(ws)
 	}
 }
@@ -66,8 +96,29 @@ func (h *Height) Init(elem *govfx.Element) {
 // Update contains the update operations for the width property.
 // All calculations are handled here, it recieves the delta value to
 // allow
-func (h *Height) Update(delta float64) {
-	h.current += (delta * 5)
+func (h *Height) Update(delta float64, timeline float64) {
+	cu := int(h.current)
+
+	easer := 1.0
+
+	if h.easer != nil {
+		easer = h.easer.Ease(timeline)
+	}
+
+	if cu < h.Target {
+		h.current += (h.current * delta * easer) + 5
+	} else {
+		h.current = float64(h.Target)
+		h.ended = true
+	}
+}
+
+// Blend takes the last value to which allows us to correct the
+// rendered position of our update.
+func (h *Height) Blend(delta float64) {
+	if !h.ended {
+		h.current += delta
+	}
 }
 
 // CSS writes the css output to the supplied writer

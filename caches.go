@@ -12,13 +12,13 @@ import (
 // stopping any frame immediately
 var stopCache = newLoopCache()
 
-// stop stops the frame within the animation step, removing its registered
+// StopTimer stops the frame within the animation step, removing its registered
 // loopere.
-func stop(t Timer) {
-	looper := stopCache.Get(t)
-	if looper != nil {
-		stopCache.Delete(t)
+func StopTimer(t Timer) {
+	if looper := stopCache.Get(t); looper != nil {
 		looper.End()
+		// time.Sleep(1 * time.Millisecond)
+		stopCache.Delete(t)
 	}
 }
 

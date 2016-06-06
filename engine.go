@@ -16,19 +16,11 @@ import (
 // into one call.
 func Animate(stat Stat, b Values, elems Elementals) *Timeline {
 	frame := NewSeqBev(elems, stat, b)
-	return NewTimeline(NewTimer(nil, ModeTimer{
+	return NewTimeline(ModeTimer{
 		Delay:             stat.Delay,
 		MaxMSPerUpdate:    0.01,
 		MaxDeltaPerUpdate: 2.5,
-	}), frame, stat)
-}
-
-// AnimateWith provides a function which lets you provide a custom clock by
-// which the timeline will be managed instead of using the default set
-// by govfx.
-func AnimateWith(clock Timeable, stat Stat, b Values, elems Elementals) *Timeline {
-	frame := NewSeqBev(elems, stat, b)
-	return NewTimeline(clock, frame, stat)
+	}, frame, stat)
 }
 
 //==============================================================================

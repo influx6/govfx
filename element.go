@@ -3,6 +3,7 @@ package govfx
 import (
 	"io"
 	"regexp"
+	"strings"
 
 	"honnef.co/go/js/dom"
 )
@@ -53,8 +54,8 @@ func (e *Element) Add(css ...Sequence) {
 
 // Init calls the Init() methods on all items in its property list.
 func (e *Element) Init() {
-	for _, elem := range e.props {
-		elem.Init(e)
+	for _, prop := range e.props {
+		prop.Init(e)
 	}
 }
 
@@ -107,17 +108,24 @@ func (e *Element) Read(prop string, selector string) (string, bool, bool) {
 		return "", false, false
 	}
 
-	for _, val := range cs.Values {
-		valName := propName.FindStringSubmatch(val)[1]
-		if valName != selector {
-			continue
+	// If we the selector is not a empty string, then search deep within the
+	// property value list and return needed item else return false as last
+	// boolean return value to indicate a failure.
+	if strings.TrimSpace(selector) != "" {
+		for _, val := range cs.Values {
+			valName := propName.FindStringSubmatch(val)[1]
+			if valName != selector {
+				continue
+			}
+
+			return val, cs.Priority, true
 		}
 
-		return val, cs.Priority, true
+		return cs.Value, cs.Priority, false
 	}
 
 	// Read the value, return both value and true state.
-	return cs.Value, cs.Priority, false
+	return cs.Value, cs.Priority, true
 }
 
 // ReadInt reads the given property and attempts to convert its value into a

@@ -23,6 +23,9 @@ type Stat struct {
 	Delay    time.Duration
 	Loop     int
 	Reverse  bool
+	Begin    Listener
+	End      Listener
+	Progress Listener
 }
 
 // Block represents a single state instance for rendering at a specific moment
@@ -53,10 +56,9 @@ func (b BlockMoment) Run() {
 type SeqBev struct {
 	Stat
 
-	ended       Listener
-	progressing Listener
-	begins      Listener
-	blocks      []BlockMoment
+	blocks    []BlockMoment
+	reversing bool
+	reversed  bool
 
 	elems Elementals
 	ideas Values
@@ -88,16 +90,9 @@ func ElementalSequence(elems Elementals, stat Stat, id Values) *SeqBev {
 // NewSeqBev returns a new instance of a SeqBev.
 func NewSeqBev(elems Elementals, stat Stat, ideas Values) *SeqBev {
 	f := SeqBev{
-		Stat:        stat,
-		elems:       elems,
-		ended:       &listener{},
-		begins:      &listener{},
-		progressing: &listener{},
+		Stat:  stat,
+		elems: elems,
 	}
-
-	f.ended.Add(func(_ float64) {
-		atomic.StoreInt64(&f.flymode, 1)
-	})
 
 	for _, elem := range elems {
 		// Add the sequence into the element tree.
@@ -110,12 +105,52 @@ func NewSeqBev(elems Elementals, stat Stat, ideas Values) *SeqBev {
 	return &f
 }
 
+// Completed signifies the completion of the sequence.
+func (f *SeqBev) Completed(cycle int) {
+	atomic.StoreInt64(&f.flymode, 1)
+}
+
+// Done returns true/false if the sequence has completed a full run.
+// Where a full run is a completed cycle + reveres run.
+func (f *SeqBev) Done() bool {
+	flymod := int(atomic.LoadInt64(&f.flymode))
+
+	if atomic.LoadInt64(&f.flyIndex) <= 0 {
+		f.reversed = true
+	}
+
+	if flymod < 1 {
+		return false
+	}
+
+	if f.Stat.Reverse && !f.reversed {
+		return false
+	}
+
+	return true
+}
+
 // Reset is called by the timer to tell the frame its animation period as finished.
 func (f *SeqBev) Reset() {
-	atomic.StoreInt64(&f.flymode, 0)
-	for _, elem := range f.elems {
-		elem.Reset()
+	f.reversed = false
+	f.reversing = false
+	atomic.StoreInt64(&f.flyIndex, 0)
+}
+
+// RenderReverse reverses the rendering of the sequence by calling the
+// index in reverese.
+func (f *SeqBev) RenderReverse(delta float64) {
+	ind := int(atomic.LoadInt64(&f.flyIndex))
+	total := len(f.blocks)
+
+	if ind >= total {
+		ind = total - 1
 	}
+
+	blocks := f.blocks[ind]
+
+	blocks.Run()
+	atomic.AddInt64(&f.flyIndex, -1)
 }
 
 // Render renders the current frame feeding the delta value if needed to its
@@ -159,6 +194,29 @@ func (f *SeqBev) Render(delta float64) {
 
 //==============================================================================
 
+// EmitBegin emits the begin signal to the listener supplied in the stat.
+func (f *SeqBev) EmitBegin(delta float64) {
+	if f.Stat.Begin != nil {
+		f.Stat.Begin.Emit(delta)
+	}
+}
+
+// EmitProgress emits the progress signal to the listener supplied in the stat.
+func (f *SeqBev) EmitProgress(delta float64) {
+	if f.Stat.Progress != nil {
+		f.Stat.Progress.Emit(delta)
+	}
+}
+
+// EmitEnd emits the ending signal to the listener supplied in the stat.
+func (f *SeqBev) EmitEnd(delta float64) {
+	if f.Stat.End != nil {
+		f.Stat.End.Emit(delta)
+	}
+}
+
+//==============================================================================
+
 // Update generates the next frame sequence to be rendered and stacks them for
 // rendering for the system.
 func (f *SeqBev) Update(delta, total float64, timeline float64) {
@@ -171,12 +229,28 @@ func (f *SeqBev) Update(delta, total float64, timeline float64) {
 	}
 }
 
+// UpdateReverse calls a reverse procedure on the sequence being runned.
+func (f *SeqBev) UpdateReverse(delta float64) {
+}
+
 //==============================================================================
 
 // Listener defines an interface that provides callback hooks.
 type Listener interface {
 	Add(fn func(float64))
 	Emit(float64)
+}
+
+// NewListener returns a new instance of a structure that matches the Listener
+// interface.
+func NewListener(cbs ...func(float64)) Listener {
+	var lm listener
+
+	for _, item := range cbs {
+		lm.Add(item)
+	}
+
+	return &lm
 }
 
 type listener struct {

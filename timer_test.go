@@ -34,11 +34,13 @@ func TestTimer(t *testing.T) {
 		MaxDeltaPerUpdate: 1.5,
 	})
 
+	defer govfx.StopTimer(mt)
+
 	for i := 50; i > 0; i-- {
 		mt.Update()
 		time.Sleep(100 * time.Millisecond)
 		if i > 20 {
-			mt.Stop()
+			mt.Pause()
 		}
 	}
 }
