@@ -31094,7 +31094,7 @@ $packages["github.com/influx6/govfx"] = (function() {
 	StartableBehaviour = $pkg.StartableBehaviour = $newType(8, $kindInterface, "govfx.StartableBehaviour", "StartableBehaviour", "github.com/influx6/govfx", null);
 	TimelineEmitable = $pkg.TimelineEmitable = $newType(8, $kindInterface, "govfx.TimelineEmitable", "TimelineEmitable", "github.com/influx6/govfx", null);
 	TimelineBehaviour = $pkg.TimelineBehaviour = $newType(8, $kindInterface, "govfx.TimelineBehaviour", "TimelineBehaviour", "github.com/influx6/govfx", null);
-	Timeline = $pkg.Timeline = $newType(0, $kindStruct, "govfx.Timeline", "Timeline", "github.com/influx6/govfx", function(stat_, tb_, tmMod_, timer_, start_, progress_, beating_, paused_, dead_, loopInfinite_, loops_, reversed_, reversedDone_, completed_, loop_, repeatCount_, endOnce_, timeline_) {
+	Timeline = $pkg.Timeline = $newType(0, $kindStruct, "govfx.Timeline", "Timeline", "github.com/influx6/govfx", function(stat_, tb_, tmMod_, timer_, start_, progress_, beating_, paused_, dead_, inTransistion_, loopInfinite_, loops_, reversed_, reversedDone_, completed_, loop_, repeatCount_, endOnce_, timeline_) {
 		this.$val = this;
 		if (arguments.length === 0) {
 			this.stat = new Stat.ptr(new time.Duration(0, 0), new time.Duration(0, 0), 0, false, $ifaceNil, $ifaceNil, $ifaceNil);
@@ -31106,6 +31106,7 @@ $packages["github.com/influx6/govfx"] = (function() {
 			this.beating = new $Int64(0, 0);
 			this.paused = new $Int64(0, 0);
 			this.dead = new $Int64(0, 0);
+			this.inTransistion = new $Int64(0, 0);
 			this.loopInfinite = false;
 			this.loops = false;
 			this.reversed = false;
@@ -31126,6 +31127,7 @@ $packages["github.com/influx6/govfx"] = (function() {
 		this.beating = beating_;
 		this.paused = paused_;
 		this.dead = dead_;
+		this.inTransistion = inTransistion_;
 		this.loopInfinite = loopInfinite_;
 		this.loops = loops_;
 		this.reversed = reversed_;
@@ -32195,7 +32197,7 @@ $packages["github.com/influx6/govfx"] = (function() {
 		var $ptr, mt, stat, t, tm;
 		stat = $clone(stat, Stat);
 		mt = $clone(mt, ModeTimer);
-		tm = new Timeline.ptr($clone(stat, Stat), t, $clone(mt, ModeTimer), $ifaceNil, new time.Time.ptr(new $Int64(0, 0), 0, ptrType$11.nil), 0, new $Int64(0, 0), new $Int64(0, 0), new $Int64(0, 0), false, false, false, false, false, 0, 0, new sync.Once.ptr(new sync.Mutex.ptr(0, 0), 0), new time.Duration(0, 0));
+		tm = new Timeline.ptr($clone(stat, Stat), t, $clone(mt, ModeTimer), $ifaceNil, new time.Time.ptr(new $Int64(0, 0), 0, ptrType$11.nil), 0, new $Int64(0, 0), new $Int64(0, 0), new $Int64(0, 0), new $Int64(0, 0), false, false, false, false, false, 0, 0, new sync.Once.ptr(new sync.Mutex.ptr(0, 0), 0), new time.Duration(0, 0));
 		tm.loop = stat.Loop;
 		tm.loops = stat.Loop < 0 || stat.Loop > 0;
 		tm.loopInfinite = stat.Loop < 0;
@@ -32236,9 +32238,11 @@ $packages["github.com/influx6/govfx"] = (function() {
 		}
 		t[0].timer = NewTimer(t[0], t[0].tmMod);
 		_arg = t[0].timer;
-		_r$14 = engine.Loop((function(t) { return function(delta) {
-			var $ptr, delta;
-			$go($methodVal(t[0].timer, "Update"), []);
+		_r$14 = engine.Loop((function(t) { return function $b(delta) {
+			var $ptr, delta, $s, $r;
+			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; delta = $f.delta; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+			$r = t[0].timer.Update(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f.delta = delta; $f.$s = $s; $f.$r = $r; return $f;
 		}; })(t), 0); /* */ $s = 1; case 1: if($c) { $c = false; _r$14 = _r$14.$blk(); } if (_r$14 && _r$14.$blk !== undefined) { break s; }
 		_arg$1 = _r$14;
 		$r = stopCache.Add(_arg, _arg$1); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
@@ -32306,9 +32310,11 @@ $packages["github.com/influx6/govfx"] = (function() {
 		t[0].progress = 0;
 		t[0].timer = NewTimer(t[0], t[0].tmMod);
 		_arg = t[0].timer;
-		_r$14 = engine.Loop((function(t) { return function(delta) {
-			var $ptr, delta;
-			$go($methodVal(t[0].timer, "Update"), []);
+		_r$14 = engine.Loop((function(t) { return function $b(delta) {
+			var $ptr, delta, $s, $r;
+			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; delta = $f.delta; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+			$r = t[0].timer.Update(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f.delta = delta; $f.$s = $s; $f.$r = $r; return $f;
 		}; })(t), 0); /* */ $s = 4; case 4: if($c) { $c = false; _r$14 = _r$14.$blk(); } if (_r$14 && _r$14.$blk !== undefined) { break s; }
 		_arg$1 = _r$14;
 		$r = stopCache.Add(_arg, _arg$1); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
@@ -32391,18 +32397,16 @@ $packages["github.com/influx6/govfx"] = (function() {
 						/* } */ case 2:
 						/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._tuple = _tuple; $f.fb = fb; $f.ok = ok; $f.$s = $s; $f.$r = $r; return $f;
 					}; })(progress, t)); /* */ $s = 22; case 22: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-					$r = t[0].timer.Pause(); /* */ $s = 23; case 23: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-					$r = t[0].loopRun(); /* */ $s = 24; case 24: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+					$r = t[0].loopRun(); /* */ $s = 23; case 23: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 					return;
 				/* } */ case 21:
 				t[0].loop = t[0].loop - (1) >> 0;
-				/* */ if (t[0].loop > 0) { $s = 25; continue; }
-				/* */ $s = 26; continue;
-				/* if (t[0].loop > 0) { */ case 25:
-					$r = t[0].timer.Pause(); /* */ $s = 27; case 27: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-					$r = t[0].loopRun(); /* */ $s = 28; case 28: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+				/* */ if (t[0].loop > 0) { $s = 24; continue; }
+				/* */ $s = 25; continue;
+				/* if (t[0].loop > 0) { */ case 24:
+					$r = t[0].loopRun(); /* */ $s = 26; case 26: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 					return;
-				/* } */ case 26:
+				/* } */ case 25:
 			/* } */ case 19:
 			$r = t[0].endOnce.Do((function(progress, t) { return function $b() {
 				var $ptr, _tuple, fb, ok, $s, $r;
@@ -32417,12 +32421,12 @@ $packages["github.com/influx6/govfx"] = (function() {
 					$r = fb.EmitEnd(progress[0]); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 				/* } */ case 2:
 				/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._tuple = _tuple; $f.fb = fb; $f.ok = ok; $f.$s = $s; $f.$r = $r; return $f;
-			}; })(progress, t)); /* */ $s = 29; case 29: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-			$r = t[0].timer.Pause(); /* */ $s = 30; case 30: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-			$r = StopTimer(t[0].timer); /* */ $s = 31; case 31: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			}; })(progress, t)); /* */ $s = 27; case 27: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			$r = t[0].timer.Pause(); /* */ $s = 28; case 28: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			$r = StopTimer(t[0].timer); /* */ $s = 29; case 29: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 			return;
 		/* } */ case 2:
-		$r = t[0].tb.Update(delta, progress[0], progress[0] / t[0].timeline.Seconds()); /* */ $s = 32; case 32: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = t[0].tb.Update(delta, progress[0], progress[0] / t[0].timeline.Seconds()); /* */ $s = 30; case 30: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: Timeline.ptr.prototype.Update }; } $f.$ptr = $ptr; $f._r$14 = _r$14; $f._r$15 = _r$15; $f._v = _v; $f._v$1 = _v$1; $f.delta = delta; $f.progress = progress; $f.t = t; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	Timeline.prototype.Update = function(delta, progress) { return this.$val.Update(delta, progress); };
@@ -32566,7 +32570,7 @@ $packages["github.com/influx6/govfx"] = (function() {
 	StartableBehaviour.init([{prop: "Begin", name: "Begin", pkg: "", typ: $funcType([time.Time], [], false)}]);
 	TimelineEmitable.init([{prop: "EmitBegin", name: "EmitBegin", pkg: "", typ: $funcType([$Float64], [], false)}, {prop: "EmitEnd", name: "EmitEnd", pkg: "", typ: $funcType([$Float64], [], false)}, {prop: "EmitProgress", name: "EmitProgress", pkg: "", typ: $funcType([$Float64], [], false)}]);
 	TimelineBehaviour.init([{prop: "Completed", name: "Completed", pkg: "", typ: $funcType([$Int], [], false)}, {prop: "Done", name: "Done", pkg: "", typ: $funcType([], [$Bool], false)}, {prop: "Render", name: "Render", pkg: "", typ: $funcType([$Float64], [], false)}, {prop: "RenderReverse", name: "RenderReverse", pkg: "", typ: $funcType([$Float64], [], false)}, {prop: "Reset", name: "Reset", pkg: "", typ: $funcType([], [], false)}, {prop: "Update", name: "Update", pkg: "", typ: $funcType([$Float64, $Float64, $Float64], [], false)}, {prop: "UpdateReverse", name: "UpdateReverse", pkg: "", typ: $funcType([$Float64], [], false)}]);
-	Timeline.init([{prop: "stat", name: "stat", pkg: "github.com/influx6/govfx", typ: Stat, tag: ""}, {prop: "tb", name: "tb", pkg: "github.com/influx6/govfx", typ: TimelineBehaviour, tag: ""}, {prop: "tmMod", name: "tmMod", pkg: "github.com/influx6/govfx", typ: ModeTimer, tag: ""}, {prop: "timer", name: "timer", pkg: "github.com/influx6/govfx", typ: Timeable, tag: ""}, {prop: "start", name: "start", pkg: "github.com/influx6/govfx", typ: time.Time, tag: ""}, {prop: "progress", name: "progress", pkg: "github.com/influx6/govfx", typ: $Float64, tag: ""}, {prop: "beating", name: "beating", pkg: "github.com/influx6/govfx", typ: $Int64, tag: ""}, {prop: "paused", name: "paused", pkg: "github.com/influx6/govfx", typ: $Int64, tag: ""}, {prop: "dead", name: "dead", pkg: "github.com/influx6/govfx", typ: $Int64, tag: ""}, {prop: "loopInfinite", name: "loopInfinite", pkg: "github.com/influx6/govfx", typ: $Bool, tag: ""}, {prop: "loops", name: "loops", pkg: "github.com/influx6/govfx", typ: $Bool, tag: ""}, {prop: "reversed", name: "reversed", pkg: "github.com/influx6/govfx", typ: $Bool, tag: ""}, {prop: "reversedDone", name: "reversedDone", pkg: "github.com/influx6/govfx", typ: $Bool, tag: ""}, {prop: "completed", name: "completed", pkg: "github.com/influx6/govfx", typ: $Bool, tag: ""}, {prop: "loop", name: "loop", pkg: "github.com/influx6/govfx", typ: $Int, tag: ""}, {prop: "repeatCount", name: "repeatCount", pkg: "github.com/influx6/govfx", typ: $Int, tag: ""}, {prop: "endOnce", name: "endOnce", pkg: "github.com/influx6/govfx", typ: sync.Once, tag: ""}, {prop: "timeline", name: "timeline", pkg: "github.com/influx6/govfx", typ: time.Duration, tag: ""}]);
+	Timeline.init([{prop: "stat", name: "stat", pkg: "github.com/influx6/govfx", typ: Stat, tag: ""}, {prop: "tb", name: "tb", pkg: "github.com/influx6/govfx", typ: TimelineBehaviour, tag: ""}, {prop: "tmMod", name: "tmMod", pkg: "github.com/influx6/govfx", typ: ModeTimer, tag: ""}, {prop: "timer", name: "timer", pkg: "github.com/influx6/govfx", typ: Timeable, tag: ""}, {prop: "start", name: "start", pkg: "github.com/influx6/govfx", typ: time.Time, tag: ""}, {prop: "progress", name: "progress", pkg: "github.com/influx6/govfx", typ: $Float64, tag: ""}, {prop: "beating", name: "beating", pkg: "github.com/influx6/govfx", typ: $Int64, tag: ""}, {prop: "paused", name: "paused", pkg: "github.com/influx6/govfx", typ: $Int64, tag: ""}, {prop: "dead", name: "dead", pkg: "github.com/influx6/govfx", typ: $Int64, tag: ""}, {prop: "inTransistion", name: "inTransistion", pkg: "github.com/influx6/govfx", typ: $Int64, tag: ""}, {prop: "loopInfinite", name: "loopInfinite", pkg: "github.com/influx6/govfx", typ: $Bool, tag: ""}, {prop: "loops", name: "loops", pkg: "github.com/influx6/govfx", typ: $Bool, tag: ""}, {prop: "reversed", name: "reversed", pkg: "github.com/influx6/govfx", typ: $Bool, tag: ""}, {prop: "reversedDone", name: "reversedDone", pkg: "github.com/influx6/govfx", typ: $Bool, tag: ""}, {prop: "completed", name: "completed", pkg: "github.com/influx6/govfx", typ: $Bool, tag: ""}, {prop: "loop", name: "loop", pkg: "github.com/influx6/govfx", typ: $Int, tag: ""}, {prop: "repeatCount", name: "repeatCount", pkg: "github.com/influx6/govfx", typ: $Int, tag: ""}, {prop: "endOnce", name: "endOnce", pkg: "github.com/influx6/govfx", typ: sync.Once, tag: ""}, {prop: "timeline", name: "timeline", pkg: "github.com/influx6/govfx", typ: time.Duration, tag: ""}]);
 	TimeBehaviour.init([{prop: "Render", name: "Render", pkg: "", typ: $funcType([$Float64], [], false)}, {prop: "Update", name: "Update", pkg: "", typ: $funcType([$Float64, $Float64], [], false)}]);
 	Timer.init([{prop: "Pause", name: "Pause", pkg: "", typ: $funcType([], [], false)}, {prop: "Resume", name: "Resume", pkg: "", typ: $funcType([], [], false)}, {prop: "Update", name: "Update", pkg: "", typ: $funcType([], [], false)}]);
 	Timeable.init([{prop: "Pause", name: "Pause", pkg: "", typ: $funcType([], [], false)}, {prop: "Resume", name: "Resume", pkg: "", typ: $funcType([], [], false)}, {prop: "Update", name: "Update", pkg: "", typ: $funcType([], [], false)}, {prop: "Use", name: "Use", pkg: "", typ: $funcType([TimeBehaviour], [], false)}]);
@@ -32864,7 +32868,7 @@ $packages["main"] = (function() {
 		progress = _r$2;
 		_r$3 = govfx.QuerySelectorAll(".zapps"); /* */ $s = 4; case 4: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
 		elems = _r$3;
-		_r$4 = govfx.Animate(new govfx.Stat.ptr(new time.Duration(0, 4000000000), new time.Duration(0, 0), 2, true, begin, end, progress), new govfx.Values([$makeMap($String.keyFor, [{ k: "value", v: new $Int(500) }, { k: "animate", v: new $String("width") }, { k: "easing", v: new $String("ease-in") }])]), elems); /* */ $s = 5; case 5: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+		_r$4 = govfx.Animate(new govfx.Stat.ptr(new time.Duration(0, 2000000000), new time.Duration(0, 0), 2, true, begin, end, progress), new govfx.Values([$makeMap($String.keyFor, [{ k: "value", v: new $Int(500) }, { k: "animate", v: new $String("width") }, { k: "easing", v: new $String("ease-in") }])]), elems); /* */ $s = 5; case 5: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
 		width = _r$4;
 		$r = width.Start(); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: main }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f.begin = begin; $f.elems = elems; $f.end = end; $f.progress = progress; $f.width = width; $f.$s = $s; $f.$r = $r; return $f;

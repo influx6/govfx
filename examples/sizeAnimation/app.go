@@ -24,7 +24,7 @@ func main() {
 
 	elems := govfx.QuerySelectorAll(".zapps")
 	width := govfx.Animate(govfx.Stat{
-		Duration: 4 * time.Second,
+		Duration: 2 * time.Second,
 		Loop:     2,
 		Reverse:  true,
 		Begin:    begin,

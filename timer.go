@@ -49,9 +49,10 @@ type Timeline struct {
 
 	progress float64
 
-	beating int64
-	paused  int64
-	dead    int64
+	beating       int64
+	paused        int64
+	dead          int64
+	inTransistion int64
 
 	loopInfinite bool
 	loops        bool
@@ -108,7 +109,7 @@ func (t *Timeline) Start() {
 
 	t.timer = NewTimer(t, t.tmMod)
 	stopCache.Add(t.timer, engine.Loop(func(delta float64) {
-		go t.timer.Update()
+		t.timer.Update()
 	}, 0))
 }
 
@@ -117,7 +118,6 @@ func (t *Timeline) Start() {
 func (t *Timeline) Begin(begin time.Time) {
 	t.start = begin
 	t.timeline = t.stat.Duration + t.stat.Delay
-	// t.end = t.start.Add(t.timeline)
 
 	if fb, ok := t.tb.(TimelineEmitable); ok {
 		fb.EmitBegin(time.Since(begin).Seconds())
@@ -145,6 +145,8 @@ func (t *Timeline) Render(delta float64) {
 
 // loopRun calls the looping phase for the timeline.
 func (t *Timeline) loopRun() {
+	// atomic.StoreInt64(&t.inTransistion, 1)
+
 	// Pause and stop the current timer, we need a fresh timer
 	// to ensure our sequence end time checks works.
 	t.timer.Pause()
@@ -163,12 +165,18 @@ func (t *Timeline) loopRun() {
 	// Create a new timer and run the clock.
 	t.timer = NewTimer(t, t.tmMod)
 	stopCache.Add(t.timer, engine.Loop(func(delta float64) {
-		go t.timer.Update()
+		t.timer.Update()
 	}, 0))
+
+	// atomic.StoreInt64(&t.inTransistion, 0)
 }
 
 // Update implements the TimeBehaviour interface Update() function.
 func (t *Timeline) Update(delta float64, progress float64) {
+	// if atomic.LoadInt64(&t.inTransistion) > 0 {
+	// 	return
+	// }
+
 	if atomic.LoadInt64(&t.paused) > 0 {
 		return
 	}
@@ -230,9 +238,6 @@ func (t *Timeline) Update(delta float64, progress float64) {
 					}
 				})
 
-				// Pause and stop the current timer, we need a fresh timer
-				// to ensure our sequence end time checks works.
-				t.timer.Pause()
 				t.loopRun()
 				return
 			}
@@ -240,9 +245,6 @@ func (t *Timeline) Update(delta float64, progress float64) {
 			t.loop--
 
 			if t.loop > 0 {
-				// Pause and stop the current timer, we need a fresh timer
-				// to ensure our sequence end time checks works.
-				t.timer.Pause()
 				t.loopRun()
 				return
 			}
