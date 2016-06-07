@@ -1,6 +1,7 @@
 package govfx
 
 import (
+	"fmt"
 	"sync"
 	"sync/atomic"
 	"time"
@@ -40,6 +41,7 @@ type TimelineBehaviour interface {
 type Timeline struct {
 	stat Stat
 	tb   TimelineBehaviour
+	ul   sync.Mutex
 
 	tmMod ModeTimer
 	timer Timeable
@@ -49,10 +51,11 @@ type Timeline struct {
 
 	progress float64
 
-	beating       int64
-	paused        int64
-	dead          int64
-	inTransistion int64
+	beating  int64
+	paused   int64
+	dead     int64
+	loop     int64
+	loopDone int64
 
 	loopInfinite bool
 	loops        bool
@@ -60,11 +63,12 @@ type Timeline struct {
 	reversed     bool
 	reversedDone bool
 	completed    bool
+	reclocking   bool
 
-	loop        int
 	repeatCount int
 
-	endOnce sync.Once
+	beginOnce sync.Once
+	endOnce   sync.Once
 
 	timeline time.Duration
 }
@@ -74,7 +78,7 @@ func NewTimeline(mt ModeTimer, t TimelineBehaviour, stat Stat) *Timeline {
 	tm := Timeline{tmMod: mt, stat: stat, tb: t}
 
 	// Setup loop flags.
-	tm.loop = stat.Loop
+	tm.loop = int64(stat.Loop)
 	tm.loops = (stat.Loop < 0 || stat.Loop > 0)
 	tm.loopInfinite = stat.Loop < 0
 
@@ -120,7 +124,9 @@ func (t *Timeline) Begin(begin time.Time) {
 	t.timeline = t.stat.Duration + t.stat.Delay
 
 	if fb, ok := t.tb.(TimelineEmitable); ok {
-		fb.EmitBegin(time.Since(begin).Seconds())
+		t.beginOnce.Do(func() {
+			fb.EmitBegin(time.Since(begin).Seconds())
+		})
 	}
 }
 
@@ -160,7 +166,7 @@ func (t *Timeline) loopRun() {
 	t.reversedDone = false
 
 	// Set progress to 0.
-	t.progress = 0
+	// t.progress = 0
 
 	// Create a new timer and run the clock.
 	t.timer = NewTimer(t, t.tmMod)
@@ -168,14 +174,25 @@ func (t *Timeline) loopRun() {
 		t.timer.Update()
 	}, 0))
 
+	t.reclocking = true
 	// atomic.StoreInt64(&t.inTransistion, 0)
 }
 
 // Update implements the TimeBehaviour interface Update() function.
 func (t *Timeline) Update(delta float64, progress float64) {
+	// t.ul.Lock()
+	// defer t.ul.Unlock()
 	// if atomic.LoadInt64(&t.inTransistion) > 0 {
 	// 	return
 	// }
+	if t.reclocking && t.timeline.Seconds() <= progress {
+		return
+	}
+
+	if t.reclocking && t.timeline.Seconds() > progress {
+		t.reclocking = false
+		return
+	}
 
 	if atomic.LoadInt64(&t.paused) > 0 {
 		return
@@ -194,14 +211,14 @@ func (t *Timeline) Update(delta float64, progress float64) {
 			}
 
 			// If we have reversed and do loop but the loop is done then end.
-			if t.reversed && t.reversedDone && t.loops && t.loop == 0 {
+			if t.reversed && t.reversedDone && t.loops && atomic.LoadInt64(&t.loop) == 0 {
 				return
 			}
 		}
 
 		// If the loops and its not infinite and the loop is done then
 		// end.
-		if t.loops && !t.loopInfinite && t.loop == 0 {
+		if t.loops && !t.loopInfinite && atomic.LoadInt64(&t.loop) == 0 {
 			return
 		}
 
@@ -242,9 +259,10 @@ func (t *Timeline) Update(delta float64, progress float64) {
 				return
 			}
 
-			t.loop--
-
-			if t.loop > 0 {
+			fmt.Printf("Before looping Decrement: %d\n", atomic.LoadInt64(&t.loop))
+			atomic.AddInt64(&t.loop, -1)
+			fmt.Printf("After looping Decrement: %d\n", atomic.LoadInt64(&t.loop))
+			if atomic.LoadInt64(&t.loop) > 0 {
 				t.loopRun()
 				return
 			}
