@@ -220,7 +220,7 @@ func (t *Timeline) Update(delta float64, progress float64) {
 	}
 
 	// We check the timelines to see if its matching what's expected.
-	if t.timeline.Seconds() < progress {
+	if t.timeline.Seconds() < progress || t.timeline.Seconds() < (progress+t.tmMod.MaxMSPerUpdate) {
 
 		if !t.completed {
 			t.completed = true

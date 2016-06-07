@@ -19,12 +19,12 @@ func main() {
 	})
 
 	progress := govfx.NewListener(func(dl float64) {
-		// fmt.Printf("Animation Is Progressing at %.4f .\n", dl)
+		fmt.Printf("Animation Is Progressing at %.4f .\n", dl)
 	})
 
 	elems := govfx.QuerySelectorAll(".zapps")
 	width := govfx.Animate(govfx.Stat{
-		Duration: 2 * time.Second,
+		Duration: 1 * time.Second,
 		Loop:     2,
 		Reverse:  true,
 		Begin:    begin,

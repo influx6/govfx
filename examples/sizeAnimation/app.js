@@ -32361,9 +32361,9 @@ $packages["github.com/influx6/govfx"] = (function() {
 				return;
 			}
 		}
-		/* */ if (t[0].timeline.Seconds() < progress[0]) { $s = 1; continue; }
+		/* */ if (t[0].timeline.Seconds() < progress[0] || t[0].timeline.Seconds() < (progress[0] + t[0].tmMod.MaxMSPerUpdate)) { $s = 1; continue; }
 		/* */ $s = 2; continue;
-		/* if (t[0].timeline.Seconds() < progress[0]) { */ case 1:
+		/* if (t[0].timeline.Seconds() < progress[0] || t[0].timeline.Seconds() < (progress[0] + t[0].tmMod.MaxMSPerUpdate)) { */ case 1:
 			/* */ if (!t[0].completed) { $s = 3; continue; }
 			/* */ $s = 4; continue;
 			/* if (!t[0].completed) { */ case 3:
@@ -32874,13 +32874,17 @@ $packages["main"] = (function() {
 			/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._r$1 = _r$1; $f.dl = dl; $f.$s = $s; $f.$r = $r; return $f;
 		})])); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
 		end = _r$1;
-		_r$2 = govfx.NewListener(new sliceType$1([(function(dl) {
-			var $ptr, dl;
+		_r$2 = govfx.NewListener(new sliceType$1([(function $b(dl) {
+			var $ptr, _r$2, dl, $s, $r;
+			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r$2 = $f._r$2; dl = $f.dl; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+			_r$2 = fmt.Printf("Animation Is Progressing at %.4f .\n", new sliceType([new $Float64(dl)])); /* */ $s = 1; case 1: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+			_r$2;
+			/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._r$2 = _r$2; $f.dl = dl; $f.$s = $s; $f.$r = $r; return $f;
 		})])); /* */ $s = 3; case 3: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
 		progress = _r$2;
 		_r$3 = govfx.QuerySelectorAll(".zapps"); /* */ $s = 4; case 4: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
 		elems = _r$3;
-		_r$4 = govfx.Animate(new govfx.Stat.ptr(new time.Duration(0, 2000000000), new time.Duration(0, 0), 2, true, begin, end, progress), new govfx.Values([$makeMap($String.keyFor, [{ k: "value", v: new $Int(500) }, { k: "animate", v: new $String("width") }, { k: "easing", v: new $String("ease-in") }])]), elems); /* */ $s = 5; case 5: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+		_r$4 = govfx.Animate(new govfx.Stat.ptr(new time.Duration(0, 1000000000), new time.Duration(0, 0), 2, true, begin, end, progress), new govfx.Values([$makeMap($String.keyFor, [{ k: "value", v: new $Int(500) }, { k: "animate", v: new $String("width") }, { k: "easing", v: new $String("ease-in") }])]), elems); /* */ $s = 5; case 5: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
 		width = _r$4;
 		$r = width.Start(); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: main }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f.begin = begin; $f.elems = elems; $f.end = end; $f.progress = progress; $f.width = width; $f.$s = $s; $f.$r = $r; return $f;
