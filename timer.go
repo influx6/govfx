@@ -1,7 +1,6 @@
 package govfx
 
 import (
-	"fmt"
 	"sync"
 	"sync/atomic"
 	"time"
@@ -41,13 +40,11 @@ type TimelineBehaviour interface {
 type Timeline struct {
 	stat Stat
 	tb   TimelineBehaviour
-	ul   sync.Mutex
 
 	tmMod ModeTimer
 	timer Timeable
 
 	start time.Time
-	// end   time.Time
 
 	progress float64
 
@@ -64,8 +61,6 @@ type Timeline struct {
 	reversedDone bool
 	completed    bool
 	reclocking   bool
-
-	repeatCount int
 
 	beginOnce sync.Once
 	endOnce   sync.Once
@@ -259,9 +254,9 @@ func (t *Timeline) Update(delta float64, progress float64) {
 				return
 			}
 
-			fmt.Printf("Before looping Decrement: %d\n", atomic.LoadInt64(&t.loop))
+			// fmt.Printf("Before looping Decrement: %d\n", atomic.LoadInt64(&t.loop))
 			atomic.AddInt64(&t.loop, -1)
-			fmt.Printf("After looping Decrement: %d\n", atomic.LoadInt64(&t.loop))
+			// fmt.Printf("After looping Decrement: %d\n", atomic.LoadInt64(&t.loop))
 			if atomic.LoadInt64(&t.loop) > 0 {
 				t.loopRun()
 				return
