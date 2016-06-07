@@ -18,8 +18,28 @@ type CSSElem interface {
 
 //==============================================================================
 
+// Elemental defines the interface for an elements decorator.
+type Elemental interface {
+	dom.Element
+
+	Init()
+	Reset()
+	Clear()
+
+	Add(...Sequence)
+
+	Read(string, string) (string, bool, bool)
+	ReadInt(string, string) (int, bool, bool)
+	ReadFloat(string, string) (float64, bool, bool)
+
+	Update(delta float64, progress float64)
+	Blend(blending float64)
+
+	CSS(io.Writer)
+}
+
 // Elementals defines a lists of elementals,
-type Elementals []*Element
+type Elementals []Elemental
 
 // Element defines a structure that holds ehances the dom.Element api.
 // Element provides a caching facility that helps to reduce layout checks
@@ -33,7 +53,7 @@ type Element struct {
 }
 
 // NewElement returns an instancee of the Element struct.
-func NewElement(elem dom.Element, pseudo string) *Element {
+func NewElement(elem dom.Element, pseudo string) Elemental {
 	css, err := GetComputedStyleMap(elem, pseudo)
 	if err != nil {
 		panic(err)

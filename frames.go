@@ -31,7 +31,7 @@ type Stat struct {
 // Block represents a single state instance for rendering at a specific moment
 // in time.
 type Block struct {
-	Elem *Element
+	Elem Elemental
 	Buf  *bytes.Buffer
 }
 

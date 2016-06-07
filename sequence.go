@@ -34,7 +34,7 @@ type Blending interface {
 // DeferWriter.
 type Sequence interface {
 	CSSElem
-	Init(*Element)
+	Init(Elemental)
 	Update(delta float64, timeline float64)
 }
 

@@ -19,13 +19,13 @@ type Width struct {
 	accum   float64
 
 	easer govfx.Easing
-	elem  *govfx.Element
+	elem  govfx.Elemental
 
 	ended bool
 }
 
 // Init initializes the width property with the provided element for animation.
-func (w *Width) Init(elem *govfx.Element) {
+func (w *Width) Init(elem govfx.Elemental) {
 	w.elem = elem
 	w.easer = govfx.GetEasing(w.Easing)
 
@@ -78,13 +78,13 @@ type Height struct {
 	accum   float64
 
 	easer govfx.Easing
-	elem  *govfx.Element
+	elem  govfx.Elemental
 
 	ended bool
 }
 
 // Init initializes the width property with the provided element for animation.
-func (h *Height) Init(elem *govfx.Element) {
+func (h *Height) Init(elem govfx.Elemental) {
 	h.elem = elem
 	h.easer = govfx.GetEasing(h.Easing)
 

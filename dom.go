@@ -52,7 +52,7 @@ func QuerySelectorAll(selector string) Elementals {
 
 // QuerySelector returns the elemental that maches the selector else returns
 // nil.
-func QuerySelector(selector string) *Element {
+func QuerySelector(selector string) Elemental {
 	node := Document().QuerySelector(selector)
 	if node == nil {
 		return nil
@@ -70,7 +70,7 @@ func TransformElements(elem interface{}) Elementals {
 	case Elementals:
 		return elem.(Elementals)
 	case Element:
-		return Elementals{elem.(*Element)}
+		return Elementals{elem.(Elemental)}
 	case dom.Element:
 		return Elementals{NewElement(elem.(dom.Element), "")}
 	case []dom.Element:

@@ -41,7 +41,7 @@ func (s *ShadowRoot) QuerySelectorAll(selector string) Elementals {
 }
 
 // QuerySelector uses the underline query selector to return elementals
-func (s *ShadowRoot) QuerySelector(selector string) *Element {
+func (s *ShadowRoot) QuerySelector(selector string) Elemental {
 	node := s.DocumentFragment.QuerySelector(selector)
 	if node == nil {
 		return nil
