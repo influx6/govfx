@@ -31,9 +31,16 @@ type TimelineBehaviour interface {
 	Reset()
 	Completed(int)
 	Render(interpolate float64)
-	RenderReverse(interpolate float64)
 	UpdateReverse(delta float64)
+	RenderReverse(interpolate float64)
 	Update(delta, progress float64, timeline float64)
+}
+
+// TimelineBehaviourSimulationFlag defines a interface for allowing the turning on and off
+// a flag to which sets the state of simulation intenally for a TimelineBehaviour.
+type TimelineBehaviourSimulationFlag interface {
+	SimulationON()
+	SimulationOFF()
 }
 
 // Timeline defines a struct to manage the behaviour of a animation frame.
@@ -65,19 +72,54 @@ type Timeline struct {
 	beginOnce sync.Once
 	endOnce   sync.Once
 
+	simulated     chan struct{}
+	simulationON  bool
+	simulatedOnce sync.Once
+	simulatedDone bool
+
 	timeline time.Duration
 }
 
 // NewTimeline returns a new timeline to manage the lifetime of a animation.
 func NewTimeline(mt ModeTimer, t TimelineBehaviour, stat Stat) *Timeline {
-	tm := Timeline{tmMod: mt, stat: stat, tb: t}
+	tm := Timeline{tmMod: mt, stat: stat, tb: t, simulated: make(chan struct{})}
 
 	// Setup loop flags.
 	tm.loop = int64(stat.Loop)
 	tm.loops = (stat.Loop < 0 || stat.Loop > 0)
 	tm.loopInfinite = stat.Loop < 0
 
+	// Set up core variables.
+	tm.timeline = stat.Duration + stat.Delay
+
 	return &tm
+}
+
+// Simulate provides a pre-calculation method which allows the
+// animations to be generated long before the sequence start of
+// animation.
+func (t *Timeline) Simulate() <-chan struct{} {
+	if atomic.LoadInt64(&t.beating) > 1 {
+		t.simulatedOnce.Do(func() {
+			close(t.simulated)
+		})
+
+		return t.simulated
+	}
+
+	sim, ok := t.tb.(TimelineBehaviourSimulationFlag)
+	if !ok {
+		t.simulatedOnce.Do(func() {
+			close(t.simulated)
+		})
+
+		return t.simulated
+	}
+
+	t.simulationON = true
+	sim.SimulationON()
+	t.Start()
+	return t.simulated
 }
 
 // Resume unpauses the timeline operations if its started.
@@ -106,6 +148,7 @@ func (t *Timeline) Start() {
 		return
 	}
 
+	atomic.StoreInt64(&t.beating, 1)
 	t.timer = NewTimer(t, t.tmMod)
 	stopCache.Add(t.timer, engine.Loop(func(delta float64) {
 		t.timer.Update()
@@ -115,8 +158,11 @@ func (t *Timeline) Start() {
 // Begin sets the timeline ready to begin to clocking its behaviours
 // update and render cycles.
 func (t *Timeline) Begin(begin time.Time) {
+	if t.simulationON {
+		return
+	}
+
 	t.start = begin
-	t.timeline = t.stat.Duration + t.stat.Delay
 
 	if fb, ok := t.tb.(TimelineEmitable); ok {
 		t.beginOnce.Do(func() {
@@ -146,7 +192,6 @@ func (t *Timeline) Render(delta float64) {
 
 // loopRun calls the looping phase for the timeline.
 func (t *Timeline) loopRun() {
-	// atomic.StoreInt64(&t.inTransistion, 1)
 
 	// Pause and stop the current timer, we need a fresh timer
 	// to ensure our sequence end time checks works.
@@ -160,9 +205,6 @@ func (t *Timeline) loopRun() {
 	t.reversed = false
 	t.reversedDone = false
 
-	// Set progress to 0.
-	// t.progress = 0
-
 	// Create a new timer and run the clock.
 	t.timer = NewTimer(t, t.tmMod)
 	stopCache.Add(t.timer, engine.Loop(func(delta float64) {
@@ -170,16 +212,14 @@ func (t *Timeline) loopRun() {
 	}, 0))
 
 	t.reclocking = true
-	// atomic.StoreInt64(&t.inTransistion, 0)
 }
 
 // Update implements the TimeBehaviour interface Update() function.
 func (t *Timeline) Update(delta float64, progress float64) {
-	// t.ul.Lock()
-	// defer t.ul.Unlock()
-	// if atomic.LoadInt64(&t.inTransistion) > 0 {
-	// 	return
-	// }
+	if atomic.LoadInt64(&t.beating) < 1 {
+		return
+	}
+
 	if t.reclocking && t.timeline.Seconds() <= progress {
 		return
 	}
@@ -192,8 +232,6 @@ func (t *Timeline) Update(delta float64, progress float64) {
 	if atomic.LoadInt64(&t.paused) > 0 {
 		return
 	}
-
-	atomic.StoreInt64(&t.beating, 1)
 
 	t.progress = progress
 
@@ -221,10 +259,26 @@ func (t *Timeline) Update(delta float64, progress float64) {
 
 	// We check the timelines to see if its matching what's expected.
 	if t.timeline.Seconds() < progress || t.timeline.Seconds() < (progress+t.tmMod.MaxMSPerUpdate) {
-
 		if !t.completed {
 			t.completed = true
 			t.tb.Completed(0)
+
+			t.simulatedOnce.Do(func() {
+				close(t.simulated)
+			})
+
+			if t.simulationON {
+				if sim, ok := t.tb.(TimelineBehaviourSimulationFlag); ok {
+					sim.SimulationOFF()
+				}
+
+				t.simulationON = false
+
+				// t.completed = false
+				atomic.StoreInt64(&t.beating, 0)
+				t.tb.Reset()
+				return
+			}
 		}
 
 		if t.stat.Reverse {

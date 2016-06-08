@@ -56,7 +56,8 @@ func (b BlockMoment) Run() {
 type SeqBev struct {
 	Stat
 
-	blocks    []BlockMoment
+	blocks []BlockMoment
+
 	reversing bool
 	reversed  bool
 
@@ -65,6 +66,7 @@ type SeqBev struct {
 
 	flymode  int64
 	flyIndex int64
+	simMode  int64
 }
 
 // QuerySequence uses a selector to retrieve the desired elements needed
@@ -103,6 +105,18 @@ func NewSeqBev(elems Elementals, stat Stat, ideas Values) *SeqBev {
 	}
 
 	return &f
+}
+
+// SimulationOFF puts off the sequence frame simulation mode returning things
+// back to normal operations.
+func (f *SeqBev) SimulationOFF() {
+	atomic.StoreInt64(&f.simMode, 0)
+}
+
+// SimulationON puts the sequence frame into simulation mode where
+// the operations are performed but not written to display.
+func (f *SeqBev) SimulationON() {
+	atomic.StoreInt64(&f.simMode, 1)
 }
 
 // Completed signifies the completion of the sequence.
@@ -149,7 +163,10 @@ func (f *SeqBev) RenderReverse(delta float64) {
 
 	blocks := f.blocks[ind]
 
-	blocks.Run()
+	if atomic.LoadInt64(&f.simMode) < 1 {
+		blocks.Run()
+	}
+
 	atomic.AddInt64(&f.flyIndex, -1)
 }
 
@@ -185,7 +202,10 @@ func (f *SeqBev) Render(delta float64) {
 		}
 
 		blocks = append(blocks, block)
-		block.Do()
+
+		if int(atomic.LoadInt64(&f.simMode)) < 1 {
+			block.Do()
+		}
 	}
 
 	f.blocks[ind] = blocks

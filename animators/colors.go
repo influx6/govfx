@@ -24,7 +24,7 @@ func (ColorTransistion) Interpolate(easing govfx.Easing, base, current ColorValu
 }
 
 // Blend returns a new ColorValue with the giving blend function.
-func (ColorTransistion) Blend(current ColorValue, blend float64) ColorValue {
+func (ColorTransistion) Blend(easing govfx.Easing, current ColorValue, blend float64) ColorValue {
 	var newcolor ColorValue
 
 	return newcolor
@@ -59,8 +59,7 @@ type Color struct {
 	color ColorValue
 	base  ColorValue
 
-	elem  govfx.Elemental
-	easer govfx.Easing
+	elem govfx.Elemental
 }
 
 // Init initializes the property for execution.
@@ -84,7 +83,8 @@ func (t *Color) Update(delta float64, timeline float64) {
 
 // Blend adjust the property details to match appropriate state.
 func (t *Color) Blend(interpolation float64) {
-	t.color = Colors.Blend(t.color, interpolation)
+	easing := govfx.GetEasing(t.Easing)
+	t.color = Colors.Blend(easing, t.color, interpolation)
 }
 
 // CSS writes out the current state of the property in css format to the provided
@@ -121,7 +121,8 @@ func (t *BackgroundColor) Update(delta float64, timeline float64) {
 
 // Blend adjust the property details to match appropriate state.
 func (t *BackgroundColor) Blend(interpolation float64) {
-	t.color = Colors.Blend(t.color, interpolation)
+	easing := govfx.GetEasing(t.Easing)
+	t.color = Colors.Blend(easing, t.color, interpolation)
 }
 
 // CSS writes out the current state of the property in css format to the provided
