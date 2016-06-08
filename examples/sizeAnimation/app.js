@@ -32976,8 +32976,12 @@ $packages["main"] = (function() {
 			/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._r$1 = _r$1; $f.dl = dl; $f.$s = $s; $f.$r = $r; return $f;
 		})])); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
 		end = _r$1;
-		_r$2 = govfx.NewListener(new sliceType$1([(function(dl) {
-			var $ptr, dl;
+		_r$2 = govfx.NewListener(new sliceType$1([(function $b(dl) {
+			var $ptr, _r$2, dl, $s, $r;
+			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r$2 = $f._r$2; dl = $f.dl; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+			_r$2 = fmt.Printf("Animation Is Progressing at %.4f .\n", new sliceType([new $Float64(dl)])); /* */ $s = 1; case 1: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+			_r$2;
+			/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._r$2 = _r$2; $f.dl = dl; $f.$s = $s; $f.$r = $r; return $f;
 		})])); /* */ $s = 3; case 3: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
 		progress = _r$2;
 		_r$3 = govfx.QuerySelectorAll(".zapps"); /* */ $s = 4; case 4: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
