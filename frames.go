@@ -161,6 +161,10 @@ func (f *SeqBev) RenderReverse(delta float64) {
 		ind = total - 1
 	}
 
+	if ind < 0 {
+		ind = 0
+	}
+
 	blocks := f.blocks[ind]
 
 	if atomic.LoadInt64(&f.simMode) < 1 {
