@@ -1,164 +1,49 @@
 {
 	"comment": "",
-	"ignore": "",
+	"ignore": "test",
 	"package": [
 		{
-			"origin": "github.com/influx6/govfx/vendor/github.com/ardanlabs/kit/cfg",
-			"path": "github.com/ardanlabs/kit/cfg",
-			"revision": "6540bba4450b4951d1df4dd9c03f813ce2ff04c3",
-			"revisionTime": "2016-04-27T05:35:20+01:00"
-		},
-		{
-			"path": "github.com/ardanlabs/kit/db",
-			"revision": "6f7130ae8987ad34b144a7aa4b670295e4e45b3b",
-			"revisionTime": "2016-04-27T13:18:54-04:00"
-		},
-		{
-			"origin": "github.com/influx6/govfx/vendor/github.com/ardanlabs/kit/db/mongo",
-			"path": "github.com/ardanlabs/kit/db/mongo",
-			"revision": "6540bba4450b4951d1df4dd9c03f813ce2ff04c3",
-			"revisionTime": "2016-04-27T05:35:20+01:00"
-		},
-		{
-			"origin": "github.com/influx6/govfx/vendor/github.com/ardanlabs/kit/log",
-			"path": "github.com/ardanlabs/kit/log",
-			"revision": "6540bba4450b4951d1df4dd9c03f813ce2ff04c3",
-			"revisionTime": "2016-04-27T05:35:20+01:00"
-		},
-		{
-			"origin": "github.com/influx6/govfx/vendor/github.com/ardanlabs/kit/tests",
-			"path": "github.com/ardanlabs/kit/tests",
-			"revision": "6540bba4450b4951d1df4dd9c03f813ce2ff04c3",
-			"revisionTime": "2016-04-27T05:35:20+01:00"
-		},
-		{
-			"path": "github.com/fatih/camelcase",
-			"revision": "332844f2fb0193cce955f4687646abbdcc43ceeb",
-			"revisionTime": "2015-04-20T00:47:19+03:00"
-		},
-		{
+			"checksumSHA1": "l+9zkLpQoH1bWRCY3hx3nTRsAos=",
 			"path": "github.com/go-humble/detect",
 			"revision": "714e9e4d821cb7daac42b10f6f91fe5da00fa6fb",
-			"revisionTime": "2015-07-11T22:04:33-07:00"
+			"revisionTime": "2015-07-12T05:04:33Z"
 		},
 		{
-			"path": "github.com/gopherjs/gopherjs/build",
-			"revision": "76dd0e02d28e5192523ef1ee98becbd86c918cff",
-			"revisionTime": "2016-02-05T16:25:13-08:00"
-		},
-		{
-			"path": "github.com/gopherjs/gopherjs/compiler",
-			"revision": "76dd0e02d28e5192523ef1ee98becbd86c918cff",
-			"revisionTime": "2016-02-05T16:25:13-08:00"
-		},
-		{
-			"path": "github.com/gopherjs/gopherjs/compiler/analysis",
-			"revision": "76dd0e02d28e5192523ef1ee98becbd86c918cff",
-			"revisionTime": "2016-02-05T16:25:13-08:00"
-		},
-		{
-			"path": "github.com/gopherjs/gopherjs/compiler/astutil",
-			"revision": "76dd0e02d28e5192523ef1ee98becbd86c918cff",
-			"revisionTime": "2016-02-05T16:25:13-08:00"
-		},
-		{
-			"path": "github.com/gopherjs/gopherjs/compiler/filter",
-			"revision": "76dd0e02d28e5192523ef1ee98becbd86c918cff",
-			"revisionTime": "2016-02-05T16:25:13-08:00"
-		},
-		{
-			"path": "github.com/gopherjs/gopherjs/compiler/prelude",
-			"revision": "76dd0e02d28e5192523ef1ee98becbd86c918cff",
-			"revisionTime": "2016-02-05T16:25:13-08:00"
-		},
-		{
-			"path": "github.com/gopherjs/gopherjs/compiler/typesutil",
-			"revision": "76dd0e02d28e5192523ef1ee98becbd86c918cff",
-			"revisionTime": "2016-02-05T16:25:13-08:00"
-		},
-		{
+			"checksumSHA1": "P3zGmsNjW8m15a+nks4FdVpFKwE=",
 			"path": "github.com/gopherjs/gopherjs/js",
-			"revision": "64858154c27789453689ac91041a736c89abd49d",
-			"revisionTime": "2016-03-28T11:50:26+02:00"
+			"revision": "090403452ab6979e3b7c054ceb7ee23da91b2ae4",
+			"revisionTime": "2016-07-05T06:58:54Z"
 		},
 		{
-			"path": "github.com/gopherjs/gopherjs/third_party/importer",
-			"revision": "76dd0e02d28e5192523ef1ee98becbd86c918cff",
-			"revisionTime": "2016-02-05T16:25:13-08:00"
-		},
-		{
-			"path": "github.com/influx6/faux/ds",
-			"revision": "6540bba4450b4951d1df4dd9c03f813ce2ff04c3",
-			"revisionTime": "2016-04-27T05:35:20+01:00"
-		},
-		{
-			"path": "github.com/influx6/faux/fque",
-			"revision": "6540bba4450b4951d1df4dd9c03f813ce2ff04c3",
-			"revisionTime": "2016-04-27T05:35:20+01:00"
-		},
-		{
+			"checksumSHA1": "Qt+8ap8pJ0vfs+CjYGMnpBLVMsU=",
 			"path": "github.com/influx6/faux/loop",
-			"revision": "6540bba4450b4951d1df4dd9c03f813ce2ff04c3",
-			"revisionTime": "2016-04-27T05:35:20+01:00"
+			"revision": "23a0dea603bc1581e7908718a9506cc87ace79de",
+			"revisionTime": "2016-07-31T18:03:13Z"
 		},
 		{
+			"checksumSHA1": "Zd4QIO2jRE2T3fTBJGDYN+kVHW4=",
 			"path": "github.com/influx6/faux/loop/web",
-			"revision": "6540bba4450b4951d1df4dd9c03f813ce2ff04c3",
-			"revisionTime": "2016-04-27T05:35:20+01:00"
+			"revision": "23a0dea603bc1581e7908718a9506cc87ace79de",
+			"revisionTime": "2016-07-31T18:03:13Z"
 		},
 		{
+			"checksumSHA1": "HzO1lRQjIo4Zi550Rtc0keKRCns=",
 			"path": "github.com/influx6/faux/loop/web/raf",
-			"revision": "6540bba4450b4951d1df4dd9c03f813ce2ff04c3",
-			"revisionTime": "2016-04-27T05:35:20+01:00"
+			"revision": "23a0dea603bc1581e7908718a9506cc87ace79de",
+			"revisionTime": "2016-07-31T18:03:13Z"
 		},
 		{
+			"checksumSHA1": "FgdyME+rxOGxXHuB2cbyLUS4GnU=",
 			"path": "github.com/influx6/faux/reflection",
-			"revision": "6540bba4450b4951d1df4dd9c03f813ce2ff04c3",
-			"revisionTime": "2016-04-27T05:35:20+01:00"
+			"revision": "23a0dea603bc1581e7908718a9506cc87ace79de",
+			"revisionTime": "2016-07-31T18:03:13Z"
 		},
 		{
-			"path": "github.com/influx6/faux/utils",
-			"revision": "6540bba4450b4951d1df4dd9c03f813ce2ff04c3",
-			"revisionTime": "2016-04-27T05:35:20+01:00"
-		},
-		{
-			"path": "github.com/satori/go.uuid",
-			"revision": ""
-		},
-		{
-			"origin": "github.com/influx6/govfx/vendor/gopkg.in/mgo.v2",
-			"path": "gopkg.in/mgo.v2",
-			"revision": "6540bba4450b4951d1df4dd9c03f813ce2ff04c3",
-			"revisionTime": "2016-04-27T05:35:20+01:00"
-		},
-		{
-			"origin": "github.com/influx6/govfx/vendor/gopkg.in/mgo.v2/bson",
-			"path": "gopkg.in/mgo.v2/bson",
-			"revision": "6540bba4450b4951d1df4dd9c03f813ce2ff04c3",
-			"revisionTime": "2016-04-27T05:35:20+01:00"
-		},
-		{
-			"origin": "github.com/influx6/govfx/vendor/gopkg.in/mgo.v2/internal/sasl",
-			"path": "gopkg.in/mgo.v2/internal/sasl",
-			"revision": "6540bba4450b4951d1df4dd9c03f813ce2ff04c3",
-			"revisionTime": "2016-04-27T05:35:20+01:00"
-		},
-		{
-			"origin": "github.com/influx6/govfx/vendor/gopkg.in/mgo.v2/internal/scram",
-			"path": "gopkg.in/mgo.v2/internal/scram",
-			"revision": "6540bba4450b4951d1df4dd9c03f813ce2ff04c3",
-			"revisionTime": "2016-04-27T05:35:20+01:00"
-		},
-		{
-			"origin": "github.com/influx6/govfx/vendor/gopkg.in/yaml.v2",
-			"path": "gopkg.in/yaml.v2",
-			"revision": "6540bba4450b4951d1df4dd9c03f813ce2ff04c3",
-			"revisionTime": "2016-04-27T05:35:20+01:00"
-		},
-		{
+			"checksumSHA1": "6PkY6SMHvZdN99cSZDMGYRZ/SX8=",
 			"path": "honnef.co/go/js/dom",
-			"revision": "ef247f60aa88ed944d605c82cb56a9873c2f9b2e",
-			"revisionTime": "2016-01-27T08:58:48+01:00"
+			"revision": "24aa052bc5c63cfb9383bf59493ee48621ca788c",
+			"revisionTime": "2016-03-10T11:26:45Z"
 		}
-	]
+	],
+	"rootPath": "github.com/influx6/govfx"
 }

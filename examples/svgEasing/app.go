@@ -38,7 +38,7 @@ func main() {
 		End:      end,
 		Progress: progress,
 	}, govfx.Values{
-		{"value": 500, "animate": "width", "easer": easer},
+		{"value": 700, "animate": "width", "easer": easer},
 	}, elems)
 
 	<-width.Simulate()

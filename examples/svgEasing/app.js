@@ -33137,7 +33137,7 @@ $packages["main"] = (function() {
 		easer = _r$3;
 		_r$4 = govfx.QuerySelectorAll(".zapps"); /* */ $s = 5; case 5: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
 		elems = _r$4;
-		_r$5 = govfx.Animate(new govfx.Stat.ptr(new time.Duration(0, 1000000000), new time.Duration(0, 0), 2, true, begin, end, progress), new govfx.Values([$makeMap($String.keyFor, [{ k: "value", v: new $Int(500) }, { k: "animate", v: new $String("width") }, { k: "easer", v: easer }])]), elems); /* */ $s = 6; case 6: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
+		_r$5 = govfx.Animate(new govfx.Stat.ptr(new time.Duration(0, 1000000000), new time.Duration(0, 0), 2, true, begin, end, progress), new govfx.Values([$makeMap($String.keyFor, [{ k: "value", v: new $Int(700) }, { k: "animate", v: new $String("width") }, { k: "easer", v: easer }])]), elems); /* */ $s = 6; case 6: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
 		width = _r$5;
 		_r$6 = width.Simulate(); /* */ $s = 7; case 7: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
 		_r$7 = $recv(_r$6); /* */ $s = 8; case 8: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }

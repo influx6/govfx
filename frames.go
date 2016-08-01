@@ -17,17 +17,6 @@ var AnimationStepsPerSec int64 = 60
 
 //==============================================================================
 
-// Stat provides a configuration for building a Stats object for animators.
-type Stat struct {
-	Duration time.Duration
-	Delay    time.Duration
-	Loop     int
-	Reverse  bool
-	Begin    Listener
-	End      Listener
-	Progress Listener
-}
-
 // Block represents a single state instance for rendering at a specific moment
 // in time.
 type Block struct {
@@ -50,6 +39,19 @@ func (b BlockMoment) Run() {
 		// TODO: should we Go-routine this, to ensure elements update asynchronousely?
 		block.Do()
 	}
+}
+
+//==============================================================================
+
+// Stat provides a configuration for building a Stats object for animators.
+type Stat struct {
+	Duration time.Duration
+	Delay    time.Duration
+	Loop     int
+	Reverse  bool
+	Begin    Listener
+	End      Listener
+	Progress Listener
 }
 
 // SeqBev defines a sequence producer interface.

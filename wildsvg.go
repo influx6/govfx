@@ -8,20 +8,20 @@ import (
 
 // CurvePoint defines a area along a svg path for a specific progress and x value.
 type CurvePoint struct {
-	X        float64
-	Y        float64
-	Xd       float64
-	Yd       float64
-	Progress float64
-	Length   int
+	Length         int
+	X              float64
+	Y              float64
+	Xd             float64
+	Yd             float64
+	SampleProgress float64
 }
 
 // SVGPathEaser defines a easing provider using SVG Paths.
 type SVGPathEaser struct {
+	pathlength int
 	conf       SVGConfig
 	samples    []CurvePoint
 	svgElement dom.Element
-	pathlength int
 	start      time.Time
 	end        time.Time
 	delta      time.Duration
@@ -84,6 +84,14 @@ func (svg *SVGPathEaser) Ease(t float64) float64 {
 	return 0
 }
 
+// Stats returns the giving time details taken to generate the samples.
+func (svg *SVGPathEaser) Stats() (delta time.Duration, start time.Time, end time.Time) {
+	delta = svg.delta
+	start = svg.start
+	end = svg.end
+	return
+}
+
 // generateSampling the samplings based on the sampling size from the
 // svg data.
 func (svg *SVGPathEaser) generateSampling() {
@@ -94,12 +102,13 @@ func (svg *SVGPathEaser) generateSampling() {
 	for i := 0; i < svg.conf.SamplingSize; i++ {
 		step := float64(i) * samplePct
 		fsm := step * float64(svg.pathlength)
-		fsmObj := svg.svgElement.Underlying().Call("getPointAtLength", fsm)
 
 		var point CurvePoint
 
-		point.Progress = step
+		point.SampleProgress = step
 		point.Length = int(fsm)
+
+		fsmObj := svg.svgElement.Underlying().Call("getPointAtLength", fsm)
 
 		point.X = fsmObj.Get("x").Float()
 		point.Xd = point.X / float64(svg.conf.Width)

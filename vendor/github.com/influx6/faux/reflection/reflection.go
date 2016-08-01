@@ -2,6 +2,7 @@ package reflection
 
 import (
 	"errors"
+	"fmt"
 	"reflect"
 	"strings"
 )
@@ -101,17 +102,87 @@ func GetFuncArgumentsType(elem interface{}) ([]reflect.Type, error) {
 	return input, nil
 }
 
+// MatchFuncArgumentTypeWithValues validates specific values matches the elems
+// function arguments.
+func MatchFuncArgumentTypeWithValues(elem interface{}, vals []reflect.Value) int {
+	ma, err := GetFuncArgumentsType(elem)
+	if err != nil {
+		return -1
+	}
+
+	if len(ma) != len(vals) {
+		return -1
+	}
+
+	for index, item := range ma {
+		val := vals[index]
+
+		if ok, _ := CanSetFor(item, val); !ok {
+			return index
+		}
+	}
+
+	return -1
+}
+
+// CanSetForType checks if a val reflect.Type can be used for the target type.
+// It returns true bool, where the first returns if the value can be used and if
+// it must be converted into the type first.
+func CanSetForType(target, val reflect.Type) (canSet bool, mustConvert bool) {
+	if val.AssignableTo(target) {
+		canSet = true
+		return
+	}
+
+	if val.ConvertibleTo(target) {
+		canSet = true
+		mustConvert = true
+		return
+	}
+
+	return
+}
+
+// CanSetFor checks if the giving val can be set in the place of the target type.
+// It returns true bool, where the first returns if the value can be used and if
+// it must be converted into the type first.
+func CanSetFor(target reflect.Type, val reflect.Value) (canSet bool, mustConvert bool) {
+	valType := val.Type()
+
+	if valType.AssignableTo(target) {
+		canSet = true
+		return
+	}
+
+	if valType.ConvertibleTo(target) {
+		canSet = true
+		mustConvert = true
+		return
+	}
+
+	return
+}
+
+// Convert takes a val and converts it into the target type provided if possible.
+func Convert(target reflect.Type, val reflect.Value) (reflect.Value, error) {
+	valType := val.Type()
+
+	if !valType.ConvertibleTo(target) {
+		return reflect.Value{}, errors.New("Can not convert type")
+	}
+
+	return val.Convert(target), nil
+}
+
 // MakeValueFor makes a new reflect.Value for the reflect.Type.
 func MakeValueFor(t reflect.Type) reflect.Value {
-	var input reflect.Value
-
 	mtl := reflect.New(t)
 
-	if mtl.Kind() == reflect.Ptr {
+	if t.Kind() != reflect.Ptr && mtl.Kind() == reflect.Ptr {
 		mtl = mtl.Elem()
 	}
 
-	return input
+	return mtl
 }
 
 // MakeArgumentsValues takes a list of reflect.Types and returns a new version of
@@ -120,6 +191,7 @@ func MakeArgumentsValues(args []reflect.Type) []reflect.Value {
 	var inputs []reflect.Value
 
 	for _, tl := range args {
+		fmt.Printf("Item: %s-> %s\n", tl, reflect.New(tl))
 		inputs = append(inputs, MakeValueFor(tl))
 	}
 
