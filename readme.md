@@ -1,3 +1,5 @@
+# Discontinued and Deprecated
+
 # GoVFX
  GoVFX is a idiomatic web animation library which brings the style of [VelocityJS](https://julian.com/research/velocity/) to Go.
 
